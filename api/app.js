@@ -1,10 +1,12 @@
 const express = require('express');
+require("./config/passport-setup");
 const passport = require("passport");
 const cors = require("cors");
 const keys = require("./config/keys");
 const app = express();
 const cookieSession = require("cookie-session");
 const cookieParser = require("cookie-parser");
+const authRoutes = require('./routes/oauth.routes');
 
 app.use(
     cookieSession({
@@ -26,7 +28,7 @@ app.use(
     })
 );
 
-app.use('/api/login', require('./routes/oauth.routes'));
+app.use('/api/login', authRoutes);
 
 const authCheck = (req, res, next) => {
     if (!req.user) {

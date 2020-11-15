@@ -11,15 +11,15 @@ passport.deserializeUser((id, done) => {
 });
 
 passport.use(new FacebookStrategy({
-  clientID: keys.TWITTER_ACCESS_TOKEN,
-  clientSecret: keys.FACEBOOK_APP_SECRET,
+  clientID: keys.FACEBOOK_ACCESS_TOKEN,
+  clientSecret: keys.FACEBOOK_TOKEN_SECRET,
   callbackURL: "/api/login/facebook/redirect"
 },
   async (token, tokenSecret, profile, done) => {
 
     console.log(profile);
-    const currentUser = profile._json.id_str;
+    // const currentUser = profile._json.id_str;
 
-    done(null, currentUser);
+    done(null, profile);
   }
 ));

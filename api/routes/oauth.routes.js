@@ -25,7 +25,9 @@ router.get("/logout", (req, res) => {
   res.redirect(CLIENT_HOME_PAGE_URL);
 });
 
-router.get("/facebook", passport.authenticate("facebook"), function(res, res){});
+router.get("/facebook", passport.authenticate("facebook"), function(req, res){
+  res.redirect(CLIENT_HOME_PAGE_URL);
+});
 
 router.get("/facebook/redirect",
   passport.authenticate("facebook", {
