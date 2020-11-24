@@ -7,6 +7,14 @@ const PORTS = {
   apiPort: "5000"
 };
 
+const DB_LOGIN = "";
+const DB_PSWD = "";
+const DB_NAME = "";
+
+const DB = {
+  DB_URL: `postgres://${DB_LOGIN}:${DB_PSWD}@localhost:5432/${DB_NAME}`
+}
+
 const SESSION = {
   COOKIE_KEY: "hyperSession"
 };
@@ -14,7 +22,8 @@ const SESSION = {
 const KEYS = {
   ...FACEBOOK_TOKENS,
   ...SESSION,
-  ...PORTS
+  ...PORTS,
+  ...DB
 };
 
 module.exports = KEYS;
