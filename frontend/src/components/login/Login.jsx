@@ -1,5 +1,20 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { Card, CardBody, Container, Row, Col, Button, FormGroup, Label, Input } from 'reactstrap';
+import { fetchLogin, setLogin, setPassword } from '../../redux/login/ActionCreators';
+
+const mapStateToProps = (state) => {
+    return {
+        login: state.login
+    }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+    // fetchLogin: (login, password) => dispatch(fetchLogin(login, password)),
+    setLogin: (login) => dispatch(setLogin(login)),
+    setPassword: (password) => dispatch(setPassword(password))
+});
 
 const LoginInput = () => {
 
@@ -74,4 +89,4 @@ const Login = () => {
     )
 }
 
-export default Login;
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));
