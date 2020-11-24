@@ -58,6 +58,4 @@ router.get("/intra/redirect",
   })
 );
 
-
-
 module.exports = router;
