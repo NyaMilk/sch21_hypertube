@@ -7,6 +7,12 @@ const PORTS = {
   apiPort: "5000"
 };
 
+const DB = {
+  DB_LOGIN: "",
+  DB_PSWD: "",
+  DB_NAME: ""
+}
+
 const SESSION = {
   COOKIE_KEY: "hyperSession"
 };
@@ -14,7 +20,8 @@ const SESSION = {
 const KEYS = {
   ...FACEBOOK_TOKENS,
   ...SESSION,
-  ...PORTS
+  ...PORTS,
+  ...DB
 };
 
 module.exports = KEYS;
