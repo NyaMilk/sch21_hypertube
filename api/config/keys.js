@@ -17,9 +17,9 @@ const PORTS = {
   apiPort: "5000"
 };
 
-const DB_LOGIN = "";
-const DB_PSWD = "";
-const DB_NAME = "";
+const DB_LOGIN = "dindon";
+const DB_PSWD = "wwq";
+const DB_NAME = "dindon";
 
 const DB = {
   DB_URL: `postgres://${DB_LOGIN}:${DB_PSWD}@localhost:5432/${DB_NAME}`

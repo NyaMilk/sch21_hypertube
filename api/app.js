@@ -7,6 +7,7 @@ const app = express();
 const cookieSession = require("cookie-session");
 const cookieParser = require("cookie-parser");
 const authRoutes = require('./routes/oauth.routes');
+const userRoutes = require('./routes/user');
 const torrentRoutes = require('./routes/torrent.routes');
 
 app.use(
@@ -30,6 +31,7 @@ app.use(
 );
 
 app.use('/api/login', authRoutes);
+app.use('/api/test', userRoutes);
 app.use('/api/torrent', torrentRoutes);
 
 const authCheck = (req, res, next) => {
