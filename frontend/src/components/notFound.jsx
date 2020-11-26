@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Container, Row } from 'reactstrap';
-import { request } from './../util/http'; 
+import { request } from '../util/http';
 
 const NotFound = () => {
     return (
@@ -13,7 +13,7 @@ const NotFound = () => {
                         request(`http://localhost:5000/api/login/logout`)
                             .then(res => res.json())
                             .then((data) => console.log(data))
-                    }}/>
+                    }} />
                     <span className="font-profile-head font-message">Oops! Page not found.</span>
                 </Row>
             </Container>

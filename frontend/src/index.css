@@ -1,13 +1,109 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+html {
+  position: relative;
+  min-height: 100%;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+  margin-bottom: 60px;
+}
+
+/* header */
+.navbar .navbar-brand {
+  font-weight: 700;
+  opacity: 0.7;
+  padding-left: 10px;
+}
+
+.navbar .navbar-nav {
+  padding-right: 10px;
+}
+
+/* spinner / message  */
+.page-state {
+  text-align: center;
+  padding-top: 100px;
+}
+
+/* label */
+.font-profile-head {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #5a6268;
+}
+
+/* footer */
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+}
+
+.font-message {
+  display: block;
+  text-align: center;
+  margin: 0 auto;
+  padding-top: 50px;
+  opacity: 0.5;
+}
+
+.footer .row {
+  padding: 15px 0;
+}
+
+.footer a {
+  color: #000;
+  font-weight: 700;
+}
+
+/* login */
+.login {
+  padding: 10vh 0;
+  text-align: center;
+}
+
+.login .font-profile-head,
+.login .login-btn {
+  width: 100%;
+}
+
+.login .font-profile-head {
+  margin-top: 0;
+}
+
+.login .font-profile-head input {
+  margin-top: 10px;
+}
+
+.login .login-btn,
+.login-btn__aside {
+  margin-top: 20px;
+}
+
+.login-btn__aside {
+  width: 60px;
+}
+
+.login .login-btn__aside:nth-child(1) {
+  margin-right: 15px;
+}
+
+.login .card {
+  border: none;
+}
+
+.login .card-body {
+  background: #f8f9fa;
+}
+
+.login .dropdown-divider {
+  margin: 1.5rem 0 0.5rem;
+}
+
+.login .invalid-feedback {
+  margin-top: 0.25rem;
+  font-weight: normal;
+  font-size: 0.8rem;
 }
