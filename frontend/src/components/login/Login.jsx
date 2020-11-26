@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Card, CardBody, Container, Row, Col, Button, FormGroup, Label, Input } from 'reactstrap';
 import { fetchLogin, setLogin, setPassword } from '../../redux/login/ActionCreators';
+import { request } from './../../util/http';
 
 const mapStateToProps = (state) => {
     return {
@@ -17,16 +18,16 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const InputForm = (props) => {
-	const { name, type, set } = props;
+    const { name, type, set } = props;
 
     return (
         <Col>
             <FormGroup>
                 <Label className="font-profile-head">{name}
-                <Input
+                    <Input
                         type={type}
-						name={name}
-						onChange={e => set(e.target.value)}
+                        name={name}
+                        onChange={e => set(e.target.value)}
                         required
                     />
                 </Label>
@@ -36,10 +37,13 @@ const InputForm = (props) => {
 }
 
 const Login = (props) => {
-	const { setLogin, setPassword } = props;
+    const { setLogin, setPassword } = props;
 
     const handle = (e) => {
-        window.open(`http://localhost:5000/api/login/${e.target.name}`, "_self");
+        // request(`http://localhost:5000/`)
+        //     .then(res => res.json())
+        //     .then((data) => console.log(data));
+        window.open(`http://localhost:5000/api/auth/${e.target.name}`, "_self");
     }
 
     return (
@@ -49,8 +53,8 @@ const Login = (props) => {
                     <Col md={6} className="m-auto">
                         <Card>
                             <CardBody>
-                                <InputForm name="Login" type="text" set={setLogin}/>
-                                <InputForm name="Password" type="password" set={setPassword}/>
+                                <InputForm name="Login" type="text" set={setLogin} />
+                                <InputForm name="Password" type="password" set={setPassword} />
                                 <Row>
                                     <Col xs={3}>
                                         <Button className="login-btn" color="info" >Sign in</Button>

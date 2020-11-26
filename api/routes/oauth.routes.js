@@ -3,7 +3,6 @@ const passport = require("passport");
 const CLIENT_HOME_PAGE_URL = "http://localhost:3000/login";
 
 router.get("/success", (req, res) => {
-  console.log('1t1t', req);
   if (req.user) {
     res.json({
       success: true,
@@ -22,9 +21,11 @@ router.get("/failed", (req, res) => {
 });
 
 router.get("/logout", (req, res) => {
-  console.log('here12');
   req.logout();
-  res.redirect(CLIENT_HOME_PAGE_URL);
+  res.status(200).json({
+    msg: 'fa'
+  })
+  // res.redirect(CLIENT_HOME_PAGE_URL);
 });
 
 router.get("/github", passport.authenticate("github"), function(req, res){
@@ -35,7 +36,7 @@ router.get("/github", passport.authenticate("github"), function(req, res){
 router.get("/github/redirect",
   passport.authenticate("github", {
     successRedirect: CLIENT_HOME_PAGE_URL,
-    failureRedirect: "/auth/login/failed"
+    failureRedirect: "/auth/auth/failed"
   })
 );
 

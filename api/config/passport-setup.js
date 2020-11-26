@@ -4,7 +4,7 @@ const GithubStrategy = require('passport-github').Strategy;
 const SchoolStrategy = require('passport-42').Strategy;
 
 passport.serializeUser((user, done) => {
-  done(null, user.id);
+  done(null, user.username);
 });
 
 passport.deserializeUser((id, done) => {
@@ -14,12 +14,9 @@ passport.deserializeUser((id, done) => {
 passport.use(new GithubStrategy({
   clientID: keys.GITHUB_ACCESS_TOKEN,
   clientSecret: keys.GITHUB_TOKEN_SECRET,
-  callbackURL: "/api/login/github/redirect"
+  callbackURL: "/api/auth/github/redirect"
 },
   async (token, tokenSecret, profile, done) => {
-
-    // console.log(profile);
-    // const currentUser = profile._json.id_str;
 
     done(null, profile);
   }
@@ -28,13 +25,9 @@ passport.use(new GithubStrategy({
 passport.use(new SchoolStrategy({
   clientID: keys.SCHOOL_ACCESS_TOKEN,
   clientSecret: keys.SCHOOL_TOKEN_SECRET,
-  callbackURL: "/api/login/intra/redirect"
+  callbackURL: "/api/auth/intra/redirect"
 },
   async (token, tokenSecret, profile, done) => {
-    // console.log('here', token, tokenSecret, profile, done);
-
-    // console.log(profile);
-    // const currentUser = profile._json.id_str;
 
     done(null, profile);
   }

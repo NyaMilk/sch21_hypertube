@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 import Login from './login/Login';
-import NotFound from './notFound';
+import Catalog from './catalog/Catalog';
 
 export function Main() {
 
@@ -10,7 +10,7 @@ export function Main() {
             <Router>
                 <Switch>
                     <Route path='/login' component={Login} />
-                    <Route component={NotFound}/>
+                    <Route component={Catalog}/>
                 </Switch>
             </Router>
         </div>
