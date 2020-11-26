@@ -16,16 +16,17 @@ const mapDispatchToProps = (dispatch) => ({
     setPassword: (password) => dispatch(setPassword(password))
 });
 
-const LoginInput = () => {
+const InputForm = (props) => {
+	const { name, type, set } = props;
 
     return (
         <Col>
             <FormGroup>
-                <Label className="font-profile-head">Login
+                <Label className="font-profile-head">{name}
                 <Input
-                        type="text"
-                        name="Login"
-                        placeholder="rkina7"
+                        type={type}
+						name={name}
+						onChange={e => set(e.target.value)}
                         required
                     />
                 </Label>
@@ -34,25 +35,9 @@ const LoginInput = () => {
     )
 }
 
-const Password = () => {
+const Login = (props) => {
+	const { setLogin, setPassword } = props;
 
-    return (
-        <Col>
-            <FormGroup>
-                <Label className="font-profile-head">Password
-                <Input
-                        type="password"
-                        name='password'
-                        placeholder="Str0ngPa55%"
-                        required
-                    />
-                </Label>
-            </FormGroup>
-        </Col>
-    )
-}
-
-const Login = () => {
     const handle = (e) => {
         window.open(`http://localhost:5000/api/login/${e.target.name}`, "_self");
     }
@@ -64,14 +49,11 @@ const Login = () => {
                     <Col md={6} className="m-auto">
                         <Card>
                             <CardBody>
-                                <LoginInput />
-                                <Password />
+                                <InputForm name="Login" type="text" set={setLogin}/>
+                                <InputForm name="Password" type="password" set={setPassword}/>
                                 <Row>
                                     <Col xs={3}>
                                         <Button className="login-btn" color="info" >Sign in</Button>
-                                    </Col>
-                                    <Col xs={3}>
-                                        <Button className="login-btn" color="info" onClick={handle} name="facebook">Via FB</Button>
                                     </Col>
                                     <Col xs={3}>
                                         <Button className="login-btn" color="info" onClick={handle} name="github">Via github</Button>

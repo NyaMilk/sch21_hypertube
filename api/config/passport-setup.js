@@ -1,6 +1,5 @@
 const passport = require("passport");
 const keys = require("./keys");
-const FacebookStrategy = require('passport-facebook').Strategy;
 const GithubStrategy = require('passport-github').Strategy;
 const SchoolStrategy = require('passport-42').Strategy;
 
@@ -11,20 +10,6 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((id, done) => {
   done(null, id);
 });
-
-passport.use(new FacebookStrategy({
-  clientID: keys.FACEBOOK_ACCESS_TOKEN,
-  clientSecret: keys.FACEBOOK_TOKEN_SECRET,
-  callbackURL: "/api/login/facebook/redirect"
-},
-  async (token, tokenSecret, profile, done) => {
-
-    // console.log(profile);
-    // const currentUser = profile._json.id_str;
-
-    done(null, profile);
-  }
-));
 
 passport.use(new GithubStrategy({
   clientID: keys.GITHUB_ACCESS_TOKEN,
@@ -46,6 +31,7 @@ passport.use(new SchoolStrategy({
   callbackURL: "/api/login/intra/redirect"
 },
   async (token, tokenSecret, profile, done) => {
+    // console.log('here', token, tokenSecret, profile, done);
 
     // console.log(profile);
     // const currentUser = profile._json.id_str;
