@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardBody, Container, Row, Col, FormGroup, Label, Input, Spinner, Button } from 'reactstrap';
 import { request } from '../util/http';
+import { Loading } from './Loading';
 
 
 const Catalog = (props) => {
@@ -15,22 +16,11 @@ const Catalog = (props) => {
             });
     }, [setLogged])
 
-    if (!isLogged)
+    if (!isLogged) {
         return (
-            <section className="login">
-                <Container>
-                    <Row>
-                        <Col md={6} className="m-auto">
-                            <Card>
-                                <CardBody>
-                                    <Spinner />
-                                </CardBody>
-                            </Card>
-                        </Col>
-                    </Row>
-                </Container>
-            </section>
-        )
+            <Loading />
+        );
+    }
     else if (isLogged)
         return (
             <section className="login">

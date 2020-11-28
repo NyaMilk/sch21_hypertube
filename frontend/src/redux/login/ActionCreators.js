@@ -1,4 +1,5 @@
 import * as ActionTypes from './ActionTypes';
+import { request } from '../../util/http';
 
 export const loginOut = () => ({
     type: ActionTypes.LOGIN_OUT
@@ -40,40 +41,40 @@ export const setPassword = (password) => (dispatch) => {
     return dispatch(loginPasswordAdd(password));
 }
 
-// export const fetchLogin = (login, password) => (dispatch) => {
-//     dispatch(loginLoading());
+export const fetchLogin = (login, password) => (dispatch) => {
+    dispatch(loginLoading());
 
-//     const data = {
-//         login: login,
-//         password: password
-//     }
+    const data = {
+        login: login,
+        password: password
+    }
 
-//     return request('/api/user/login', data, 'POST')
-//         .then(res => res.json())
-//         .then(result => {
-//             if (result.success === true) {
-//                 dispatch(loginDataAdd(result.profile));
-//             }
-//             else {
-//                 dispatch(loginFailed(result.message));
-//             }
-//         })
-//         .catch(error => dispatch(loginFailed(error.message)));
-// }
+    return request('/api/user/login', data, 'POST')
+        .then(res => res.json())
+        .then(result => {
+            if (result.success === true) {
+                dispatch(loginDataAdd(result.profile));
+            }
+            else {
+                dispatch(loginFailed(result.message));
+            }
+        })
+        .catch(error => dispatch(loginFailed(error.message)));
+}
 
-// export const fetchUpdateLogin = (login) => (dispatch) => {
-//     dispatch(loginLoading());
+export const fetchUpdateLogin = (login) => (dispatch) => {
+    dispatch(loginLoading());
 
-//     return request(`/api/user/login/${login}`)
-//         .then(res => res.json())
-//         .then(result => {
-//             if (result.success === true) {
-//                 console.log(result);
-//                 dispatch(loginDataAdd(result.profile));
-//             }
-//             else {
-//                 dispatch(loginFailed(result.message));
-//             }
-//         })
-//         .catch(error => dispatch(loginFailed(error.message)));
-// }
+    return request(`/api/user/login/${login}`)
+        .then(res => res.json())
+        .then(result => {
+            if (result.success === true) {
+                console.log(result);
+                dispatch(loginDataAdd(result.profile));
+            }
+            else {
+                dispatch(loginFailed(result.message));
+            }
+        })
+        .catch(error => dispatch(loginFailed(error.message)));
+}
