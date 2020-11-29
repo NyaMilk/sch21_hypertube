@@ -1,13 +1,7 @@
 import React, { useState } from 'react';
-<<<<<<< HEAD
-// import { withRouter } from 'react-router-dom';
-// import { connect } from 'react-redux';
-import { Card, CardBody, Container, Row, Col, Button, FormGroup, Label, Input, Form } from 'reactstrap';
-=======
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Card, CardBody, Container, Row, Col, Button, FormGroup, Label, Input } from 'reactstrap';
->>>>>>> mgrass
 import { NavLink } from 'reactstrap';
 import { request } from '../util/http';
 // import { fetchLogin, setLogin, setPassword } from '../redux/login/ActionCreators';
@@ -49,13 +43,9 @@ const InputForm = (props) => {
     );
 }
 
-<<<<<<< HEAD
-const Login = () => {
-=======
 const Login = (props) => {
     const { t } = useTranslation();
 
->>>>>>> mgrass
     const names = ["github", "intra"];
     const [login, setLogin] = useState();
     const [password, setPassword] = useState();
@@ -70,11 +60,7 @@ const Login = (props) => {
         const data = new URLSearchParams({
             'username': login,
             'password': password
-<<<<<<< HEAD
-          })
-=======
         })
->>>>>>> mgrass
 
         console.log(data);
 
@@ -89,13 +75,8 @@ const Login = (props) => {
             body: new URLSearchParams({
                 'username': login,
                 'password': password
-<<<<<<< HEAD
-              })
-        }).then(res => {console.log(res);});
-=======
             })
         }).then(res => { console.log(res); });
->>>>>>> mgrass
     }
 
     return (
@@ -109,16 +90,6 @@ const Login = (props) => {
                                 <InputForm name="Password" text={t("loginPage.password")} type="password" set={setPassword} />
 
                                 <Col>
-<<<<<<< HEAD
-                                    <Button className="login-btn" onClick={submit}>Sign in</Button>
-                                </Col>
-
-                                <div className="d-flex justify-content-center align-items-center">
-                                    <Button className="login-btn__aside" onClick={handle}>
-                                        <img src={logo_git} width="27" alt="GitHub" name={names[0]} />
-                                    </Button>
-                                    <Button className="login-btn__aside" onClick={handle}>
-=======
                                     <Button className="login-btn" onClick={submit}>{t("loginPage.signIn")}</Button>
                                 </Col>
                                 <div className="d-flex justify-content-center align-items-center">
@@ -126,7 +97,6 @@ const Login = (props) => {
                                         <img src={logo_git} width="27" alt="GitHub" name={names[0]} />
                                     </Button>
                                     <Button className="login-btn__aside" onClick={handle} name="intra">
->>>>>>> mgrass
                                         <img src={logo_42} width="35" alt="Intra 42" name={names[1]} />
                                     </Button>
                                 </div>
