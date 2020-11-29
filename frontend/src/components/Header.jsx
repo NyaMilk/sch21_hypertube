@@ -1,12 +1,39 @@
 import React from "react";
 import { Container, Navbar, NavbarBrand, Nav, NavItem, NavLink } from 'reactstrap';
 
+import video from '../img/head-video.svg';
+import user from '../img/profile-user.svg';
+import logout from '../img/logout2.svg';
+
+
+import { useTranslation } from "react-i18next";
+
 function Header() {
+    const { i18n } = useTranslation();
+
+    const changeLanguage = (language) => {
+        i18n.changeLanguage(language);
+    };
+
     return (
         <Navbar color="light" light expand="xs">
             <Container>
                 <NavbarBrand>Hypertube</NavbarBrand>
                 <Nav className="ml-auto" navbar>
+                    <img src={video} width="25" height="25" alt="Films" />
+                    <img src={user} width="25" height="25" alt="Profile" />
+                    <img src={logout} width="23" height="23" alt="Logout" />
+
+                    <button
+                        onClick={() => changeLanguage("en")}
+                        className={`btn-fst btn-lng ${i18n.language === 'en' ? 'active-lng' : ''}`}>
+                        Eng
+                    </button>
+                    <button
+                        onClick={() => changeLanguage("ru")}
+                        className={`btn-lng ${i18n.language === 'ru' ? 'active-lng' : ''}`}>
+                        Рус
+                    </button>
                     {/* {!urls.includes(path) &&
                         <NavItem>
                             <Notification

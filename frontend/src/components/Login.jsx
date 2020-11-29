@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
+<<<<<<< HEAD
 // import { withRouter } from 'react-router-dom';
 // import { connect } from 'react-redux';
 import { Card, CardBody, Container, Row, Col, Button, FormGroup, Label, Input, Form } from 'reactstrap';
+=======
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { Card, CardBody, Container, Row, Col, Button, FormGroup, Label, Input } from 'reactstrap';
+>>>>>>> mgrass
 import { NavLink } from 'reactstrap';
 import { request } from '../util/http';
 // import { fetchLogin, setLogin, setPassword } from '../redux/login/ActionCreators';
@@ -9,25 +15,28 @@ import axios from 'axios';
 import logo_42 from '../img/42_logo.svg';
 import logo_git from '../img/git_logo.svg';
 
-// const mapStateToProps = (state) => {
-//     return {
-//         login: state.login
-//     }
-// }
+import { useTranslation } from "react-i18next";
 
-// const mapDispatchToProps = (dispatch) => ({
-//     // fetchLogin: (login, password) => dispatch(fetchLogin(login, password)),
-//     setLogin: (login) => dispatch(setLogin(login)),
-//     setPassword: (password) => dispatch(setPassword(password))
-// });
+const mapStateToProps = (state) => {
+    return {
+        login: state.login
+    }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+    fetchLogin: (login, password) => dispatch(fetchLogin(login, password)),
+    setLogin: (login) => dispatch(setLogin(login)),
+    setPassword: (password) => dispatch(setPassword(password))
+});
 
 const InputForm = (props) => {
-    const { name, type, set } = props;
+    const { name, text, type, set } = props;
 
     return (
         <Col>
             <FormGroup>
-                <Label className="font-profile-head">{name}
+                <Label className="font-profile-head">
+                    {text}
                     <Input
                         type={type}
                         name={name}
@@ -40,7 +49,13 @@ const InputForm = (props) => {
     );
 }
 
+<<<<<<< HEAD
 const Login = () => {
+=======
+const Login = (props) => {
+    const { t } = useTranslation();
+
+>>>>>>> mgrass
     const names = ["github", "intra"];
     const [login, setLogin] = useState();
     const [password, setPassword] = useState();
@@ -55,7 +70,11 @@ const Login = () => {
         const data = new URLSearchParams({
             'username': login,
             'password': password
+<<<<<<< HEAD
           })
+=======
+        })
+>>>>>>> mgrass
 
         console.log(data);
 
@@ -70,8 +89,13 @@ const Login = () => {
             body: new URLSearchParams({
                 'username': login,
                 'password': password
+<<<<<<< HEAD
               })
         }).then(res => {console.log(res);});
+=======
+            })
+        }).then(res => { console.log(res); });
+>>>>>>> mgrass
     }
 
     return (
@@ -81,10 +105,11 @@ const Login = () => {
                     <Col md={6} className="m-auto">
                         <Card className="mb-4 shadow-sm">
                             <CardBody>
-                                <InputForm name="Login" type="text" set={setLogin} />
-                                <InputForm name="Password" type="password" set={setPassword} />
+                                <InputForm name="Login" text={t("loginPage.login")} type="text" set={setLogin} />
+                                <InputForm name="Password" text={t("loginPage.password")} type="password" set={setPassword} />
 
                                 <Col>
+<<<<<<< HEAD
                                     <Button className="login-btn" onClick={submit}>Sign in</Button>
                                 </Col>
 
@@ -93,13 +118,22 @@ const Login = () => {
                                         <img src={logo_git} width="27" alt="GitHub" name={names[0]} />
                                     </Button>
                                     <Button className="login-btn__aside" onClick={handle}>
+=======
+                                    <Button className="login-btn" onClick={submit}>{t("loginPage.signIn")}</Button>
+                                </Col>
+                                <div className="d-flex justify-content-center align-items-center">
+                                    <Button className="login-btn__aside" onClick={handle} name="github">
+                                        <img src={logo_git} width="27" alt="GitHub" name={names[0]} />
+                                    </Button>
+                                    <Button className="login-btn__aside" onClick={handle} name="intra">
+>>>>>>> mgrass
                                         <img src={logo_42} width="35" alt="Intra 42" name={names[1]} />
                                     </Button>
                                 </div>
                                 <Col className="login-btn__link">
                                     <div className="dropdown-divider"></div>
-                                    <NavLink href='/register' >Newbee? Sign up</NavLink>
-                                    <NavLink href='/remind' >Forgot password? Remind</NavLink>
+                                    <NavLink href='/register'>{t("loginPage.register")}</NavLink>
+                                    <NavLink href='/remind'>{t("loginPage.remind")}</NavLink>
                                 </Col>
                             </CardBody>
                         </Card>
