@@ -12,16 +12,16 @@ const PORTS = {
   apiPort: "5000"
 };
 
-const DB_LOGIN = "";
-const DB_PSWD = "";
-const DB_NAME = "";
+const DB_LOGIN = "super";
+const DB_PSWD = "1234";
+const DB_NAME = "hypertube";
 
 const DB = {
   DB_URL: `postgres://${DB_LOGIN}:${DB_PSWD}@localhost:5432/${DB_NAME}`
 }
 
 const SESSION = {
-  COOKIE_KEY: "hyperSession"
+  COOKIE_KEY: "hyperT"
 };
 
 const KEYS = {

@@ -1,4 +1,5 @@
 import * as ActionTypes from './ActionTypes';
+// import { request } from '../../util/http';
 
 export const loginOut = () => ({
     type: ActionTypes.LOGIN_OUT

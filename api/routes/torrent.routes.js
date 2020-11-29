@@ -7,16 +7,16 @@ dn=Avatar+a+lenda+de+Aang+3%26ordf%3B+Temporada+Dublado&tr=udp%3A%2F%2Ftracker.c
 const fs = require('fs');
 
 router.get("/test", (req, res) => {
-    client.add(magnetURI, { path: '/download' }, function (torrent) {
-        torrent.on('done', function () {
-          console.log('torrent download finished')
-        })
-      })
+  client.add(magnetURI, { path: '/download' }, function (torrent) {
+    torrent.on('done', function () {
+      console.log('torrent download finished')
+    })
+  })
 
-    res.status(200).json({
-        success: 'success',
-        message: "test"
-      });
+  res.status(200).json({
+    success: 'success',
+    message: "test"
   });
+});
 
-  module.exports = router;
+module.exports = router;

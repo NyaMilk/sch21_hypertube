@@ -1,5 +1,4 @@
 DROP TABLE IF EXISTS Users CASCADE;
-
 DROP TYPE providers CASCADE;
 
 CREATE TYPE providers AS ENUM ('hypert', 'github', 'school42');
@@ -12,7 +11,7 @@ CREATE TABLE Users
     lastName text,
     email text DEFAULT NULL,
     provider providers DEFAULT 'hypert',
-    password text NOT NULL,
+    password text,
     confirm boolean DEFAULT FALSE,
     confirmHash text,
     remindHash text,

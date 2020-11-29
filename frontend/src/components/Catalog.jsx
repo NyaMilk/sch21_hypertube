@@ -7,52 +7,69 @@ const Catalog = (props) => {
     const [isLogged, setLogged] = useState(false);
 
     useEffect(() => {
-        request(`http://localhost:5000/api/auth/success`)
+        request(`/api/auth/success`)
             .then(res => res.json())
             .then((data) => {
                 console.log(data);
-                setLogged(true);
+                setLogged(data.success);
             });
     }, [setLogged])
 
-    if (!isLogged)
-        return (
-            <section className="login">
-                <Container>
-                    <Row>
-                        <Col md={6} className="m-auto">
-                            <Card>
-                                <CardBody>
-                                    <Spinner />
-                                </CardBody>
-                            </Card>
-                        </Col>
-                    </Row>
-                </Container>
-            </section>
-        )
-    else if (isLogged)
-        return (
-            <section className="login">
-                <Container>
-                    <Row>
-                        <Col md={6} className="m-auto">
-                            <Card>
-                                <CardBody>
-                                    <div>
-                                        Hello
+    // if (!isLogged)
+    //     return (
+    //         <section className="login">
+    //             <Container>
+    //                 <Row>
+    //                     <Col md={6} className="m-auto">
+    //                         <Card>
+    //                             <CardBody>
+    //                                 <Spinner />
+    //                             </CardBody>
+    //                         </Card>
+    //                     </Col>
+    //                 </Row>
+    //             </Container>
+    //         </section>
+    //     )
+    // else if (isLogged)
+    return (
+        <section className="login">
+            <Container>
+                <Row>
+                    <Col md={6} className="m-auto">
+                        <Card>
+                            <CardBody>
+                                <div>
+                                    Out
                                     </div>
-                                    <Button onClick={() => {
-                                        console.log('ht');
-                                        request(`http://localhost:5000/api/auth/logout`);
-                                    }} />
-                                </CardBody>
-                            </Card>
-                        </Col>
-                    </Row>
-                </Container>
-            </section>
-        )
+                                <Button onClick={() => {
+                                    request(`/api/auth/logout`)
+                                        .then(res => res.json())
+                                        .then((data) => {
+                                            console.log(data);
+                                            // setLogged(data.success);
+                                        });
+                                }} />
+                            </CardBody>
+                            <CardBody>
+                                <div>
+                                    Hello
+                                    </div>
+                                <Button onClick={() => {
+                                    request(`/api/auth/success`)
+                                        .then(res => res.json())
+                                        .then((data) => {
+                                            console.log(data);
+                                            // setLogged(data.success);
+                                        });
+                                }} />
+                            </CardBody>
+                        </Card>
+                    </Col>
+                </Row>
+            </Container>
+        </section>
+    )
 }
 
 export default Catalog;
