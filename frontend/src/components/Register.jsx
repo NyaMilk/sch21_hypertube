@@ -3,12 +3,12 @@ import { useState } from 'react';
 import { useHistory, withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 import { useTranslation } from "react-i18next";
-
 import { setLogin, setFirstName, setLastName, setEmail, setPassword, setRepassword, fetchRegister } from '../redux/register/ActionCreators';
 import { NavLink, Card, CardBody, Row, Col, FormGroup, Label, Input, FormFeedback, Button, Container, Alert } from 'reactstrap';
 import { isValidInput, isValidPassword } from '../util/check';
 import { request } from '../util/http';
 import { Loading } from './Loading';
+import CONFIG from '../util/const';
 
 const mapStateToProps = (state) => {
     return {
@@ -66,12 +66,13 @@ function InputFormWithFetch(props) {
     const [feedback, setFeedback] = useState('Oopsy');
 
     const checkExist = (name, value) => {
-        request(`/api/register/check/${name}/${value}`)
+        request(`${CONFIG.API_URL}/api/register/check/${name}/${value}`)
             .then(res => res.json())
             .then(
                 result => {
                     if (result.success === true) {
                         toggleValid('is-invalid');
+                        // здесь второй язык in8
                         setFeedback(`${name} is taken`)
                     }
                 }
@@ -87,6 +88,7 @@ function InputFormWithFetch(props) {
         }
         else {
             toggleValid('is-invalid');
+            // здесь второй язык in8
             setFeedback(`${name} is invalid`)
         }
     };
@@ -98,7 +100,7 @@ function InputFormWithFetch(props) {
                     {props.labelName}
                     <Input
                         type="text"
-                        name={props.labelName}
+                        name={props.name}
                         onChange={inputChange}
                         onBlur={() => props.onBlur()}
                         placeholder={props.placeholder}
@@ -131,11 +133,7 @@ function Password(props) {
         else {
             const password = document.querySelector('input[name="password"]').value;
 
-            if (password === value) {
-                toggleValidRepass('is-valid');
-            }
-            else
-                toggleValidRepass('is-invalid');
+            (password === value) ? toggleValidRepass('is-valid') : toggleValidRepass('is-invalid');
         }
     };
 
@@ -186,16 +184,14 @@ const Register = (props) => {
     const [isActiveBtn, toggleBtn] = useState(false);
 
     const handleSubmit = () => {
-        const { nickName, lastName, firstName, email, password, dateBirth, sex } = props.register;
+        const { userName, lastName, firstName, email, password } = props.register;
 
         let data = {
-            nickName: nickName,
+            userName: userName,
             lastName: lastName,
             firstName: firstName,
             email: email,
             password: password,
-            date: dateBirth,
-            sex: sex
         }
 
         props.fetchRegister(data)
@@ -208,7 +204,7 @@ const Register = (props) => {
         const countValidInputs = document.querySelectorAll(".is-valid").length;
         const countInvalidInputs = document.querySelectorAll(".is-invalid").length;
 
-        (countValidInputs === 7 && countInvalidInputs === 0) ? toggleBtn(false) : toggleBtn(true);
+        (countValidInputs === 6 && countInvalidInputs === 0) ? toggleBtn(false) : toggleBtn(true);
     }
 
     if (props.register.isLoading) {
@@ -234,11 +230,13 @@ const Register = (props) => {
                                             set={props.setLogin}
                                             onBlur={checkBtn}
                                             labelName={t("loginPage.login")}
+                                            name='login'
                                             placeholder='rkina7' />
                                         <InputFormWithFetch
                                             set={props.setEmail}
                                             onBlur={checkBtn}
                                             labelName={t("loginPage.email")}
+                                            name='email'
                                             placeholder='rkina@mail.ru' />
                                     </Row>
                                     <Row>
@@ -249,6 +247,7 @@ const Register = (props) => {
                                             name='lastName'
                                             placeholder='Ng'
                                             type='text'
+                                            // здесь второй язык in8
                                             feedback='Only symbols are required'
                                         />
 
@@ -259,6 +258,7 @@ const Register = (props) => {
                                             name='firstName'
                                             placeholder='Duong'
                                             type='text'
+                                            // здесь второй язык in8
                                             feedback='Only symbols are required'
                                         />
                                     </Row>
