@@ -24,12 +24,23 @@ const SESSION = {
   COOKIE_KEY: "hyperT"
 };
 
+const EMAIL = {
+  EMAIL: "matcha.rm.nd@gmail.com",
+  EMAIL_PASS: "wwqfd123"
+}
+
+const BCRYPT = {
+  SALT: "_271kweV77"
+}
+
 const KEYS = {
   ...GITHUB_TOKENS,
   ...SCHOOL_TOKENS,
   ...SESSION,
   ...PORTS,
-  ...DB
+  ...DB,
+  ...EMAIL,
+  ...BCRYPT
 };
 
 module.exports = KEYS;

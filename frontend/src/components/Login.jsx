@@ -5,11 +5,11 @@ import { Card, CardBody, Container, Row, Col, Button, FormGroup, Label, Input } 
 import { NavLink } from 'reactstrap';
 import { request } from '../util/http';
 // import { fetchLogin, setLogin, setPassword } from '../redux/login/ActionCreators';
-import axios from 'axios';
 import logo_42 from '../img/42_logo.svg';
 import logo_git from '../img/git_logo.svg';
-
 import { useTranslation } from "react-i18next";
+
+import CONFIG from '../util/const';
 
 // const mapStateToProps = (state) => {
 //     return {
@@ -53,7 +53,7 @@ const Login = (props) => {
     const handle = (e) => {
         console.log(e.target.name);
         if (names.includes(e.target.name))
-            window.open(`http://localhost:5000/api/auth/${e.target.name}`, "_self");
+            window.open(`${CONFIG.API_URL}/api/auth/${e.target.name}`, "_self");
     }
 
     const submit = () => {
@@ -67,7 +67,7 @@ const Login = (props) => {
         // request(`http://localhost:5000/api/auth/test/`, data, 'POST');
 
         // axios.post(`http://localhost:5000/api/auth/test?username=${login}&password=${password}`)
-        fetch('/api/auth/test', {
+        fetch('${CONFIG.API_URL}/api/auth/test', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
