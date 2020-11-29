@@ -11,17 +11,17 @@ import logo_git from '../img/git_logo.svg';
 
 import { useTranslation } from "react-i18next";
 
-const mapStateToProps = (state) => {
-    return {
-        login: state.login
-    }
-}
+// const mapStateToProps = (state) => {
+//     return {
+//         login: state.login
+//     }
+// }
 
-const mapDispatchToProps = (dispatch) => ({
-    fetchLogin: (login, password) => dispatch(fetchLogin(login, password)),
-    setLogin: (login) => dispatch(setLogin(login)),
-    setPassword: (password) => dispatch(setPassword(password))
-});
+// const mapDispatchToProps = (dispatch) => ({
+//     fetchLogin: (login, password) => dispatch(fetchLogin(login, password)),
+//     setLogin: (login) => dispatch(setLogin(login)),
+//     setPassword: (password) => dispatch(setPassword(password))
+// });
 
 const InputForm = (props) => {
     const { name, text, type, set } = props;
