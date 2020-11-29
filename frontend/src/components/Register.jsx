@@ -2,6 +2,8 @@ import React from 'react';
 import { useState } from 'react';
 import { useHistory, withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
+import { useTranslation } from "react-i18next";
+
 import { setLogin, setFirstName, setLastName, setEmail, setPassword, setRepassword, fetchRegister } from '../redux/register/ActionCreators';
 import { NavLink, Card, CardBody, Row, Col, FormGroup, Label, Input, FormFeedback, Button, Container, Alert } from 'reactstrap';
 import { isValidInput, isValidPassword } from '../util/check';
@@ -39,7 +41,7 @@ function InputForm(props) {
     };
 
     return (
-        <Col>
+        <Col sm="6">
             <FormGroup>
                 <Label className="font-profile-head">
                     {props.labelName}
@@ -90,7 +92,7 @@ function InputFormWithFetch(props) {
     };
 
     return (
-        <Col>
+        <Col sm="6">
             <FormGroup>
                 <Label className="font-profile-head">
                     {props.labelName}
@@ -139,11 +141,11 @@ function Password(props) {
 
     return (
         <Row>
-            <Col>
+            <Col sm="6">
                 <FormGroup>
                     <Label className="font-profile-head">
-                        Password
-                    <Input
+                        {props.labelNamePass}
+                        <Input
                             id="1"
                             type="password"
                             name='password'
@@ -160,8 +162,8 @@ function Password(props) {
             <Col>
                 <FormGroup>
                     <Label className="font-profile-head">
-                        Re-Password
-                    <Input
+                        {props.labelNameRePass}
+                        <Input
                             type="password"
                             name='repassword'
                             onChange={passChange}
@@ -179,6 +181,7 @@ function Password(props) {
 }
 
 const Register = (props) => {
+    const { t } = useTranslation();
     const history = useHistory();
     const [isActiveBtn, toggleBtn] = useState(false);
 
@@ -205,21 +208,18 @@ const Register = (props) => {
         const countValidInputs = document.querySelectorAll(".is-valid").length;
         const countInvalidInputs = document.querySelectorAll(".is-invalid").length;
 
-        if (countValidInputs === 7 && countInvalidInputs === 0)
-            toggleBtn(false);
-        else
-            toggleBtn(true);
+        (countValidInputs === 7 && countInvalidInputs === 0) ? toggleBtn(false) : toggleBtn(true);
     }
 
     if (props.register.isLoading) {
         return (
             <Loading />
-        )
+        );
     }
     else if (props.errMsg) {
         return (
             <Alert color='info'>{props.errMsg}</Alert>
-        )
+        );
     }
     else
         return (
@@ -230,25 +230,56 @@ const Register = (props) => {
                             <Card className="mb-4 shadow-sm">
                                 <CardBody>
                                     <Row>
-                                        <InputFormWithFetch set={props.setLogin} onBlur={checkBtn} labelName='Login' placeholder='rkina7' />
-                                        <InputFormWithFetch set={props.setEmail} onBlur={checkBtn} labelName='Email' placeholder='rkina@mail.ru' />
+                                        <InputFormWithFetch
+                                            set={props.setLogin}
+                                            onBlur={checkBtn}
+                                            labelName={t("loginPage.login")}
+                                            placeholder='rkina7' />
+                                        <InputFormWithFetch
+                                            set={props.setEmail}
+                                            onBlur={checkBtn}
+                                            labelName={t("loginPage.email")}
+                                            placeholder='rkina@mail.ru' />
                                     </Row>
                                     <Row>
                                         <InputForm
-                                            set={props.setLastName} onBlur={checkBtn} labelName='Last name'
-                                            name='lastName' placeholder='Ng' type='text' feedback='Only symbols are required'
+                                            set={props.setLastName}
+                                            onBlur={checkBtn}
+                                            labelName={t("loginPage.lastName")}
+                                            name='lastName'
+                                            placeholder='Ng'
+                                            type='text'
+                                            feedback='Only symbols are required'
                                         />
 
                                         <InputForm
-                                            set={props.setFirstName} onBlur={checkBtn} labelName='First name'
-                                            name='firstName' placeholder='Duong' type='text' feedback='Only symbols are required'
+                                            set={props.setFirstName}
+                                            onBlur={checkBtn}
+                                            labelName={t("loginPage.firstName")}
+                                            name='firstName'
+                                            placeholder='Duong'
+                                            type='text'
+                                            feedback='Only symbols are required'
                                         />
                                     </Row>
-                                    <Password setPass={props.setPassword} onBlur={checkBtn} />
-                                    <Button className="login-btn" color="secondary" type="submit" disabled={isActiveBtn} onClick={handleSubmit} onBlur={checkBtn} block>Sign Up</Button>
+                                    <Password
+                                        setPass={props.setPassword}
+                                        onBlur={checkBtn}
+                                        labelNamePass={t("loginPage.password")}
+                                        labelNameRePass={t("loginPage.repassword")} />
+                                    <Button
+                                        className="login-btn"
+                                        color="secondary"
+                                        type="submit"
+                                        disabled={isActiveBtn}
+                                        onClick={handleSubmit}
+                                        onBlur={checkBtn}
+                                        block>
+                                        {t("loginPage.signUp")}
+                                    </Button>
                                     <Col className="login-btn__link">
                                         <div className="dropdown-divider"></div>
-                                        <NavLink href='/login' >Back</NavLink>
+                                        <NavLink href='/login'>{t("loginPage.back")}</NavLink>
                                     </Col>
                                 </CardBody>
                             </Card>
@@ -256,7 +287,7 @@ const Register = (props) => {
                     </Row>
                 </Container>
             </section>
-        )
+        );
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Register));

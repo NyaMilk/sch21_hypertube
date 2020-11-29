@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button, Col, Container, Input, Row, Card, CardBody, Label, NavLink } from 'reactstrap';
 import Info from './Info';
 import { request } from '../util/http';
+import { useTranslation } from "react-i18next";
 
 const Remind = () => {
     const [email, setEmail] = useState('');
@@ -22,6 +23,8 @@ const Remind = () => {
             })
     }
 
+    const { t } = useTranslation();
+
     return (
         <section className="login">
             <Container>
@@ -35,16 +38,19 @@ const Remind = () => {
                                 }
                                 <Col>
                                     <Label className="font-profile-head">
-                                        Enter your email address to receive a secured link
-                                    <Input onChange={(e) => setEmail(e.target.value)} />
+                                        {t("loginPage.reset")}
+                                        <Input onChange={(e) => setEmail(e.target.value)} />
                                     </Label>
                                 </Col>
                                 <Col>
-                                    <Button className="login-btn" onClick={remind} color='secondary'>Recovery</Button>
+                                    <Button
+                                        className="login-btn"
+                                        onClick={remind}
+                                        color='secondary'>{t("loginPage.send")}</Button>
                                 </Col>
                                 <Col className="login-btn__link">
                                     <div className="dropdown-divider"></div>
-                                    <NavLink href='/login' >Back</NavLink>
+                                    <NavLink href='/login' >{t("loginPage.back")}</NavLink>
                                 </Col>
                             </CardBody>
                         </Card>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Card, CardBody, Container, Row, Col, Button, FormGroup, Label, Input } from 'reactstrap';
@@ -8,6 +8,8 @@ import { fetchLogin, setLogin, setPassword } from '../redux/login/ActionCreators
 import logo_42 from '../img/42_logo.svg';
 import logo_git from '../img/git_logo.svg';
 
+import { useTranslation } from "react-i18next";
+
 const mapStateToProps = (state) => {
     return {
         login: state.login
@@ -15,18 +17,19 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    // fetchLogin: (login, password) => dispatch(fetchLogin(login, password)),
+    fetchLogin: (login, password) => dispatch(fetchLogin(login, password)),
     setLogin: (login) => dispatch(setLogin(login)),
     setPassword: (password) => dispatch(setPassword(password))
 });
 
 const InputForm = (props) => {
-    const { name, type, set } = props;
+    const { name, text, type, set } = props;
 
     return (
         <Col>
             <FormGroup>
-                <Label className="font-profile-head">{name}
+                <Label className="font-profile-head">
+                    {text}
                     <Input
                         type={type}
                         name={name}
@@ -40,13 +43,39 @@ const InputForm = (props) => {
 }
 
 const Login = (props) => {
-    const { setLogin, setPassword } = props;
+    const { t } = useTranslation();
+
+    const names = ["github", "intra"];
+    const [login, setLogin] = useState();
+    const [password, setPassword] = useState();
 
     const handle = (e) => {
-        // request(`http://localhost:5000/`)
-        //     .then(res => res.json())
-        //     .then((data) => console.log(data));
-        window.open(`http://localhost:5000/api/auth/${e.target.name}`, "_self");
+        console.log(e.target.name);
+        if (names.includes(e.target.name))
+            window.open(`http://localhost:5000/api/auth/${e.target.name}`, "_self");
+    }
+
+    const submit = () => {
+        const data = new URLSearchParams({
+            'username': login,
+            'password': password
+        })
+
+        console.log(data);
+
+        // request(`http://localhost:5000/api/auth/test/`, data, 'POST');
+
+        // axios.post(`http://localhost:5000/api/auth/test?username=${login}&password=${password}`)
+        fetch('/api/auth/test', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                'username': login,
+                'password': password
+            })
+        }).then(res => { console.log(res); });
     }
 
     return (
@@ -56,25 +85,24 @@ const Login = (props) => {
                     <Col md={6} className="m-auto">
                         <Card className="mb-4 shadow-sm">
                             <CardBody>
-                                <InputForm name="Login" type="text" set={setLogin} />
-                                <InputForm name="Password" type="password" set={setPassword} />
+                                <InputForm name="Login" text={t("loginPage.login")} type="text" set={setLogin} />
+                                <InputForm name="Password" text={t("loginPage.password")} type="password" set={setPassword} />
 
                                 <Col>
-                                    <Button className="login-btn">Sign in</Button>
+                                    <Button className="login-btn" onClick={submit}>{t("loginPage.signIn")}</Button>
                                 </Col>
                                 <div className="d-flex justify-content-center align-items-center">
-
                                     <Button className="login-btn__aside" onClick={handle} name="github">
-                                        <img src={logo_git} width="27" alt="GitHub" />
+                                        <img src={logo_git} width="27" alt="GitHub" name={names[0]} />
                                     </Button>
                                     <Button className="login-btn__aside" onClick={handle} name="intra">
-                                        <img src={logo_42} width="35" alt="Intra 42" />
+                                        <img src={logo_42} width="35" alt="Intra 42" name={names[1]} />
                                     </Button>
                                 </div>
                                 <Col className="login-btn__link">
                                     <div className="dropdown-divider"></div>
-                                    <NavLink href='/register' >Newbee? Sign up</NavLink>
-                                    <NavLink href='/remind' >Forgot password? Remind</NavLink>
+                                    <NavLink href='/register'>{t("loginPage.register")}</NavLink>
+                                    <NavLink href='/remind'>{t("loginPage.remind")}</NavLink>
                                 </Col>
                             </CardBody>
                         </Card>

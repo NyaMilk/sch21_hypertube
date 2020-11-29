@@ -6,6 +6,7 @@ import { Container, Button, Input, Col, Label, Card, CardBody } from 'reactstrap
 // import Button from 'reactstrap/lib/Button';
 import FormFeedback from 'reactstrap/lib/FormFeedback';
 import Info from './Info';
+import { useTranslation } from "react-i18next";
 
 function InputForm(props) {
     const [isValid, toggleValid] = useState('');
@@ -82,6 +83,7 @@ const Restore = () => {
             .then((res) => setMsg(res.message));
     }
 
+    const { t } = useTranslation();
     return (
         <section className="login">
             <Container>
@@ -92,10 +94,26 @@ const Restore = () => {
                                 msg &&
                                 <Info message={msg} />
                             }
-                            <InputForm name='newPass' label='New password' feedback='Too weak pass' set={setPass} checkBtn={checkBtn} />
-                            <InputForm name='rePass' label='Repeat password' feedback='Too weak pass' new={newPass} checkBtn={checkBtn} />
+                            <InputForm
+                                name='newPass'
+                                label={t("loginPage.password")}
+                                feedback='Too weak pass'
+                                set={setPass}
+                                checkBtn={checkBtn} />
+                            <InputForm
+                                name='rePass'
+                                label={t("loginPage.repassword")}
+                                feedback='Too weak pass'
+                                new={newPass}
+                                checkBtn={checkBtn} />
                             <Col>
-                                <Button className="login-btn" color='secondary' disabled={isActive} onClick={handleBtn} >Change</Button>
+                                <Button
+                                    className="login-btn"
+                                    color='secondary'
+                                    disabled={isActive}
+                                    onClick={handleBtn}>
+                                    {t("loginPage.send")}
+                                </Button>
                             </Col>
                         </CardBody>
                     </Card>
