@@ -5,10 +5,10 @@ import { connect } from 'react-redux';
 import { useTranslation } from "react-i18next";
 import { setLogin, setFirstName, setLastName, setEmail, setPassword, setRepassword, fetchRegister } from '../redux/register/ActionCreators';
 import { NavLink, Card, CardBody, Row, Col, FormGroup, Label, Input, FormFeedback, Button, Container, Alert } from 'reactstrap';
+import CONFIG from '../util/const';
 import { isValidInput, isValidPassword } from '../util/check';
 import { request } from '../util/http';
 import { Loading } from './Loading';
-import CONFIG from '../util/const';
 
 const mapStateToProps = (state) => {
     return {
@@ -28,16 +28,33 @@ const mapDispatchToProps = (dispatch) => ({
 
 function InputForm(props) {
     const [isValid, toggleValid] = useState('');
+    const [feedback, setFeedback] = useState('Oopsy');
 
-    const nameChange = (e) => {
+    const checkExist = (name, value) => {
+        request(`${CONFIG.API_URL}/api/register/check/${name}/${value}`)
+            .then(res => res.json())
+            .then(
+                result => {
+                    if (result.success === true) {
+                        toggleValid('is-invalid');
+                        setFeedback(props.feedback[0])
+                    }
+                }
+            )
+    }
+
+    const inputChange = (e) => {
         const { name, value } = e.target;
-
-        if (isValidInput(name, value)) {
+        if (isValidInput(name, value) === true) {
             toggleValid('is-valid');
+            if (name === 'login' || name === 'email')
+                checkExist(name, value);
             props.set(value);
         }
-        else
+        else {
             toggleValid('is-invalid');
+            (name === 'login' || name === 'email') ? setFeedback(props.feedback[1]) : setFeedback(props.feedback);
+        }
     };
 
     return (
@@ -48,65 +65,11 @@ function InputForm(props) {
                     <Input
                         type={props.type}
                         name={props.name}
-                        onChange={nameChange}
-                        onBlur={props.onBlur}
-                        placeholder={props.placeholder}
-                        required
-                        className={isValid}
-                    />
-                    <FormFeedback>{props.feedback}</FormFeedback>
-                </Label>
-            </FormGroup>
-        </Col>
-    )
-}
-
-function InputFormWithFetch(props) {
-    const [isValid, toggleValid] = useState('');
-    const [feedback, setFeedback] = useState('Oopsy');
-
-    const checkExist = (name, value) => {
-        request(`${CONFIG.API_URL}/api/register/check/${name}/${value}`)
-            .then(res => res.json())
-            .then(
-                result => {
-                    if (result.success === true) {
-                        toggleValid('is-invalid');
-                        // здесь второй язык in8
-                        setFeedback(`${name} is taken`)
-                    }
-                }
-            )
-    }
-
-    const inputChange = (e) => {
-        const { name, value } = e.target;
-        if (isValidInput(name, value) === true && value.length > 2) {
-            toggleValid('is-valid');
-            checkExist(name, value);
-            props.set(value);
-        }
-        else {
-            toggleValid('is-invalid');
-            // здесь второй язык in8
-            setFeedback(`${name} is invalid`)
-        }
-    };
-
-    return (
-        <Col sm="6">
-            <FormGroup>
-                <Label className="font-profile-head">
-                    {props.labelName}
-                    <Input
-                        type="text"
-                        name={props.name}
                         onChange={inputChange}
                         onBlur={() => props.onBlur()}
                         placeholder={props.placeholder}
-                        required
-                        feedback={feedback}
                         className={isValid}
+                        required
                     />
                     <FormFeedback>{feedback}</FormFeedback>
                 </Label>
@@ -125,14 +88,13 @@ function Password(props) {
         if (name === 'password') {
             if (isValidPassword(value) === true) {
                 toggleValidPass('is-valid');
-                props.setPass(value);
+                props.set(value);
             }
             else
                 toggleValidPass('is-invalid');
         }
         else {
             const password = document.querySelector('input[name="password"]').value;
-
             (password === value) ? toggleValidRepass('is-valid') : toggleValidRepass('is-invalid');
         }
     };
@@ -144,16 +106,15 @@ function Password(props) {
                     <Label className="font-profile-head">
                         {props.labelNamePass}
                         <Input
-                            id="1"
                             type="password"
                             name='password'
                             onChange={passChange}
                             onBlur={() => props.onBlur()}
                             placeholder="Str0ngPa55%"
-                            required
                             className={isValidPass}
+                            required
                         />
-                        <FormFeedback>Too weak password. 8 symbols is required</FormFeedback>
+                        <FormFeedback>{props.feedback[0]}</FormFeedback>
                     </Label>
                 </FormGroup>
             </Col>
@@ -167,10 +128,10 @@ function Password(props) {
                             onChange={passChange}
                             onBlur={() => props.onBlur()}
                             placeholder="Str0ngPa55%"
-                            required
                             className={isValidRepass}
+                            required
                         />
-                        <FormFeedback>Password doesn't match</FormFeedback>
+                        <FormFeedback>{props.feedback[1]}</FormFeedback>
                     </Label>
                 </FormGroup>
             </Col>
@@ -226,47 +187,47 @@ const Register = (props) => {
                             <Card className="mb-4 shadow-sm">
                                 <CardBody>
                                     <Row>
-                                        <InputFormWithFetch
+                                        <InputForm
                                             set={props.setLogin}
                                             onBlur={checkBtn}
                                             labelName={t("loginPage.login")}
+                                            feedback={[t("inputMsg.login.taken"), t("inputMsg.login.invalid")]}
                                             name='login'
-                                            placeholder='rkina7' />
-                                        <InputFormWithFetch
+                                            placeholder='rkina7'
+                                            type='text' />
+                                        <InputForm
                                             set={props.setEmail}
                                             onBlur={checkBtn}
                                             labelName={t("loginPage.email")}
+                                            feedback={[t("inputMsg.email.taken"), t("inputMsg.email.invalid")]}
                                             name='email'
-                                            placeholder='rkina@mail.ru' />
+                                            placeholder='rkina@mail.ru'
+                                            type='email' />
                                     </Row>
                                     <Row>
                                         <InputForm
                                             set={props.setLastName}
                                             onBlur={checkBtn}
                                             labelName={t("loginPage.lastName")}
+                                            feedback={t("inputMsg.text")}
                                             name='lastName'
                                             placeholder='Ng'
-                                            type='text'
-                                            // здесь второй язык in8
-                                            feedback='Only symbols are required'
-                                        />
-
+                                            type='text' />
                                         <InputForm
                                             set={props.setFirstName}
                                             onBlur={checkBtn}
                                             labelName={t("loginPage.firstName")}
+                                            feedback={t("inputMsg.text")}
                                             name='firstName'
                                             placeholder='Duong'
-                                            type='text'
-                                            // здесь второй язык in8
-                                            feedback='Only symbols are required'
-                                        />
+                                            type='text' />
                                     </Row>
                                     <Password
-                                        setPass={props.setPassword}
+                                        set={props.setPassword}
                                         onBlur={checkBtn}
                                         labelNamePass={t("loginPage.password")}
-                                        labelNameRePass={t("loginPage.repassword")} />
+                                        labelNameRePass={t("loginPage.repassword")}
+                                        feedback={[t("inputMsg.password.weak"), t("inputMsg.password.match")]} />
                                     <Button
                                         className="login-btn"
                                         color="secondary"

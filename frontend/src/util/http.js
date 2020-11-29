@@ -1,13 +1,13 @@
 const request = (url, data = [], method = 'GET', type = '') => {
     const requestOptions = {
-        method: method,
-        credentials: 'include'
+        method: method
+        // credentials: 'include'
     };
 
     if (type !== 'image')
         requestOptions.headers = {
-            'Content-Type': 'application/json',
-            "Access-Control-Allow-Credentials": true
+            'Content-Type': 'application/json'
+            // "Access-Control-Allow-Credentials": true
         };
     else
         requestOptions.body = data;

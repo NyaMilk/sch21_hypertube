@@ -73,6 +73,7 @@ export const setRepassword = (pass) => (dispatch) => {
 export const fetchRegister = (data) => (dispatch) => {
     dispatch(formLoading());
 
+    console.log('da', data);
     return request('/api/register', data, 'POST')
         .then(res => res.json())
         .then(result => {

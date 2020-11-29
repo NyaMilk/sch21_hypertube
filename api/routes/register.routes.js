@@ -105,6 +105,7 @@ router.post('/check/pass', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
+        console.log(req.body);
         const { userName, lastName, firstName, email, password } = req.body;
         const time = new Date();
         const saltRounds = 10;
@@ -132,21 +133,21 @@ router.post('/', async (req, res) => {
                         })
                         .catch(() => {
                             res.status(200).json({
-                                message: "Ooops! User was not added! Try again1",
+                                message: "Ooops! User was not added! Try again",
                                 success: false
                             })
                         })
                 }
             })
-            .catch(() => {
+            .catch((e) => {
                 res.status(200).json({
-                    message: "Ooops! User was not added! Try again2",
+                    message: "Ooops! User was not added! Try again",
                     success: false
                 })
             })
     } catch (e) {
         res.status(200).json({
-            message: "Ooops! User was not added! Try again3" + e.message,
+            message: "Ooops! User was not added! Try again",
             success: false
         })
     }
