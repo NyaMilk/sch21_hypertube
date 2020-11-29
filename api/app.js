@@ -7,6 +7,7 @@ const app = express();
 const cookieSession = require("cookie-session");
 const cookieParser = require("cookie-parser");
 const authRoutes = require('./routes/oauth.routes');
+const registerRoutes = require('./routes/register.routes');
 // const torrentRoutes = require('./routes/torrent.routes');
 
 app.use(
@@ -30,6 +31,7 @@ app.use(
 );
 
 app.use('/api/auth', authRoutes);
+app.use('/api/register', registerRoutes);
 // app.use('/api/torrent', torrentRoutes);
 
 app.listen(keys.apiPort, () => console.log('App on ' + keys.apiPort));

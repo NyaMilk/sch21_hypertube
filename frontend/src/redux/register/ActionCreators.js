@@ -1,5 +1,6 @@
 import * as ActionTypes from './ActionTypes';
 import { request } from '../../util/http';
+import CONFIG from '../../util/const';
 
 export const formLoading = () => ({
     type: ActionTypes.USER_FORM_LOADING
@@ -75,33 +76,7 @@ export const fetchRegister = (data) => (dispatch) => {
     return request('/api/register', data, 'POST')
         .then(res => res.json())
         .then(result => {
-            if (result.success === true) {
-                const login = result.login;
-                console.log(result, login);
-                request('https://extreme-ip-lookup.com/json/')
-                    .then(res => res.json())
-                    .then((result) => {
-                        const data = {
-                            country: result.country,
-                            city: result.city,
-                            longitude: result.lon,
-                            latitude: result.lat
-                        }
-                        request(`/api/register/location/${login}`, data, 'POST')
-                            .then(res => res.json())
-                            .then(result => {
-                                console.log(result);
-                                if (result.success)
-                                    dispatch(formSubmit());
-                                else
-                                    dispatch(formFailed(result.message))
-                            })
-                            .catch(error => dispatch(formFailed(error.message)));
-                    })
-            }
-            else {
-                dispatch(formFailed(result.message))
-            }
+            (result.success === true) ? dispatch(formSubmit()) : dispatch(formFailed(result.message));
         })
         .catch(error => dispatch(formFailed(error.message)));
 }
