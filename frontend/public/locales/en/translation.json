@@ -1,18 +1,33 @@
 {
     "loginPage": {
-      "login": "Login",
-      "password": "Password",
-      "repassword": "Re-Password",
-      "email": "Email",
-      "firstName": "First name",
-      "lastName": "Last name",
-      "reset": "Enter your email address and we'll send you a link to reset your password",
-      "signIn": "Sign in",
-      "signUp": "Sign Up",
-      "recovery": "Recovery",
-      "send": "Send",
-      "register": "Newbee?",
-      "remind": "Forgot password?",
-      "back": "Back"
-    }
+		"login": "Login",
+		"password": "Password",
+		"repassword": "Re-Password",
+		"email": "Email",
+		"firstName": "First name",
+		"lastName": "Last name",
+		"reset": "Enter your email address and we'll send you a link to reset your password",
+		"signIn": "Sign in",
+		"signUp": "Sign Up",
+		"recovery": "Recovery",
+		"send": "Send",
+		"register": "Newbee?",
+		"remind": "Forgot password?",
+		"back": "Back"
+	},
+	"inputMsg": {
+		"login": {
+			"taken": "Login is taken",
+			"invalid": "Login is invalid"
+		},
+		"email": {
+			"taken": "Email is taken",
+			"invalid": "Email is invalid"
+		},
+		"password": {
+			"weak": "Too weak password. 8 symbols is required",
+			"match": "Password doesn't match"
+		},
+		"text": "Only symbols are required"
+	}
 }
