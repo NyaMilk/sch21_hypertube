@@ -1,46 +1,65 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { request } from '../util/http';
-import { isValidInput } from '../util/check';
-import { Container, Button, Input, Col, Label, Card, CardBody } from 'reactstrap';
-// import Button from 'reactstrap/lib/Button';
-import FormFeedback from 'reactstrap/lib/FormFeedback';
+import { isValidPassword } from '../util/check';
+import { Container, Button, Input, Row, Col, Label, Card, CardBody, FormFeedback, FormGroup } from 'reactstrap'
 import Info from './Info';
 import { useTranslation } from "react-i18next";
 
 function InputForm(props) {
-    const [isValid, toggleValid] = useState('');
-    const [newFeedback, setFeedback] = useState(null);
+    const [isValidPass, toggleValidPass] = useState('');
+    const [isValidRepass, toggleValidRepass] = useState('');
 
     const inputChange = (e) => {
         const { name, value } = e.target;
 
-        if (isValidInput(name, value)) {
-            toggleValid('is-valid');
-            if (name === 'rePass' && props.new !== value) {
-                toggleValid('is-invalid');
-                setFeedback('Password does not match');
+        if (name === 'password' || name === 'repassword') {
+            if (isValidPassword(value) === true) {
+                toggleValidPass('is-valid');
+                if (name === 'password')
+                    props.set(value);
             }
-            if (name === 'newPass')
-                props.set(value);
-        }
-        else {
-            toggleValid('is-invalid');
+            else
+                toggleValidPass('is-invalid');
+
+            const password = document.querySelector('input[name="password"]').value;
+            const repassword = document.querySelector('input[name="repassword"]').value;
+            (password === repassword) ? toggleValidRepass('is-valid') : toggleValidRepass('is-invalid');
         }
     };
 
     return (
         <Col>
-            <Label className="font-profile-head">{props.label}
-                <Input
-                    type='password'
-                    name={props.name}
-                    onChange={inputChange}
-                    onBlur={props.checkBtn}
-                    className={isValid}
-                />
-                <FormFeedback>{newFeedback || props.feedback}</FormFeedback>
-            </Label>
+            <FormGroup>
+                <Label className="font-profile-head">
+                    {props.labelNamePass}
+                    <Input
+                        type="password"
+                        name='password'
+                        onChange={inputChange}
+                        onBlur={props.checkBtn}
+                        placeholder="Str0ngPa55%"
+                        className={isValidPass}
+                        required
+                    />
+                    <FormFeedback>{props.feedback[0]}</FormFeedback>
+                </Label>
+            </FormGroup>
+            <FormGroup>
+                <Label className="font-profile-head">
+                    {props.labelNameRePass}
+                    <Input
+                        type="password"
+                        name='repassword'
+                        onChange={inputChange}
+                        onBlur={props.checkBtn}
+                        placeholder="Str0ngPa55%"
+                        className={isValidRepass}
+                        required
+                    />
+                    <FormFeedback>{props.feedback[1]}</FormFeedback>
+                </Label>
+            </FormGroup>
         </Col>
     );
 }
@@ -95,17 +114,11 @@ const Restore = () => {
                                 <Info message={msg} />
                             }
                             <InputForm
-                                name='newPass'
-                                label={t("loginPage.password")}
-                                feedback='Too weak pass'
                                 set={setPass}
-                                checkBtn={checkBtn} />
-                            <InputForm
-                                name='rePass'
-                                label={t("loginPage.repassword")}
-                                feedback='Too weak pass'
-                                new={newPass}
-                                checkBtn={checkBtn} />
+                                checkBtn={checkBtn}
+                                labelNamePass={t("loginPage.password")}
+                                labelNameRePass={t("loginPage.repassword")}
+                                feedback={[t("inputMsg.password.weak"), t("inputMsg.password.match")]} />
                             <Col>
                                 <Button
                                     className="login-btn"
