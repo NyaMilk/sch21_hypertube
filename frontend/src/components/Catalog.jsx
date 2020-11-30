@@ -16,12 +16,12 @@ const Catalog = (props) => {
             });
     }, [setLogged])
 
-    if (!isLogged) {
-        return (
-            <Loading />
-        );
-    }
-    else if (isLogged)
+    // if (!isLogged) {
+    //     return (
+    //         <Loading />
+    //     );
+    // }
+    // else if (isLogged)
         return (
             <section className="login">
                 <Container>
