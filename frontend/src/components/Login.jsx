@@ -67,7 +67,7 @@ const Login = (props) => {
         // request(`http://localhost:5000/api/auth/test/`, data, 'POST');
 
         // axios.post(`http://localhost:5000/api/auth/test?username=${login}&password=${password}`)
-        fetch('${CONFIG.API_URL}/api/auth/test', {
+        fetch(`${CONFIG.API_URL}/api/auth/local`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -76,7 +76,9 @@ const Login = (props) => {
                 'username': login,
                 'password': password
             })
-        }).then(res => { console.log(res); });
+        })
+        .then(res => res.json())
+        .then(data => console.log(data))
     }
 
     return (
