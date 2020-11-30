@@ -36,21 +36,22 @@ router.get('/check/email/:email', async (req, res) => {
 
 router.get('/check/login/:login', async (req, res) => {
     try {
-        const login = [req.params.login];
+        const login = req.params.login;
 
         getLogin(login)
             .then(data => {
+                console.log(data);
                 if (data.length > 0)
                     res.status(200).json({
                         success: true
                     })
                 else
                     res.status(200).json({
-                        message: "Ooops! Cannot check login. Try again",
+                        message: "Username is available",
                         success: false
                     })
             })
-            .catch(() => {
+            .catch((e) => {
                 res.status(200).json({
                     message: "Ooops! Cannot check login. Try again",
                     success: false
@@ -58,7 +59,7 @@ router.get('/check/login/:login', async (req, res) => {
             })
     } catch (e) {
         res.status(200).json({
-            message: "Ooops! Cannot check login. Try again",
+            message: "Ooops! Cannot check login. Try again3",
             success: false
         })
     }
@@ -68,7 +69,7 @@ router.post('/check/pass', async (req, res) => {
     try {
         const { login, password } = req.body;
 
-        getOnlyPass([login])
+        getOnlyPass(login)
             .then(data => {
                 const len = data.length;
                 let check;
@@ -89,7 +90,7 @@ router.post('/check/pass', async (req, res) => {
                     })
                 }
             })
-            .catch(e => {
+            .catch(() => {
                 res.status(200).json({
                     message: "Ooops! Cannot check password. Try again",
                     success: false
@@ -105,13 +106,11 @@ router.post('/check/pass', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        console.log(req.body);
         const { userName, lastName, firstName, email, password } = req.body;
         const time = new Date();
         const saltRounds = 10;
         const salt = bcrypt.genSaltSync(saltRounds);
         const hash = bcrypt.hashSync(password, salt);
-        console.log(userName, firstName, lastName, email, hash);
 
         sign(userName, firstName, lastName, email, hash)
             .then(data => {
@@ -119,7 +118,7 @@ router.post('/', async (req, res) => {
                     const login = data.username;
                     const confirmHash = bcrypt.hashSync(login + time, salt).replace(/\//g, "slash");
 
-                    addConfirmHash([confirmHash, login])
+                    addConfirmHash(confirmHash, login)
                         .then(() => {
                             sendMail(email, 'Confirmation',
                                 'You have 1 day to confirm your account',
@@ -139,7 +138,7 @@ router.post('/', async (req, res) => {
                         })
                 }
             })
-            .catch((e) => {
+            .catch(() => {
                 res.status(200).json({
                     message: "Ooops! User was not added! Try again",
                     success: false
@@ -157,15 +156,14 @@ router.post('/confirm', async (req, res) => {
     try {
         const { nickname, hash } = req.body;
         const time = new Date();
-
-        getConfirmHash([nickname])
+        getConfirmHash(nickname)
             .then((data) => {
                 if (data[0].confirmhash) {
                     const trueHash = data[0].confirmhash;
-                    const oldTime = data[0].created_at_user;
+                    const oldTime = data[0].createdat;
 
                     if (time.getDate() !== oldTime.getDate() || hash !== trueHash) {
-                        userDel([nickname])
+                        userDel(nickname)
                             .then(() => {
                                 res.status(200).json({
                                     message: "Your confirm link is time out",
@@ -180,7 +178,7 @@ router.post('/confirm', async (req, res) => {
                             })
                     }
                     else {
-                        confirmUser([nickname])
+                        confirmUser(nickname)
                             .then(() => {
                                 res.status(200).json({
                                     message: "Cool! Welcome to",

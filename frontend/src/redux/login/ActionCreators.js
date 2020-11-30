@@ -1,9 +1,5 @@
 import * as ActionTypes from './ActionTypes';
-<<<<<<< HEAD
-// import { request } from '../../util/http';
-=======
 import { request } from '../../util/http';
->>>>>>> mgrass
 
 export const loginOut = () => ({
     type: ActionTypes.LOGIN_OUT

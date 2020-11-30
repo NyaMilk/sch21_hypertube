@@ -15,7 +15,8 @@ export function Main() {
             <Header />
             <Router>
                 <Switch>
-                    <Route path='/login' component={Login} />
+                    <Route exact={true} path='/login' component={Login} />
+                    <Route path='/login/:nickname/:hash' component={Login} />
                     <Route path='/register' component={Register} />
                     <Route exact={true} path='/remind' component={Remind} />
                     <Route path='/remind/:email/:hash' component={Restore} />

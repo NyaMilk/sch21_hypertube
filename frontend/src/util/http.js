@@ -1,19 +1,26 @@
 const request = (url, data = [], method = 'GET', type = '') => {
     const requestOptions = {
-        method: method
-        // credentials: 'include'
+        method: method,
+        credentials: 'include'
     };
 
-    if (type !== 'image')
+    if (type === 'urlencoded')
         requestOptions.headers = {
-            'Content-Type': 'application/json'
-            // "Access-Control-Allow-Credentials": true
+            'Content-Type': 'application/x-www-form-urlencoded'
         };
-    else
-        requestOptions.body = data;
 
-    if (method === 'POST' && type !== 'image')
-        requestOptions.body = JSON.stringify(data);
+    if (type !== 'image' && type !== 'urlencoded')
+        requestOptions.headers = {
+            'Content-Type': 'application/json',
+            "Access-Control-Allow-Credentials": true
+        };
+
+    if (method === 'POST') {
+        if (type !== 'image' && type !== 'urlencoded')
+            requestOptions.body = JSON.stringify(data);
+        else
+            requestOptions.body = data;
+    }
 
     return fetch(url, requestOptions)
 }

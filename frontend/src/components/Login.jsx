@@ -1,27 +1,27 @@
 import React, { useState } from 'react';
-import { withRouter } from 'react-router-dom';
+import { useParams, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Card, CardBody, Container, Row, Col, Button, FormGroup, Label, Input } from 'reactstrap';
-import { NavLink } from 'reactstrap';
+import { Card, CardBody, Container, Row, Col, Button, FormGroup, Label, Input, NavLink } from 'reactstrap';
 import { request } from '../util/http';
-// import { fetchLogin, setLogin, setPassword } from '../redux/login/ActionCreators';
+import Info from './Info';
+import { fetchLogin, setLogin, setPassword } from '../redux/login/ActionCreators';
 import logo_42 from '../img/42_logo.svg';
 import logo_git from '../img/git_logo.svg';
 import { useTranslation } from "react-i18next";
 
 import CONFIG from '../util/const';
 
-// const mapStateToProps = (state) => {
-//     return {
-//         login: state.login
-//     }
-// }
+const mapStateToProps = (state) => {
+    return {
+        login: state.login
+    }
+}
 
-// const mapDispatchToProps = (dispatch) => ({
-//     fetchLogin: (login, password) => dispatch(fetchLogin(login, password)),
-//     setLogin: (login) => dispatch(setLogin(login)),
-//     setPassword: (password) => dispatch(setPassword(password))
-// });
+const mapDispatchToProps = (dispatch) => ({
+    fetchLogin: (login, password) => dispatch(fetchLogin(login, password)),
+    setLogin: (login) => dispatch(setLogin(login)),
+    setPassword: (password) => dispatch(setPassword(password))
+});
 
 const InputForm = (props) => {
     const { name, text, type, set } = props;
@@ -45,13 +45,13 @@ const InputForm = (props) => {
 
 const Login = (props) => {
     const { t } = useTranslation();
-
+    const { nickname, hash } = useParams();
+    const [msg, setMsg] = useState(null);
     const names = ["github", "intra"];
     const [login, setLogin] = useState();
     const [password, setPassword] = useState();
-
+    
     const handle = (e) => {
-        console.log(e.target.name);
         if (names.includes(e.target.name))
             window.open(`${CONFIG.API_URL}/api/auth/${e.target.name}`, "_self");
     }
@@ -62,23 +62,26 @@ const Login = (props) => {
             'password': password
         })
 
-        console.log(data);
+        request(`${CONFIG.API_URL}/api/auth/local`, data, 'POST', 'urlencoded')
+            .then(res => res.json())
+            .then(data => console.log(data))
+    }
 
-        // request(`http://localhost:5000/api/auth/test/`, data, 'POST');
+    if (nickname && hash) {
+        const data = {
+            nickname: nickname,
+            hash: hash
+        };
 
-        // axios.post(`http://localhost:5000/api/auth/test?username=${login}&password=${password}`)
-        fetch(`${CONFIG.API_URL}/api/auth/local`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({
-                'username': login,
-                'password': password
+        console.log('fff1');
+        request('/api/register/confirm', data, "POST")
+            .then(res => res.json())
+            .then((result) => {
+                setMsg(result.msg)
             })
-        })
-        .then(res => res.json())
-        .then(data => console.log(data))
+            .catch((e) => {
+                setMsg(e.message)
+            })
     }
 
     return (
@@ -88,6 +91,10 @@ const Login = (props) => {
                     <Col md={6} className="m-auto">
                         <Card className="mb-4 shadow-sm">
                             <CardBody>
+                                {
+                                    msg &&
+                                    <Info message={msg} />
+                                }
                                 <InputForm name="Login" text={t("loginPage.login")} type="text" set={setLogin} />
                                 <InputForm name="Password" text={t("loginPage.password")} type="password" set={setPassword} />
 
@@ -116,5 +123,5 @@ const Login = (props) => {
     )
 }
 
-export default Login;
-// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));
+// export default Login;
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));

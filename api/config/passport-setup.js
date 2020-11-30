@@ -60,7 +60,6 @@ passport.use(new SchoolStrategy({
 
     findUser(userName, 'school42')
       .then(data => {
-        console.log(data);
         if (!data[0]) {
           addFullUser(userName, email, lastName, firstName, 'school42')
             .then(data => {
@@ -84,7 +83,6 @@ passport.use(new LocalStrategy(
     findUser(username, 'hypert')
       .then(data => {
         let check;
-        console.log(data);
 
         if (data[0]) {
           check = bcrypt.compareSync(password, data[0].password);
@@ -97,6 +95,5 @@ passport.use(new LocalStrategy(
         return done(null, 'Ooopsy! Cannot auth. Try again');
       });
 
-    console.log(username, password);
   }
 ));

@@ -12,7 +12,7 @@ const sign = (username, firstname, lastname, email, password) => {
 const getOnlyPass = (username) => {
     const sql =
         `SELECT password FROM Users 
-    WHERE nickName=$1 AND provider = 'hypert'`;
+    WHERE userName=$1 AND provider = 'hypert'`;
 
     return db.any(sql, [username]);
 }
