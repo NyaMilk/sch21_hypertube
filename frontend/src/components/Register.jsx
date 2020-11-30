@@ -37,7 +37,7 @@ function InputForm(props) {
                 result => {
                     if (result.success === true) {
                         toggleValid('is-invalid');
-                        setFeedback(props.feedback[0])
+                        setFeedback(props.feedback[0]);
                     }
                 }
             )
@@ -45,15 +45,17 @@ function InputForm(props) {
 
     const inputChange = (e) => {
         const { name, value } = e.target;
-        if (isValidInput(name, value) === true) {
-            toggleValid('is-valid');
-            if (name === 'login' || name === 'email')
-                checkExist(name, value);
-            props.set(value);
-        }
-        else {
-            toggleValid('is-invalid');
-            (name === 'login' || name === 'email') ? setFeedback(props.feedback[1]) : setFeedback(props.feedback);
+        if (name === 'login' || name === 'email' || name === 'lastName' | name === 'firstName') {
+            if (isValidInput(name, value) === true) {
+                toggleValid('is-valid');
+                if (name === 'login' || name === 'email')
+                    checkExist(name, value);
+                props.set(value);
+            }
+            else {
+                toggleValid('is-invalid');
+                (name === 'login' || name === 'email') ? setFeedback(props.feedback[1]) : setFeedback(props.feedback);
+            }
         }
     };
 
@@ -85,17 +87,18 @@ function Password(props) {
     const passChange = (e) => {
         const { name, value } = e.target;
 
-        if (name === 'password') {
+        if (name === 'password' || name === 'repassword') {
             if (isValidPassword(value) === true) {
                 toggleValidPass('is-valid');
-                props.set(value);
+                if (name === 'password')
+                    props.set(value);
             }
             else
                 toggleValidPass('is-invalid');
-        }
-        else {
+
             const password = document.querySelector('input[name="password"]').value;
-            (password === value) ? toggleValidRepass('is-valid') : toggleValidRepass('is-invalid');
+            const repassword = document.querySelector('input[name="repassword"]').value;
+            (password === repassword) ? toggleValidRepass('is-valid') : toggleValidRepass('is-invalid');
         }
     };
 
@@ -206,20 +209,20 @@ const Register = (props) => {
                                     </Row>
                                     <Row>
                                         <InputForm
-                                            set={props.setLastName}
-                                            onBlur={checkBtn}
-                                            labelName={t("loginPage.lastName")}
-                                            feedback={t("inputMsg.text")}
-                                            name='lastName'
-                                            placeholder='Ng'
-                                            type='text' />
-                                        <InputForm
                                             set={props.setFirstName}
                                             onBlur={checkBtn}
                                             labelName={t("loginPage.firstName")}
                                             feedback={t("inputMsg.text")}
                                             name='firstName'
                                             placeholder='Duong'
+                                            type='text' />
+                                        <InputForm
+                                            set={props.setLastName}
+                                            onBlur={checkBtn}
+                                            labelName={t("loginPage.lastName")}
+                                            feedback={t("inputMsg.text")}
+                                            name='lastName'
+                                            placeholder='Ng'
                                             type='text' />
                                     </Row>
                                     <Password
