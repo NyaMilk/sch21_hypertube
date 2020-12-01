@@ -6,8 +6,10 @@ const keys = require("./config/keys");
 const app = express();
 const cookieSession = require("cookie-session");
 const cookieParser = require("cookie-parser");
+const imageRoutes = require('./routes/image.routes');
 const authRoutes = require('./routes/oauth.routes');
 const registerRoutes = require('./routes/register.routes');
+const userRoutes = require('./routes/user.routes');
 // const torrentRoutes = require('./routes/torrent.routes');
 
 app.use(
@@ -31,8 +33,10 @@ app.use(
   })
 );
 
+app.use('/api/image', imageRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/register', registerRoutes);
+app.use('/api/user', userRoutes);
 // app.use('/api/torrent', torrentRoutes);
 
 app.listen(keys.apiPort, () => console.log('App on ' + keys.apiPort));

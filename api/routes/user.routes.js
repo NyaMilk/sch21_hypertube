@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 
 router.get('/profile/:nickname', async (req, res) => {
     try {
-        const nickname = [req.params.nickname];
+        const nickname = req.params.nickname;
 
         getProfile(nickname)
             .then(data => {
@@ -82,3 +82,5 @@ router.post('/profile/edit/:nickname', async (req, res) => {
             })
         })
 })
+
+module.exports = router;

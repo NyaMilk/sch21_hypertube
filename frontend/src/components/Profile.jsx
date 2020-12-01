@@ -129,6 +129,7 @@ const Profile = (props) => {
     const { nickname } = props.match.params;
     const { fetchProfile } = props;
 
+    console.log("profile", props);
     useEffect(() => {
         fetchProfile(nickname);
     }, [nickname]);
@@ -146,18 +147,6 @@ const Profile = (props) => {
     else if (props.profile.errProfile) {
         return (
             <Info />
-        );
-    }
-    else if (props.profile.info != null && props.profile.info.count_reports > 2) {
-
-        return (
-            <section className="page-state">
-                <Container>
-                    <Row>
-                        <Alert color="info">This account has been banned.</Alert>
-                    </Row>
-                </Container>
-            </section>
         );
     }
     else if (props.profile.info != null) {

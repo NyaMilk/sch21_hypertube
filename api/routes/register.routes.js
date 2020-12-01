@@ -37,10 +37,9 @@ router.get('/check/email/:email', async (req, res) => {
 router.get('/check/login/:login', async (req, res) => {
     try {
         const login = req.params.login;
-
+        
         getLogin(login)
             .then(data => {
-                console.log(data);
                 if (data.length > 0)
                     res.status(200).json({
                         success: true
@@ -53,7 +52,7 @@ router.get('/check/login/:login', async (req, res) => {
             })
             .catch((e) => {
                 res.status(200).json({
-                    message: "Ooops! Cannot check login. Try again",
+                    message: "Ooops! Cannot check login. Try again" + e.message,
                     success: false
                 })
             })

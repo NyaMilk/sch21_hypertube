@@ -22,8 +22,7 @@ export function Main() {
                     <Route exact={true} path='/remind' component={Remind} />
                     <Route path='/remind/:email/:hash' component={Restore} />
                     <Route path='/catalog' component={Catalog} />
-                    <Route path='/users' component={Profile} />
-                    {/* <Route path='/users/:nickname' component={Profile} /> */}
+                    <Route exact={true} path='/profile/:nickname' component={Profile} />
                     {/* <Route path='/edit' component={EditProfile} /> */}
                 </Switch>
             </Router>

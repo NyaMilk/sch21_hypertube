@@ -3,7 +3,7 @@ const db = require('../config/psql-setup');
 const getProfile = (nickname) => {
     const sql =
         `SELECT userName, firstName, lastName, email, about, photos
-    FROM Users WHERE nickName=$1`;
+    FROM Users WHERE userName=$1`;
 
     return db.any(sql, [nickname]);
 }
