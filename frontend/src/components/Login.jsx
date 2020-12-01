@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Card, CardBody, Container, Row, Col, Button, FormGroup, Label, Input, NavLink } from 'reactstrap';
 import { request } from '../util/http';
 import { Loading } from './Loading';
 import { Info } from './Info';
-import { fetchLogin} from '../redux/login/ActionCreators';
+import { localAuth, oAuth } from '../redux/login/ActionCreators';
 import logo_42 from '../img/42_logo.svg';
 import logo_git from '../img/git_logo.svg';
 import { useTranslation } from "react-i18next";
@@ -19,7 +19,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    fetchLogin: (username, password) => dispatch(fetchLogin(username, password))
+    localAuth: (username, password) => dispatch(localAuth(username, password)),
 });
 
 const InputForm = (props) => {
@@ -51,11 +51,12 @@ const Login = (props) => {
     const [password, setPassword] = useState();
 
     const handleOauth = (e) => {
-        if (names.includes(e.target.name))
+        if (names.includes(e.target.name)) {
             window.open(`${CONFIG.API_URL}/api/auth/${e.target.name}`, "_self");
+        }
     }
 
-    const submit = () => { props.fetchLogin(login, password) };
+    const submit = () => { props.localAuth(login, password) };
 
     if (nickname && hash) {
         const data = {
@@ -108,5 +109,4 @@ const Login = (props) => {
     )
 }
 
-// export default Login;
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));

@@ -14,6 +14,14 @@ export const loginLoading = () => ({
     type: ActionTypes.LOGIN_LOADING
 });
 
+export const addUser = (username) => ({
+    type: ActionTypes.LOGIN_USER_ADD,
+    username: username
+});
+
+export const setUser = (username) => (dispatch) => {
+    return dispatch(addUser(username))
+}
 export const loginDataAdd = (info) => ({
     type: ActionTypes.LOGIN_DATA_ADD,
     payload: info
@@ -24,9 +32,7 @@ export const loginFailed = (msg) => ({
     payload: msg
 });
 
-
-
-export const fetchLogin = (username, password) => (dispatch) => {
+export const localAuth = (username, password) => (dispatch) => {
     dispatch(loginLoading());
 
     const data = new URLSearchParams({
@@ -46,6 +52,7 @@ export const fetchLogin = (username, password) => (dispatch) => {
         })
         .catch(error => dispatch(loginFailed(error.message)));
 }
+
 
 export const fetchUpdateLogin = (login) => (dispatch) => {
     dispatch(loginLoading());
