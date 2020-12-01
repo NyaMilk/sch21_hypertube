@@ -9,7 +9,6 @@ import { localAuth, oAuth } from '../redux/login/ActionCreators';
 import logo_42 from '../img/42_logo.svg';
 import logo_git from '../img/git_logo.svg';
 import { useTranslation } from "react-i18next";
-
 import CONFIG from '../util/const';
 
 const mapStateToProps = (state) => {

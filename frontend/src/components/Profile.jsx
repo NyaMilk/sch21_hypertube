@@ -14,6 +14,7 @@ import { Info } from './Info';
 import NotFound from './NotFound';
 import { request } from '../util/http';
 import moment from 'moment';
+import CONFIG from '../util/const';
 
 const mapStateToProps = (state) => {
     return {
@@ -27,9 +28,8 @@ const mapDispatchToProps = (dispatch) => ({
     fetchProfile: (nickname) => dispatch(fetchProfile(nickname))
 });
 
-
-function PhotoList(props) {
-    function putPhoto(e, item) {
+const Avatar = (props) => {
+    const putPhoto = (e) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
             const type = e.target.files[0].type;
@@ -39,12 +39,12 @@ function PhotoList(props) {
             }
             let formData = new FormData();
             formData.append('photo', file);
-            request(`/api/image/${props.me}/${item}`, formData, 'POST', 'image')
+            request(`${CONFIG.API_URL}/api/image/${props.username}`, formData, 'POST', 'image')
                 .then(data => {
-                    if (data) {
-                        props.fetchProfile(props.me);
-                        props.fetchUpdateLogin(props.me);
-                    }
+                    // if (data) {
+                    //     props.fetchProfile(props.me);
+                    //     props.fetchUpdateLogin(props.me);
+                    // }
                 })
                 .catch(e => {
                     alert(e.message);
@@ -52,29 +52,21 @@ function PhotoList(props) {
         }
     }
 
-    let listItems;
-    if (props.photos) {
-        listItems = props.photos.map((photo, item) =>
-            <Col md="4" key={item}>
-                <Card className="mb-4 shadow-sm">
-                    <CardImg src={`/api/image/${props.me}/${item + 1}/${photo[1]}`} alt={"Photo profile"} />
-                    {
-                        props.check &&
-                        <CardBody>
-                            <div className="d-flex justify-content-center">
-                                <Label className="btn btn-sm btn-success">Add
-                                    <Input className="profile-input" type="file" onChange={e => putPhoto(e, item + 1)} />
-                                </Label>
-                            </div>
-                        </CardBody>
-                    }
-                </Card>
-            </Col>
-        );
-    }
     return (
-        <Row>{listItems}</Row>
-    );
+        <Card className="mb-4 shadow-sm">
+            <CardImg src={`${CONFIG.API_URL}/api/image/${props.username}`} alt={"Photo profile"} />
+            {
+                props.check &&
+                <CardBody>
+                    <div className="d-flex justify-content-center">
+                        <Label className="btn btn-sm btn-success">Add
+                                    <Input className="profile-input" type="file" onChange={putPhoto} />
+                        </Label>
+                    </div>
+                </CardBody>
+            }
+        </Card>
+    )
 }
 
 function Report(props) {
@@ -125,7 +117,7 @@ function Report(props) {
 }
 
 const Profile = (props) => {
-    const login = props.login.me.nickname;
+    const login = props.login.me;
     const { nickname } = props.match.params;
     const { fetchProfile } = props;
 
@@ -150,12 +142,13 @@ const Profile = (props) => {
         );
     }
     else if (props.profile.info != null) {
-        const isMe = (props.login.me.nickname === props.match.params.nickname);
+        const isMe = (props.login.me === nickname);
 
         return (
             <section className="profile text-break">
                 <Container>
                     <Row>
+                        <Avatar username={nickname} check={isMe} />
                         <Col className="col-lg-3">
                             {
                                 props.profile.info.photos &&
@@ -179,7 +172,6 @@ const Profile = (props) => {
                     </Row>
 
                     <p className="font-profile-head">Photo</p>
-                    <PhotoList photos={props.profile.info.photos} check={isMe} me={props.profile.info.nickname} fetchProfile={props.fetchProfile} fetchUpdateLogin={props.fetchUpdateLogin} />
 
                     <Row className="profile-tabs">
                         <Col>

@@ -4,13 +4,13 @@ const upload = multer({ dest: "uploads" });
 const fs = require('fs');
 const { putImage, getImage } = require('../models/image');
 
-router.post('/:nickname/:position', upload.single('photo'), async (req, res) => {
+router.post('/:nickname', upload.single('photo'), async (req, res) => {
     try {
-        const { nickname, position } = req.params;
+        const { nickname } = req.params;
         let { mimetype, path } = req.file;
         const newPath = path.split('/')[1];
 
-        putImage(position, mimetype, newPath, nickname)
+        putImage(mimetype, newPath, nickname)
             .then(data => {
                 res.status(200).json({
                     message: data,
@@ -31,27 +31,28 @@ router.post('/:nickname/:position', upload.single('photo'), async (req, res) => 
     }
 })
 
-router.get('/:nickname/:position/:path', async (req, res) => {
+router.get('/:nickname', async (req, res) => {
     try {
-        const { nickname, position, path } = req.params;
-        const img = fs.readFileSync('uploads/' + path);
-        const encode_image = img.toString('base64');
-        const finalImg = new Buffer.from(encode_image, 'base64');
+        const { nickname } = req.params;
 
-        getImage([position, nickname])
+        getImage(nickname)
             .then(data => {
-                res.contentType(data[0].photos)
+                const path = data[0].avatar[1];
+                const img = fs.readFileSync('uploads/' + path);
+                const encode_image = img.toString('base64');
+                const finalImg = new Buffer.from(encode_image, 'base64');
+                res.contentType(data[0].avatar[0])
                 res.send(finalImg);
             })
             .catch(e => {
                 res.status(200).json({
-                    message: e.message,
+                    message: "Not found photo",
                     success: false
                 })
             })
     } catch (e) {
         res.status(200).json({
-            message: e.message,
+            message: "Not found photo",
             success: false
         })
     }

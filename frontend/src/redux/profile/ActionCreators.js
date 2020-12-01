@@ -1,5 +1,6 @@
 import * as ActionTypes from './ActionTypes';
 import { request } from '../../util/http';
+import CONFIG from '../../util/const';
 
 export const profileLoading = () => ({
     type: ActionTypes.PROFILE_LOADING
@@ -18,8 +19,11 @@ export const profileFailed = (msg) => ({
 export const fetchProfile = (nickname) => (dispatch) => {
     dispatch(profileLoading());
 
-    return request('/api/user/profile/' + nickname)
+    return request(`${CONFIG.API_URL}/api/user/profile/${nickname}`)
         .then(response => response.json())
-        .then(result => dispatch(profileAdd(result)))
+        .then(result => {
+            console.log(result);
+            dispatch(profileAdd(result))
+        })
         .catch(error => dispatch(profileFailed(error.message)));
 };

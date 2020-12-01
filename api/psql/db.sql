@@ -16,10 +16,10 @@ CREATE TABLE Users
     confirmHash text,
     remindHash text,
     remindTime timestamp,
-    avatar text[2] DEFAULT ARRAY['image/jpg','avatar.jpg'],
+    avatar text[2] DEFAULT ARRAY['image/jpg','1.jpg'],
     about text DEFAULT 'About me',
     createdAt timestamp DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
 );
 
-INSERT INTO Users (userName) VALUES ('test');
+INSERT INTO Users (userName, confirm) VALUES ('mgrass', true);
