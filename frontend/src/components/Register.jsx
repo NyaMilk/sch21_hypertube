@@ -28,7 +28,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 function InputForm(props) {
     const [isValid, toggleValid] = useState('');
-    const [feedback, setFeedback] = useState('Oopsy');
+    const [feedback, setFeedback] = useState('Oopsy!');
 
     const checkExist = (name, value) => {
         request(`${CONFIG.API_URL}/api/register/check/${name}/${value}`)
@@ -45,7 +45,7 @@ function InputForm(props) {
 
     const inputChange = (e) => {
         const { name, value } = e.target;
-        if (name === 'login' || name === 'email' || name === 'lastName' | name === 'firstName') {
+        if (name === 'login' || name === 'email' || name === 'lastName' || name === 'firstName') {
             if (isValidInput(name, value) === true) {
                 toggleValid('is-valid');
                 if (name === 'login' || name === 'email')

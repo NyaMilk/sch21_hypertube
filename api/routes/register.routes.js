@@ -153,16 +153,16 @@ router.post('/', async (req, res) => {
 
 router.post('/confirm', async (req, res) => {
     try {
-        const { nickname, hash } = req.body;
+        const { username, hash } = req.body;
         const time = new Date();
-        getConfirmHash(nickname)
+        getConfirmHash(username)
             .then((data) => {
                 if (data[0].confirmhash) {
                     const trueHash = data[0].confirmhash;
                     const oldTime = data[0].createdat;
 
                     if (time.getDate() !== oldTime.getDate() || hash !== trueHash) {
-                        userDel(nickname)
+                        userDel(username)
                             .then(() => {
                                 res.status(200).json({
                                     message: "Your confirm link is time out",
@@ -177,7 +177,7 @@ router.post('/confirm', async (req, res) => {
                             })
                     }
                     else {
-                        confirmUser(nickname)
+                        confirmUser(username)
                             .then(() => {
                                 res.status(200).json({
                                     message: "Cool! Welcome to",

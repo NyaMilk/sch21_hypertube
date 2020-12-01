@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import {
     Alert, Container, Row, Col, Nav, NavItem, NavLink, Card, CardImg, CardBody, TabContent, TabPane, Button, Media, Input, Label,
-    UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle, Modal, ModalHeader, ModalBody, ModalFooter
+    UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle, Modal, ModalHeader, ModalBody, ModalFooter,
+    FormFeedback
 } from 'reactstrap';
 import classnames from 'classnames';
 import { fetchProfile, fetchView, fetchLike, fetchStatus, fetchUpdateStatus, fetchUpdateView, fetchReport } from '../redux/profile/ActionCreators';
@@ -14,7 +15,9 @@ import { Info } from './Info';
 import NotFound from './NotFound';
 import { request } from '../util/http';
 import moment from 'moment';
+import { useTranslation } from "react-i18next";
 import CONFIG from '../util/const';
+import { isValidInput, isValidPassword } from '../util/check';
 
 const mapStateToProps = (state) => {
     return {
@@ -24,8 +27,8 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    fetchUpdateLogin: (nickname) => dispatch(fetchUpdateLogin(nickname)),
-    fetchProfile: (nickname) => dispatch(fetchProfile(nickname))
+    fetchUpdateLogin: (username) => dispatch(fetchUpdateLogin(username)),
+    fetchProfile: (username) => dispatch(fetchProfile(username))
 });
 
 const Avatar = (props) => {
@@ -53,62 +56,179 @@ const Avatar = (props) => {
     }
 
     return (
-        <Card className="mb-4 shadow-sm">
-            <CardImg src={`${CONFIG.API_URL}/api/image/${props.username}/${src}`} alt={"Photo profile"} />
+        <Col className="col-lg-3">
+            <img
+                src={`${CONFIG.API_URL}/api/image/${props.username}/${src}`}
+                alt={`Avatar ${props.username}`}
+                className="mx-auto d-block profile-avatar rounded-circle" />
             {
                 props.check &&
-                <CardBody>
-                    <div className="d-flex justify-content-center">
-                        <Label className="btn btn-sm btn-success">Add
-                                    <Input className="profile-input" type="file" onChange={putPhoto} />
-                        </Label>
-                    </div>
-                </CardBody>
+                <div className="d-flex justify-content-center">
+                    <Label className="btn btn-sm btn-success">
+                        {props.text}
+                        <Input className="profile-input" type="file" onChange={putPhoto} />
+                    </Label>
+                </div>
             }
-        </Card>
+        </Col>
+    );
+}
+
+function InputForm(props) {
+    const [isValid, toggleValid] = useState('');
+    const [feedback, setFeedback] = useState('Oopsy!');
+
+    const inputChange = (e) => {
+        const { name, value } = e.target;
+        if (name === 'login' || name === 'email' || name === 'lastName' || name === 'firstName' || name === 'currentPass' || name === 'newPass') {
+            if (isValidInput(name, value)) {
+                toggleValid('is-valid');
+                if (name === 'email' || name === 'login') {
+                    request(`${CONFIG.API_URL}/api/register/check/${name}/${value}`)
+                        .then(res => res.json())
+                        .then(result => {
+                            if (result.success === true) {
+                                toggleValid('is-invalid');
+                                setFeedback(props.feedback[0]);
+                            }
+                        })
+                }
+                else if (name === 'currentPass') {
+                    const data = {
+                        login: props.login,
+                        password: value
+                    };
+
+                    request('/api/register/check/pass', data, 'POST')
+                        .then(res => res.json())
+                        .then(result => {
+                            console.log('h2', result);
+                            if (result.success !== true) {
+                                toggleValid('is-invalid');
+                                setFeedback(props.feedback)
+                            }
+                        })
+                }
+
+                // if (name !== 'currentPass')
+                //     props.set(value)
+            }
+            else {
+                toggleValid('is-invalid');
+                (name === 'login' || name === 'email') ? setFeedback(props.feedback[1]) : setFeedback(props.feedback);
+            }
+        }
+    };
+
+    return (
+        <div>
+            <p className="font-profile-head">{props.label}</p>
+            <Input
+                type={props.type || 'text'}
+                placeholder={props.placeholder || ''}
+                name={props.name}
+                defaultValue={props.me || ''}
+                onChange={inputChange}
+                onBlur={props.checkBtn}
+                className={isValid}
+            />
+            <FormFeedback>{feedback}</FormFeedback>
+        </div>
     )
 }
 
-function Report(props) {
+function EditProfile(props) {
+    const { t } = useTranslation();
     const [modal, setModal] = useState(false);
-    const [reason, setReason] = useState("pornography");
     const [message, setMessage] = useState();
 
     const toggleModal = () => setModal(!modal);
 
+    const [isActiveBtn, toggleBtn] = useState(true);
+
+    const checkBtn = () => {
+        const countInvalidInputs = document.querySelectorAll(".is-invalid").length;
+        countInvalidInputs === 0 ? toggleBtn(false) : toggleBtn(true);
+    }
+
     const reportSubmit = () => {
         const data = {
-            me: props.me,
-            you: props.you,
-            reason: reason,
-            message: message
+            me: props.me
         }
-        props.fetch(data);
+        // props.fetch(data);
         setModal(!modal);
     }
 
     return (
         <div>
-            <UncontrolledButtonDropdown>
-                <DropdownToggle caret></DropdownToggle>
-                <DropdownMenu>
-                    <DropdownItem onClick={toggleModal}>Report page</DropdownItem>
-                </DropdownMenu>
-            </UncontrolledButtonDropdown>
+            <Button
+                onClick={toggleModal}
+                color="secondary">
+                {t("profilePage.editProfile")}
+            </Button>
+
             <Modal isOpen={modal}>
-                <ModalHeader>Report user</ModalHeader>
+                <ModalHeader>
+                    <Row>
+                        <Col xs={12}>
+                            {t("profilePage.editProfile")}
+                        </Col>
+                    </Row>
+                </ModalHeader>
                 <ModalBody>
-                    <p>Please, let us know the reason why this user should be blocked:</p>
-                    <Input className="modal-item" type="select" onChange={e => setReason(e.target.value)}>
-                        <option value="pornography">Pornography</option>
-                        <option value="spam">Spam</option>
-                        <option value="offensive behavior">Offensive behavior</option>
-                        <option value="fraud">Fraud</option>
-                    </Input>
-                    <Input type="textarea" placeholder="Descride the reason for the report" rows={5} onChange={e => setMessage(e.target.value)} />
+                    <InputForm
+                        name='login'
+                        // me={props.info.username}
+                        label={t("loginPage.login")}
+                        feedback={[t("inputMsg.login.taken"), t("inputMsg.login.invalid")]}
+                        // set={props.setLogin}
+                        checkBtn={checkBtn} />
+                    <InputForm
+                        name='firstName'
+                        // me={props.info.firstname}
+                        label={t("loginPage.firstName")}
+                        feedback={t("inputMsg.text")}
+                        // set={props.setFirstName}
+                        checkBtn={checkBtn} />
+                    <InputForm
+                        name='lastName'
+                        // me={props.info.lastname}
+                        label={t("loginPage.lastName")}
+                        feedback={t("inputMsg.text")}
+                        // set={props.setLastName}
+                        checkBtn={checkBtn} />
+                    <InputForm
+                        name='email'
+                        // me={props.info.email}
+                        label={t("loginPage.email")}
+                        feedback={[t("inputMsg.email.taken"), t("inputMsg.email.invalid")]}
+                        // set={props.setEmail}
+                        checkBtn={checkBtn}
+                        type="email" />
+                    <InputForm
+                        name='about'
+                        // me={props.info.about}
+                        label={t("profilePage.about")}
+                        // set={props.setAbout}
+                        checkBtn={checkBtn} />
+
+                    <InputForm
+                        name='currentPass'
+                        // login={props.info.username}
+                        label={t("profilePage.curpassword")}
+                        feedback={t("inputMsg.password.wrong")}
+                        checkBtn={checkBtn}
+                        type='password' />
+                    <InputForm
+                        name='newPass'
+                        label={t("profilePage.туцpassword")}
+                        // set={props.setNewPassword}
+                        feedback={t("inputMsg.password.weak")}
+                        checkBtn={checkBtn}
+                        type='password' />
                 </ModalBody>
                 <ModalFooter className="justify-content-between">
-                    <Button color="success" onClick={reportSubmit} reason={reason} message={message} >Report</Button>{' '}
+                    <Button color="success" onClick={reportSubmit} message={message}>Save</Button>
                     <Button color="secondary" onClick={toggleModal}>Cancel</Button>
                 </ModalFooter>
             </Modal>
@@ -116,15 +236,45 @@ function Report(props) {
     );
 }
 
+function AsideButton(props) {
+    const changeStatus = (e) => {
+        if (e.target.value === 'add' || e.target.value === 'remove') {
+            // props.fetchUpdateStatus(props.me, props.you, props.status, e.target.value);
+        }
+    }
+
+    if (props.check) {
+        return (
+            <Row className="aside-button">
+                <EditProfile
+                    info={props.info}
+                />
+            </Row>
+        );
+    }
+    else {
+        return (
+            <Row className="aside-button" >
+                <Button color="info"
+                    value={props.status === 'add' ? 'remove' : 'add'}
+                    onClick={changeStatus}>
+                    {props.status === 'add' ? props.status[1] : props.status[0]}
+                </Button>
+            </Row>
+        );
+    }
+}
+
 const Profile = (props) => {
+    const { t } = useTranslation();
     const { me } = props.login;
-    const { nickname } = props.match.params;
+    const { username } = props.match.params;
     const { fetchProfile } = props;
 
     console.log("profile", props);
     useEffect(() => {
-        fetchProfile(nickname);
-    }, [nickname]);
+        fetchProfile(username);
+    }, [username]);
 
     const [activeTab, setActiveTab] = useState('1');
     const toggle = tab => {
@@ -142,46 +292,44 @@ const Profile = (props) => {
         );
     }
     else if (props.profile.info != null) {
-        const isMe = (me === nickname);
+        const isMe = (me === username);
 
         return (
             <section className="profile text-break">
                 <Container>
-                    <Row>
-                        <Col>
-                            <Avatar username={nickname} check={isMe} />
-                        </Col>
+                    <AsideButton
+                        check={isMe}
+                        // info={props.login.info}
+                        status={[t("profilePage.status.add"), t("profilePage.status.remove")]} />
+                    <Row className="profile-header">
+                        <Avatar
+                            username={username}
+                            check={isMe}
+                            username={props.profile.info.username}
+                            text={t("profilePage.change")} />
                         <Col ls="9" className="font-profile-head">
                             <h2>{props.profile.info.username}</h2>
                             <p>{props.profile.info.firstname} {props.profile.info.lastname}</p>
-                        </Col>
-                    </Row>
-
-                    <Row>
-                        <Col>
-                            <p className="font-profile-head">About</p>
                             <p>{props.profile.info.about}</p>
                         </Col>
                     </Row>
-
-                    <p className="font-profile-head">Photo</p>
 
                     <Row className="profile-tabs">
                         <Col>
                             <Nav tabs>
                                 <NavItem>
                                     <NavLink className={classnames({ active: activeTab === '1' })} onClick={() => { toggle('1'); }}>
-                                        Films
+                                        {t("profilePage.tabOne")}
                                     </NavLink>
                                 </NavItem>
                                 <NavItem>
                                     <NavLink className={classnames({ active: activeTab === '2' })} onClick={() => { toggle('2'); }}>
-                                        Comments
+                                        {t("profilePage.tabTwo")}
                                     </NavLink>
                                 </NavItem>
                                 <NavItem>
                                     <NavLink className={classnames({ active: activeTab === '3' })} onClick={() => { toggle('3'); }}>
-                                        Friends
+                                        {t("profilePage.tabTree")}
                                     </NavLink>
                                 </NavItem>
                             </Nav>

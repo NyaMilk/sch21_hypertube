@@ -43,7 +43,7 @@ const InputForm = (props) => {
 
 const Login = (props) => {
     const { t } = useTranslation();
-    const { nickname, hash } = useParams();
+    const { username, hash } = useParams();
     const [msg, setMsg] = useState(null);
     const names = ["github", "intra"];
     const [login, setLogin] = useState();
@@ -57,9 +57,9 @@ const Login = (props) => {
 
     const submit = () => { props.localAuth(login, password) };
 
-    if (nickname && hash) {
+    if (username && hash) {
         const data = {
-            nickname: nickname,
+            username: username,
             hash: hash
         };
 

@@ -144,9 +144,99 @@ body {
   font-size: 0.8rem;
 }
 
+/* profile */
+
+.profile,
+.profile-edit {
+  padding: 20px 0;
+}
+
+.profile .profile-header {
+  margin-bottom: 30px;
+}
+
+.profile .nav-item a {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.profile-avatar {
+  object-fit: cover;
+  width: 200px;
+  height: 200px;
+  padding: 0.25rem;
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  max-width: 100%;
+}
+
+.profile h2 {
+  margin-bottom: 1.5rem;
+}
+
+.profile .font-profile-head:nth-child(2) {
+  margin-top: 0;
+}
+
+.profile .profile-input {
+  display: none;
+}
+
+.profile .btn-success {
+  margin: 15px 0 0;
+}
+
+.profile .nav-tabs .nav-link {
+  cursor: pointer;
+}
+
+.profile .profile-tabs .nav-tabs {
+  margin-bottom: 1rem;
+}
+
+/* del */
+/* .media-object {
+  width: 75px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: 50%;
+} */
+
+/* del */
+.card img {
+  height: 320px;
+  object-fit: cover;
+}
+
+.profile .aside-button {
+  margin-bottom: 20px;
+  margin-right: 0;
+  justify-content: flex-end;
+  position: relative;
+}
+
+.profile .aside-button button {
+  margin-left: 10px;
+}
+
+/* .profile .tab-content {
+  height: 400px;
+  overflow-x: hidden;
+} */
+
 /* spinner / message  */
 .page-state {
   text-align: center;
   padding-top: 100px;
   background: none;
+}
+
+/* check */
+.alert-info {
+  margin: 0 auto;
+}
+
+/* style disabled */
+.disabled-button {
+  pointer-events: none;
+  opacity: 50%;
 }

@@ -1,5 +1,5 @@
 {
-    "loginPage": {
+	"loginPage": {
 		"login": "Login",
 		"password": "Password",
 		"repassword": "Re-Password",
@@ -26,7 +26,8 @@
 		},
 		"password": {
 			"weak": "Too weak password. 8 symbols is required",
-			"match": "Password doesn't match"
+			"match": "Password doesn't match",
+			"wrong": "Wrong password"
 		},
 		"text": "Only symbols are required"
 	},
@@ -34,8 +35,14 @@
 		"tabOne": "Films",
 		"tabTwo": "Comments",
 		"tabTree": "Friends",
-		"edit": "Edit",
-		"add": "Add",
-		"about": "About"
+		"editProfile": "Edit profile",
+		"change": "Change",
+		"about": "About",
+		"curpassword": "Current password",
+		"newpassword": "New password",
+		"status": {
+			"add": "Add friend!",
+			"remove": "Remove friend"
+		}
 	}
 }

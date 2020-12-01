@@ -17,12 +17,12 @@ export function Main() {
             <Router>
                 <Switch>
                     <Route exact={true} path='/login' component={Login} />
-                    <Route path='/login/:nickname/:hash' component={Login} />
+                    <Route path='/login/:username/:hash' component={Login} />
                     <Route path='/register' component={Register} />
                     <Route exact={true} path='/remind' component={Remind} />
                     <Route path='/remind/:email/:hash' component={Restore} />
                     <Route path='/catalog' component={Catalog} />
-                    <Route exact={true} path='/profile/:nickname' component={Profile} />
+                    <Route exact={true} path='/profile/:username' component={Profile} />
                     {/* <Route path='/edit' component={EditProfile} /> */}
                 </Switch>
             </Router>
