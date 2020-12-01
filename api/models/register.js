@@ -2,8 +2,8 @@ const db = require('../config/psql-setup');
 
 const sign = (username, firstname, lastname, email, password) => {
     const sql =
-        `INSERT INTO Users (userName, firstName, lastName, email, password) 
-    VALUES ($1, $2, $3, $4, $5) 
+        `INSERT INTO Users (displayName, userName, firstName, lastName, email, password) 
+    VALUES ($1, $1, $2, $3, $4, $5) 
     RETURNING userName`;
 
     return db.one(sql, [username, firstname, lastname, email, password]);

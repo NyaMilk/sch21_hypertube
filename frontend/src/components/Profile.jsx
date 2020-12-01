@@ -221,7 +221,7 @@ function EditProfile(props) {
                         type='password' />
                     <InputForm
                         name='newPass'
-                        label={t("profilePage.туцpassword")}
+                        label={t("profilePage.newpassword")}
                         // set={props.setNewPassword}
                         feedback={t("inputMsg.password.weak")}
                         checkBtn={checkBtn}

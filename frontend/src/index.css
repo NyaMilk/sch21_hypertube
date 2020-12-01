@@ -193,20 +193,6 @@ body {
   margin-bottom: 1rem;
 }
 
-/* del */
-/* .media-object {
-  width: 75px;
-  height: 75px;
-  object-fit: cover;
-  border-radius: 50%;
-} */
-
-/* del */
-.card img {
-  height: 320px;
-  object-fit: cover;
-}
-
 .profile .aside-button {
   margin-bottom: 20px;
   margin-right: 0;

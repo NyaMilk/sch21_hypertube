@@ -129,23 +129,23 @@ router.post('/', async (req, res) => {
                             })
                             return;
                         })
-                        .catch(() => {
+                        .catch((e) => {
                             res.status(200).json({
-                                message: "Ooops! User was not added! Try again",
+                                message: "Ooops! User was not added!1 Try again" + e.message,
                                 success: false
                             })
                         })
                 }
             })
-            .catch(() => {
+            .catch((e) => {
                 res.status(200).json({
-                    message: "Ooops! User was not added! Try again",
+                    message: "Ooops! User was not added! 2Try again" + e.message,
                     success: false
                 })
             })
     } catch (e) {
         res.status(200).json({
-            message: "Ooops! User was not added! Try again",
+            message: "Ooops! User was not added!3 Try again"+ e.message,
             success: false
         })
     }
