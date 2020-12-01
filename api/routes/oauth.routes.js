@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const passport = require("passport");
-const CLIENT_HOME_PAGE_URL = "http://localhost:3000";
+const CLIENT_HOME_PAGE_URL = "http://localhost:3000/catalog";
 const CLIENT_LOGIN_PAGE_URL = "http://localhost:3000/login";
 const parser = require('body-parser');
 const urlencodedParser = parser.urlencoded({ extended: false });
