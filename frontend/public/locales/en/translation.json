@@ -29,5 +29,13 @@
 			"match": "Password doesn't match"
 		},
 		"text": "Only symbols are required"
+	},
+	"profilePage": {
+		"tabOne": "Films",
+		"tabTwo": "Comments",
+		"tabTree": "Friends",
+		"edit": "Edit",
+		"add": "Add",
+		"about": "About"
 	}
 }

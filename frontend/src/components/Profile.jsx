@@ -158,41 +158,43 @@ const Profile = (props) => {
                     <Row>
                         <Col className="col-lg-3">
                             {
-                                props.profile.info.photos &&
-                                <img src={`/api/image/${props.profile.info.nickname}/1/${props.profile.info.photos[0][1]}`} alt={`Avatar ${props.profile.info.nickname}`} className="mx-auto d-block profile-avatar rounded-circle" />
+                                props.profile.info.avatar &&
+                                <img src={`/api/image/${props.profile.info.username}/1/${props.profile.info.avatar}`} alt={`Avatar ${props.profile.info.username}`} className="mx-auto d-block profile-avatar rounded-circle" />
                             }
                         </Col>
                         <Col ls="9" className="font-profile-head">
-                            <h2>{props.profile.info.nickname}</h2>
-                            <p>{props.profile.info.firstname} {props.profile.info.lastname}, {props.profile.info.age}</p>
-                            <p>{props.profile.info.sex}</p>
-                            <p>{props.profile.info.sexpreferences}</p>
-                            <p>{props.profile.info.country}, {props.profile.info.city}</p>
+                            <h2>{props.profile.info.username}</h2>
+                            <p>{props.profile.info.firstname} {props.profile.info.lastname}</p>
                         </Col>
                     </Row>
 
                     <Row>
                         <Col>
-                            <p className="font-profile-head">Biography</p>
+                            <p className="font-profile-head">About</p>
                             <p>{props.profile.info.about}</p>
                         </Col>
                     </Row>
 
-                    <p className="font-profile-head">Photo</p>
-                    <PhotoList photos={props.profile.info.photos} check={isMe} me={props.profile.info.nickname} fetchProfile={props.fetchProfile} fetchUpdateLogin={props.fetchUpdateLogin} />
+                    {/* <p className="font-profile-head">Photo</p>
+                    <PhotoList photos={props.profile.info.photos} check={isMe} me={props.profile.info.nickname} fetchProfile={props.fetchProfile} fetchUpdateLogin={props.fetchUpdateLogin} /> */}
 
                     <Row className="profile-tabs">
                         <Col>
                             <Nav tabs>
                                 <NavItem>
                                     <NavLink className={classnames({ active: activeTab === '1' })} onClick={() => { toggle('1'); }}>
-                                        Views
-                                </NavLink>
+                                        Films
+                                    </NavLink>
                                 </NavItem>
                                 <NavItem>
                                     <NavLink className={classnames({ active: activeTab === '2' })} onClick={() => { toggle('2'); }}>
-                                        Likes
-                                </NavLink>
+                                        Comments
+                                    </NavLink>
+                                </NavItem>
+                                <NavItem>
+                                    <NavLink className={classnames({ active: activeTab === '3' })} onClick={() => { toggle('3'); }}>
+                                        Friends
+                                    </NavLink>
                                 </NavItem>
                             </Nav>
                             <TabContent activeTab={activeTab}>
@@ -200,6 +202,9 @@ const Profile = (props) => {
                                     {/* <ViewsList myviews={props.profile.views} /> */}
                                 </TabPane>
                                 <TabPane tabId="2">
+                                    {/* <LikesList mylikes={props.profile.likes} /> */}
+                                </TabPane>
+                                <TabPane tabId="3">
                                     {/* <LikesList mylikes={props.profile.likes} /> */}
                                 </TabPane>
                             </TabContent>
