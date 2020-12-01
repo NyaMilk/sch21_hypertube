@@ -6,6 +6,7 @@ CREATE TYPE providers AS ENUM ('hypert', 'github', 'school42');
 CREATE TABLE Users
 (
     id SERIAL,
+    displayName text NOT NULL,
     userName text NOT NULL,
     firstName text,
     lastName text,
@@ -22,4 +23,4 @@ CREATE TABLE Users
     PRIMARY KEY (id)
 );
 
-INSERT INTO Users (userName, confirm) VALUES ('mgrass', true);
+INSERT INTO Users (displayName, userName, confirm) VALUES ('mgrass', 'mgrass', true);

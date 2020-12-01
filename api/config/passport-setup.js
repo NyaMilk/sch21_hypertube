@@ -1,19 +1,19 @@
 const passport = require("passport");
 const keys = require("./keys");
-const { findUser, addUser, findUserInAllProviders } = require('./../models/auth');
+const { findUserOauth, findUserLocalAuth, addUser, findUserInAllProviders } = require('./../models/auth');
 const GithubStrategy = require('passport-github').Strategy;
 const SchoolStrategy = require('passport-42').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
 
-passport.serializeUser((userName, done) => {
-  done(null, userName);
+passport.serializeUser((displayName, done) => {
+  done(null, displayName);
 });
 
-passport.deserializeUser((userName, done) => {
-  findUserInAllProviders(userName)
+passport.deserializeUser((displayName, done) => {
+  findUserInAllProviders(displayName)
     .then(data => {
-      (data.length > 0) ? done(null, userName) : done(null, false);
+      (data.length > 0) ? done(null, displayName) : done(null, false);
     })
 });
 
@@ -26,9 +26,11 @@ passport.use(new GithubStrategy({
     const userName = profile.username;
     const email = (profile.emails[0].value) ? profile.emails[0].value : '';
 
-    findUser(userName, 'github')
+    findUserOauth(userName, 'github')
       .then(data => {
-        if (!data[0]) {
+        if (data.length > 0)
+          done(null, data[0].displayname);
+        else {
           addUser(userName, email, 'github')
             .then(data => {
               (data) ? done(null, userName) : done(null, 'Ooopsy! Cannot auth. Try again');
@@ -37,8 +39,7 @@ passport.use(new GithubStrategy({
               done(null, 'Ooopsy! Cannot auth. Try again');
             });
         }
-        else
-          done(null, userName);
+
       })
       .catch(() => {
         done(null, 'Ooopsy! Cannot auth. Try again');
@@ -57,7 +58,7 @@ passport.use(new SchoolStrategy({
     const lastName = profile.name.familyName;
     const firstName = profile.name.firstName;
 
-    findUser(userName, 'school42')
+    findUserOauth(userName, 'school42')
       .then(data => {
         if (!data[0]) {
           addFullUser(userName, email, lastName, firstName, 'school42')
@@ -69,7 +70,7 @@ passport.use(new SchoolStrategy({
             });
         }
         else
-          done(null, userName);
+          done(null, data[0].displayname);
       })
       .catch(() => {
         done(null, 'Ooopsy! Cannot auth. Try again');
@@ -78,14 +79,14 @@ passport.use(new SchoolStrategy({
 ));
 
 passport.use(new LocalStrategy(
-  function (username, password, done) {
-    findUser(username, 'hypert')
+  function (displayname, password, done) {
+    findUserLocalAuth(displayname, 'hypert')
       .then(data => {
         let check;
 
         if (data[0]) {
           check = bcrypt.compareSync(password, data[0].password);
-          return (check) ? done(null, username) : done(null, 'Ooopsy! Cannot auth. Try again');
+          return (check) ? done(null, displayname) : done(null, 'Ooopsy! Cannot auth. Try again');
         }
         else
           return done(null, 'Ooopsy! Cannot auth. Try again');
