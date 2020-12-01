@@ -117,7 +117,7 @@ function Report(props) {
 }
 
 const Profile = (props) => {
-    const login = props.login.me;
+    const { me } = props.login;
     const { nickname } = props.match.params;
     const { fetchProfile } = props;
 
@@ -142,18 +142,14 @@ const Profile = (props) => {
         );
     }
     else if (props.profile.info != null) {
-        const isMe = (props.login.me === nickname);
+        const isMe = (me === nickname);
 
         return (
             <section className="profile text-break">
                 <Container>
                     <Row>
-                        <Avatar username={nickname} check={isMe} />
-                        <Col className="col-lg-3">
-                            {
-                                props.profile.info.avatar &&
-                                <img src={`/api/image/${props.profile.info.username}/1/${props.profile.info.avatar}`} alt={`Avatar ${props.profile.info.username}`} className="mx-auto d-block profile-avatar rounded-circle" />
-                            }
+                        <Col>
+                            <Avatar username={nickname} check={isMe} src={imgSrc}/>
                         </Col>
                         <Col ls="9" className="font-profile-head">
                             <h2>{props.profile.info.username}</h2>
