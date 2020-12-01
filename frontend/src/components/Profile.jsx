@@ -29,6 +29,9 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const Avatar = (props) => {
+    const { username } = props;
+    const [src, setSrc] = useState()
+
     const putPhoto = (e) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
@@ -39,12 +42,9 @@ const Avatar = (props) => {
             }
             let formData = new FormData();
             formData.append('photo', file);
-            request(`${CONFIG.API_URL}/api/image/${props.username}`, formData, 'POST', 'image')
+            request(`${CONFIG.API_URL}/api/image/${username}`, formData, 'POST', 'image')
                 .then(data => {
-                    // if (data) {
-                    //     props.fetchProfile(props.me);
-                    //     props.fetchUpdateLogin(props.me);
-                    // }
+                    if (data) { setSrc(Date.now()) }
                 })
                 .catch(e => {
                     alert(e.message);
@@ -54,7 +54,7 @@ const Avatar = (props) => {
 
     return (
         <Card className="mb-4 shadow-sm">
-            <CardImg src={`${CONFIG.API_URL}/api/image/${props.username}`} alt={"Photo profile"} />
+            <CardImg src={`${CONFIG.API_URL}/api/image/${props.username}/${src}`} alt={"Photo profile"} />
             {
                 props.check &&
                 <CardBody>
@@ -149,7 +149,7 @@ const Profile = (props) => {
                 <Container>
                     <Row>
                         <Col>
-                            <Avatar username={nickname} check={isMe} src={imgSrc}/>
+                            <Avatar username={nickname} check={isMe} />
                         </Col>
                         <Col ls="9" className="font-profile-head">
                             <h2>{props.profile.info.username}</h2>

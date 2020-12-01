@@ -31,7 +31,7 @@ router.post('/:nickname', upload.single('photo'), async (req, res) => {
     }
 })
 
-router.get('/:nickname', async (req, res) => {
+router.get('/:nickname/:time', async (req, res) => {
     try {
         const { nickname } = req.params;
 
