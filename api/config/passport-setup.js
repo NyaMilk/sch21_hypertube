@@ -1,19 +1,20 @@
 const passport = require("passport");
 const keys = require("./keys");
-const { findUser, addUser } = require('./../models/auth');
+const { findUser, addUser, findUserInAllProviders } = require('./../models/auth');
 const GithubStrategy = require('passport-github').Strategy;
 const SchoolStrategy = require('passport-42').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
 
 passport.serializeUser((userName, done) => {
-  console.log(userName);
   done(null, userName);
 });
 
 passport.deserializeUser((userName, done) => {
-  console.log('des', userName);
-  done(null, userName);
+  findUserInAllProviders(userName)
+    .then(data => {
+      (data.length > 0) ? done(null, userName) : done(null, false);
+    })
 });
 
 passport.use(new GithubStrategy({
@@ -24,11 +25,9 @@ passport.use(new GithubStrategy({
   async (token, tokenSecret, profile, done) => {
     const userName = profile.username;
     const email = (profile.emails[0].value) ? profile.emails[0].value : '';
-    console.log(profile.username, email);
 
     findUser(userName, 'github')
       .then(data => {
-        console.log(data);
         if (!data[0]) {
           addUser(userName, email, 'github')
             .then(data => {
@@ -91,7 +90,7 @@ passport.use(new LocalStrategy(
         else
           return done(null, 'Ooopsy! Cannot auth. Try again');
       })
-      .catch(() => {
+      .catch((e) => {
         return done(null, 'Ooopsy! Cannot auth. Try again');
       });
 

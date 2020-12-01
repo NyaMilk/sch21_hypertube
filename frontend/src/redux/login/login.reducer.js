@@ -4,9 +4,7 @@ const initialState = {
     isLoading: false,
     infoMsg: null,
     isLogged: false,
-    username: null,
-    password: null,
-    me: {}
+    me: ""
 }
 
 export const LoginReducer = (state = initialState, action) => {

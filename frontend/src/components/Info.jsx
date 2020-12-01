@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Alert } from "reactstrap";
 
-const Info = (props) => {
+export const Info = (props) => {
     const [isVisible, setClose] = useState(true);
     const color = props.isSuccess ? 'success' : 'danger';
 
@@ -19,5 +19,3 @@ const Info = (props) => {
         // </div>
     );
 }
-
-export default Info;

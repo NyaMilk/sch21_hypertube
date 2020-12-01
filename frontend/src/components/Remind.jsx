@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { Button, Col, Container, Input, Row, Card, CardBody, Label, NavLink } from 'reactstrap';
-import Info from './Info';
+import { Info } from './Info';
 import { request } from '../util/http';
 import { useTranslation } from "react-i18next";
 

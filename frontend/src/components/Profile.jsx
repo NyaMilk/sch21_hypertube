@@ -10,10 +10,10 @@ import classnames from 'classnames';
 import { fetchProfile, fetchView, fetchLike, fetchStatus, fetchUpdateStatus, fetchUpdateView, fetchReport } from '../redux/profile/ActionCreators';
 import { fetchUpdateLogin } from '../redux/login/ActionCreators';
 import { Loading } from './Loading';
+import { Info } from './Info';
 import NotFound from './NotFound';
 import { request } from '../util/http';
 import moment from 'moment';
-import Info from './Info';
 
 const mapStateToProps = (state) => {
     return {

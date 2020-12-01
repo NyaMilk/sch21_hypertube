@@ -1,5 +1,6 @@
 import * as ActionTypes from './ActionTypes';
 import { request } from '../../util/http';
+import CONFIG from '../../util/const';
 
 export const loginOut = () => ({
     type: ActionTypes.LOGIN_OUT
@@ -23,37 +24,21 @@ export const loginFailed = (msg) => ({
     payload: msg
 });
 
-export const loginUsernameAdd = (login) => ({
-    type: ActionTypes.LOGIN_USERNAME_ADD,
-    username: login
-});
 
-export const setLogin = (login) => (dispatch) => {
-    return dispatch(loginUsernameAdd(login));
-}
 
-export const loginPasswordAdd = (password) => ({
-    type: ActionTypes.LOGIN_PASSWORD_ADD,
-    password: password
-});
-
-export const setPassword = (password) => (dispatch) => {
-    return dispatch(loginPasswordAdd(password));
-}
-
-export const fetchLogin = (login, password) => (dispatch) => {
+export const fetchLogin = (username, password) => (dispatch) => {
     dispatch(loginLoading());
 
-    const data = {
-        login: login,
-        password: password
-    }
+    const data = new URLSearchParams({
+        'username': username,
+        'password': password
+    })
 
-    return request('/api/user/login', data, 'POST')
+    request(`${CONFIG.API_URL}/api/auth/local`, data, 'POST', 'urlencoded')
         .then(res => res.json())
         .then(result => {
             if (result.success === true) {
-                dispatch(loginDataAdd(result.profile));
+                dispatch(loginDataAdd(result.user));
             }
             else {
                 dispatch(loginFailed(result.message));

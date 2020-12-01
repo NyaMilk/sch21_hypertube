@@ -3,8 +3,9 @@ import { useParams, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Card, CardBody, Container, Row, Col, Button, FormGroup, Label, Input, NavLink } from 'reactstrap';
 import { request } from '../util/http';
-import Info from './Info';
-import { fetchLogin, setLogin, setPassword } from '../redux/login/ActionCreators';
+import { Loading } from './Loading';
+import { Info } from './Info';
+import { fetchLogin} from '../redux/login/ActionCreators';
 import logo_42 from '../img/42_logo.svg';
 import logo_git from '../img/git_logo.svg';
 import { useTranslation } from "react-i18next";
@@ -18,9 +19,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    fetchLogin: (login, password) => dispatch(fetchLogin(login, password)),
-    setLogin: (login) => dispatch(setLogin(login)),
-    setPassword: (password) => dispatch(setPassword(password))
+    fetchLogin: (username, password) => dispatch(fetchLogin(username, password))
 });
 
 const InputForm = (props) => {
@@ -50,22 +49,13 @@ const Login = (props) => {
     const names = ["github", "intra"];
     const [login, setLogin] = useState();
     const [password, setPassword] = useState();
-    
-    const handle = (e) => {
+
+    const handleOauth = (e) => {
         if (names.includes(e.target.name))
             window.open(`${CONFIG.API_URL}/api/auth/${e.target.name}`, "_self");
     }
 
-    const submit = () => {
-        const data = new URLSearchParams({
-            'username': login,
-            'password': password
-        })
-
-        request(`${CONFIG.API_URL}/api/auth/local`, data, 'POST', 'urlencoded')
-            .then(res => res.json())
-            .then(data => console.log(data))
-    }
+    const submit = () => { props.fetchLogin(login, password) };
 
     if (nickname && hash) {
         const data = {
@@ -73,15 +63,10 @@ const Login = (props) => {
             hash: hash
         };
 
-        console.log('fff1');
         request('/api/register/confirm', data, "POST")
             .then(res => res.json())
-            .then((result) => {
-                setMsg(result.msg)
-            })
-            .catch((e) => {
-                setMsg(e.message)
-            })
+            .then((result) => setMsg(result.msg))
+            .catch((e) => setMsg(e.message))
     }
 
     return (
@@ -102,10 +87,10 @@ const Login = (props) => {
                                     <Button className="login-btn" onClick={submit}>{t("loginPage.signIn")}</Button>
                                 </Col>
                                 <div className="d-flex justify-content-center align-items-center">
-                                    <Button className="login-btn__aside" onClick={handle} name="github">
+                                    <Button className="login-btn__aside" onClick={handleOauth} name="github">
                                         <img src={logo_git} width="27" alt="GitHub" name={names[0]} />
                                     </Button>
-                                    <Button className="login-btn__aside" onClick={handle} name="intra">
+                                    <Button className="login-btn__aside" onClick={handleOauth} name="intra">
                                         <img src={logo_42} width="35" alt="Intra 42" name={names[1]} />
                                     </Button>
                                 </div>

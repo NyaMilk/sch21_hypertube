@@ -2,9 +2,18 @@ const db = require('../config/psql-setup');
 
 const findUser = (username, provider) => {
     const sql =
-        `SELECT userName, password, confirm FROM Users WHERE userName = $1 AND provider = $2`;
+        `SELECT userName, password, confirm 
+    FROM Users WHERE userName = $1 AND provider = $2`;
 
     return db.any(sql, [username, provider]);
+};
+
+const findUserInAllProviders = (username) => {
+    const sql =
+        `SELECT userName 
+    FROM Users WHERE userName = $1`;
+
+    return db.any(sql, [username]);
 };
 
 const addUser = (username, email, provider) => {
@@ -24,5 +33,6 @@ const addFullUser = (username, email, firstName, lastName, provider) => {
 }
 
 exports.findUser = findUser;
+exports.findUserInAllProviders = findUserInAllProviders;
 exports.addUser = addUser;
 exports.addFullUser = addFullUser;
