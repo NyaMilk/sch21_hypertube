@@ -1,49 +1,91 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { withRouter, useHistory } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { Container, Navbar, NavbarBrand, Nav, NavItem, NavLink } from 'reactstrap';
+import { logOut } from '../redux/login/ActionCreators';
+import { useTranslation } from "react-i18next";
 
 import video from '../img/head-video.svg';
 import user from '../img/profile-user.svg';
 import logout from '../img/logout2.svg';
 
+const mapStateToProps = (state) => {
+    return {
+        login: state.login
+    }
+}
 
-import { useTranslation } from "react-i18next";
+const mapDispatchToProps = (dispatch) => ({
+    logOut: () => dispatch(logOut())
+});
 
-function Header() {
+const Header = (props) => {
     const { i18n } = useTranslation();
 
     const changeLanguage = (language) => {
         i18n.changeLanguage(language);
     };
 
+    const isLogged = props.login.isLogged;
+    const path = props.location.pathname;
+    const history = useHistory();
+
+    useEffect(() => {
+        if (!isLogged && !path.includes('/register') && !path.includes('/remind'))
+            history.push('/login');
+    }, [isLogged]);
+
     return (
         <Navbar color="light" light expand="xs">
             <Container>
-                <NavbarBrand>Hypertube</NavbarBrand>
+                <NavbarBrand href="/catalog">Hypertube</NavbarBrand>
                 <Nav className="ml-auto" navbar>
-                    <img src={video} width="25" height="25" alt="Films" />
+                    {/* <img src={video} width="25" height="25" alt="Films" />
                     <img src={user} width="25" height="25" alt="Profile" />
-                    <img src={logout} width="23" height="23" alt="Logout" />
+                    <img src={logout} width="23" height="23" alt="Logout" /> */}
 
-                    <button
-                        onClick={() => changeLanguage("en")}
-                        className={`btn-fst btn-lng ${i18n.language === 'en' ? 'active-lng' : ''}`}>
-                        Eng
-                    </button>
-                    <button
-                        onClick={() => changeLanguage("ru")}
-                        className={`btn-lng ${i18n.language === 'ru' ? 'active-lng' : ''}`}>
-                        Рус
-                    </button>
-                    {/* {!urls.includes(path) &&
+                    <Navbar>
+                        {
+                            isLogged &&
+                            <NavItem>
+                                <NavLink href="/catalog">
+                                    <img src={video} width="25" height="25" alt="Films" />
+                                </NavLink>
+                            </NavItem>
+                        }
+                        {
+                            isLogged &&
+                            <NavItem>
+                                <NavLink href={`/profile/${props.login.me}`}>
+                                    <img src={user} width="25" height="25" alt="Profile" />
+                                </NavLink>
+                            </NavItem>
+                        }
+                        {
+                            isLogged &&
+                            <NavItem>
+                                <NavLink href='/login' onClick={() => { props.logOut(); }}>
+                                    <img src={logout} width="23" height="23" alt="Logout" />
+                                </NavLink>
+                            </NavItem>
+                        }
+
                         <NavItem>
-                            <Notification
-                                me={me}
-                                notifications={props.notification.notifications}
-                                hasNew={props.notification.hasNew}
-                                updateNotifications={props.updateNotifications}
-                                set={props.setHasNew} />
+                            <button
+                                onClick={() => changeLanguage("en")}
+                                className={`btn-fst btn-lng ${i18n.language === 'en' ? 'active-lng' : ''}`}>
+                                Eng
+                                </button>
                         </NavItem>
-                    }
+                        <NavItem>
+                            <button
+                                onClick={() => changeLanguage("ru")}
+                                className={`btn-lng ${i18n.language === 'ru' ? 'active-lng' : ''}`}>
+                                Рус
+                                </button>
+                        </NavItem>
+                    </Navbar>
+                    {/* 
                     {!urls.includes(path) &&
                         <NavItem>
                             <NavLink href="/chats">
@@ -83,4 +125,4 @@ function Header() {
     );
 }
 
-export default Header;
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Header));

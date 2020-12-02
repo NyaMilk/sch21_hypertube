@@ -13,8 +13,8 @@ export function Main() {
 
     return (
         <div>
-            <Header />
             <Router>
+                <Header />
                 <Switch>
                     <Route exact={true} path='/login' component={Login} />
                     <Route path='/login/:username/:hash' component={Login} />
