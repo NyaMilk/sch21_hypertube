@@ -21,9 +21,6 @@ const Catalog = (props) => {
     const history = useHistory();
     const [isLogged, setLogged] = useState(false);
 
-    // if (props.login.infoMsg === "user failed to authenticate.")
-    //     history.push('/login');
-
     useEffect(() => {
         console.log(props);
         if (!isLogged && !props.login.isLogged)
