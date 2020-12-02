@@ -20,7 +20,7 @@ const getOnlyPass = (username) => {
 const getEmail = (email) => {
     const sql =
         `SELECT id FROM Users 
-    WHERE email=$1 AND provider = 'hypert'`;
+    WHERE email=$1`;
 
     return db.any(sql, [email]);
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, withRouter } from 'react-router-dom';
+import { useHistory, useParams, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Card, CardBody, Container, Row, Col, Button, FormGroup, Label, Input, NavLink } from 'reactstrap';
 import { request } from '../util/http';
@@ -43,6 +43,7 @@ const InputForm = (props) => {
 
 const Login = (props) => {
     const { t } = useTranslation();
+    const history = useHistory();
     const { username, hash } = useParams();
     const [msg, setMsg] = useState(null);
     const names = ["github", "intra"];
@@ -68,6 +69,12 @@ const Login = (props) => {
             .then((result) => setMsg(result.msg))
             .catch((e) => setMsg(e.message))
     }
+
+    useEffect(() => {
+        if (props.login.isLogged) {
+            history.push("/catalog");
+        }
+    }, [props.login.isLogged, history]);
 
     return (
         <section className="login">

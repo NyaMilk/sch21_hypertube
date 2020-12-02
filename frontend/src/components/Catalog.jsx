@@ -25,7 +25,8 @@ const Catalog = (props) => {
     //     history.push('/login');
 
     useEffect(() => {
-        if (!isLogged)
+        console.log(props);
+        if (!isLogged && !props.login.isLogged)
             request(`/api/auth/success`)
                 .then(res => res.json())
                 .then((data) => {
@@ -61,6 +62,7 @@ const Catalog = (props) => {
                                         .then(res => res.json())
                                         .then((data) => {
                                             console.log(data);
+                                            //clear store
                                             // setLogged(data.success);
                                         });
                                 }} />

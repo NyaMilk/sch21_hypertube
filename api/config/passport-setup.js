@@ -60,17 +60,7 @@ passport.use(new SchoolStrategy({
 
     findUserOauth(userName, 'school42')
       .then(data => {
-        if (!data[0]) {
-          addFullUser(userName, email, lastName, firstName, 'school42')
-            .then(data => {
-              (data) ? done(null, userName) : done(null, 'Ooopsy! Cannot auth. Try again');
-            })
-            .catch(() => {
-              done(null, 'Ooopsy! Cannot auth. Try again');
-            });
-        }
-        else
-          done(null, data[0].displayname);
+        (!data[0]) ? done(null, 'Ooopsy! Cannot auth. Try again') : done(null, data[0].displayname);
       })
       .catch(() => {
         done(null, 'Ooopsy! Cannot auth. Try again');

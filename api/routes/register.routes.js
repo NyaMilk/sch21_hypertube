@@ -6,7 +6,7 @@ const { sendMail } = require('../util/mail');
 
 router.get('/check/email/:email', async (req, res) => {
     try {
-        const email = [req.params.email];
+        const email = req.params.email;
 
         getEmail(email)
             .then(data => {
@@ -16,7 +16,7 @@ router.get('/check/email/:email', async (req, res) => {
                     })
                 else
                     res.status(200).json({
-                        message: "Ooops! Cannot check email. Try again",
+                        message: "This email doesn't exist",
                         success: false
                     })
             })

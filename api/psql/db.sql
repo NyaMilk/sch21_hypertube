@@ -23,4 +23,6 @@ CREATE TABLE Users
     PRIMARY KEY (id)
 );
 
-INSERT INTO Users (displayName, userName, confirm) VALUES ('mgrass', 'mgrass', true);
+INSERT INTO Users (displayName, userName, firstName, lastName, email, password, confirm) VALUES
+    ('rkina', 'rkina', 'Dima', 'Ng', 'd_ng@mail.ru','$2b$10$8zsNJUoK40BuGO4f2zLcSOtUGlCDahrG55TPAU4onwb9ey4Zd1IZG' ,  TRUE),
+    ('mgrass', 'mgrass', 'nya', 'milk', 'nyamilk@yandex.ru', '$2b$10$8zsNJUoK40BuGO4f2zLcSOtUGlCDahrG55TPAU4onwb9ey4Zd1IZG' , TRUE);
