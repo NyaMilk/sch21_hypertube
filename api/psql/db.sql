@@ -33,7 +33,7 @@ CREATE TABLE Movies
     poster text,
     genres text[],
     runtime integer,
-    subtitles text
+    subtitles text,
     torrents text[],
     isDownloaded boolean,
     path text
