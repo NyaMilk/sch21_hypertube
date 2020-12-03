@@ -5,9 +5,9 @@ import { Container, Navbar, NavbarBrand, Nav, NavItem, NavLink } from 'reactstra
 import { logOut } from '../redux/login/ActionCreators';
 import { useTranslation } from "react-i18next";
 
-import video from '../img/head-video.svg';
-import user from '../img/profile-user.svg';
-import logout from '../img/logout2.svg';
+const video = '/img/head-video.svg';
+const user = '/img/head-user.svg';
+const logout = '/img/head-logout.svg';
 
 const mapStateToProps = (state) => {
     return {
@@ -65,7 +65,7 @@ const Header = (props) => {
                             isLogged &&
                             <NavItem>
                                 <NavLink href='/login' onClick={() => { props.logOut(); }}>
-                                    <img src={logout} width="23" height="23" alt="Logout" />
+                                    <img src={logout} width="25" height="25" alt="Logout" />
                                 </NavLink>
                             </NavItem>
                         }

@@ -286,7 +286,7 @@ const Profile = (props) => {
             <Loading />
         );
     }
-    else if (props.profile.errProfile) {
+    else if (props.profile.infoMsg) {
         return (
             <Info />
         );

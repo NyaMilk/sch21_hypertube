@@ -176,9 +176,9 @@ const Register = (props) => {
             <Loading />
         );
     }
-    else if (props.errMsg) {
+    else if (props.register.infoMsg) {
         return (
-            <Alert color='info'>{props.errMsg}</Alert>
+            <Alert color='info'>{props.register.infoMsg}</Alert>
         );
     }
     else
