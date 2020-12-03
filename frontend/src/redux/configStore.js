@@ -1,6 +1,7 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { LoginReducer } from './login/login.reducer';
 import { RegisterReducer } from './register/register.reducer';
+import { CatalogReducer } from './catalog/catalog.reducer';
 import { ProfileReducer } from './profile/profile.reducer';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
@@ -12,6 +13,7 @@ export const ConfigureStore = () => {
         combineReducers({
             login: LoginReducer,
             register: RegisterReducer,
+            catalog: CatalogReducer,
             profile: ProfileReducer
         }),
         persistedState,

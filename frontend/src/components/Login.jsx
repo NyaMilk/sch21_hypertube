@@ -6,10 +6,11 @@ import { request } from '../util/http';
 import { Loading } from './Loading';
 import { Info } from './Info';
 import { localAuth, oAuth } from '../redux/login/ActionCreators';
-import logo_42 from '../img/42_logo.svg';
-import logo_git from '../img/git_logo.svg';
 import { useTranslation } from "react-i18next";
 import CONFIG from '../util/const';
+
+const logo_42 = '/img/42_logo.svg';
+const logo_git = '/img/git_logo.svg';
 
 const mapStateToProps = (state) => {
     return {
