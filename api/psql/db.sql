@@ -23,6 +23,22 @@ CREATE TABLE Users
     PRIMARY KEY (id)
 );
 
+CREATE TABLE Movies
+(
+    id SERIAL,
+    imdb text NOT NULL,
+    title text NOT NULL,
+    year integer,
+    description text NOT NULL,
+    poster text,
+    genres text[],
+    runtime integer,
+    subtitles text
+    torrents text[],
+    isDownloaded boolean,
+    path text
+);
+
 INSERT INTO Users (displayName, userName, firstName, lastName, email, password, confirm) VALUES
     ('rkina', 'rkina', 'Dima', 'Ng', 'd_ng@mail.ru','$2b$10$8zsNJUoK40BuGO4f2zLcSOtUGlCDahrG55TPAU4onwb9ey4Zd1IZG' ,  TRUE),
     ('mgrass', 'mgrass', 'nya', 'milk', 'nyamilk@yandex.ru', '$2b$10$8zsNJUoK40BuGO4f2zLcSOtUGlCDahrG55TPAU4onwb9ey4Zd1IZG' , TRUE);

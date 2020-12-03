@@ -1,4 +1,5 @@
-const magnet = `magnet:?xt=urn:btih:5CC8FE91E68D13D104C19336482353B1FAECE9AC&dn=%5BClassical+Music%5D+The+Best+Of+%28Vivaldi%2C+Bethovenn%2C+Mozart%2C+Strau&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2F9.rarbg.to%3A2920%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=udp%3A%2F%2Ftracker.internetwarriors.net%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.pirateparty.gr%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.cyberia.is%3A6969%2Fannounce`;
+// const magnet = `magnet:?xt=urn:btih:5CC8FE91E68D13D104C19336482353B1FAECE9AC&dn=%5BClassical+Music%5D+The+Best+Of+%28Vivaldi%2C+Bethovenn%2C+Mozart%2C+Strau&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2F9.rarbg.to%3A2920%2Fannounce&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=udp%3A%2F%2Ftracker.internetwarriors.net%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.pirateparty.gr%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.cyberia.is%3A6969%2Fannounce`;
+const magnet = `magnet:?xt=urn:btih:94A2BAD15E9ACC85BE005D1E59857AD55E54E7E3`;
 const decoded = decodeURI(magnet);
 const torrentStream = require('torrent-stream');
 
