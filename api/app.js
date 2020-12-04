@@ -10,6 +10,7 @@ const imageRoutes = require('./routes/image.routes');
 const authRoutes = require('./routes/oauth.routes');
 const registerRoutes = require('./routes/register.routes');
 const userRoutes = require('./routes/user.routes');
+const moviesRoutes = require('./routes/movies.routes');
 // const torrentRoutes = require('./routes/torrent.routes');
 
 app.use(
@@ -37,6 +38,7 @@ app.use('/api/image', imageRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/register', registerRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/movies', moviesRoutes);
 // app.use('/api/torrent', torrentRoutes);
 
 app.listen(keys.apiPort, () => console.log('App on ' + keys.apiPort));
