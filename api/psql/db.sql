@@ -27,15 +27,18 @@ CREATE TABLE Movies
 (
     id SERIAL,
     imdb text NOT NULL,
-    title text NOT NULL,
+    enTitle text NOT NULL,
+    ruTitle text NOT NULL,
     year timestamp,
-    description text NOT NULL,
-    poster text,
-    genres text[],
+    engDescription text NOT NULL,
+    ruDescription text NOT NULL,
+    poster text NOT NULL,
+    engGenres text[],
+    ruGenres text[],
     runtime integer,
     subtitles text,
-    torrents text[],
-    isDownloaded boolean,
+    torrents text[] NOT NULL,
+    isDownloaded boolean DEFAULT FALSE,
     path text
 );
 
@@ -43,7 +46,7 @@ INSERT INTO Users (displayName, userName, firstName, lastName, email, password, 
     ('rkina', 'rkina', 'Dima', 'Ng', 'd_ng@mail.ru','$2b$10$8zsNJUoK40BuGO4f2zLcSOtUGlCDahrG55TPAU4onwb9ey4Zd1IZG',  TRUE),
     ('mgrass', 'mgrass', 'nya', 'milk', 'nyamilk@yandex.ru', '$2b$10$8zsNJUoK40BuGO4f2zLcSOtUGlCDahrG55TPAU4onwb9ey4Zd1IZG', TRUE);
 
-INSERT INTO Movies (imdb, title, year, description, genres, runtime) VALUES
+INSERT INTO Movies (imdb, engTitle, year, engDescription, engGenres, runtime) VALUES
     ('7.5', 'Film', '2015-05-06', 'This is test is test is test is test is test', ARRAY['drama'], 555),
     ('9.5', 'Film2', '2017-05-06', 'This is test is test is test is test is test', ARRAY['drama'], 245),
     ('8.5', 'Film3', '2019-05-06', 'This is test is test is test is test is test', ARRAY['horror'], 585),
