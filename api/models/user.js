@@ -1,6 +1,6 @@
-const db = require('../config/psql-setup');
+const { db } = require('../config/psql-setup');
 
-const getProfile = (nickname) => {
+exports.getProfile = (nickname) => {
     const sql =
         `SELECT displayName, firstName, lastName, email, about, avatar
     FROM Users WHERE userName=$1`;
@@ -8,11 +8,8 @@ const getProfile = (nickname) => {
     return db.any(sql, [nickname]);
 }
 
-const editProfile = (que, params, i) => {
+exports.editProfile = (que, params, i) => {
     const sql = `UPDATE Users SET ${que} WHERE nickName = $${i} RETURNING nickName`;
 
     return db.one(sql, params);
 }
-
-exports.getProfile = getProfile;
-exports.editProfile = editProfile;

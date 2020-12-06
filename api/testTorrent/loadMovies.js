@@ -15,7 +15,7 @@ const getPopcornMovies = async () => {
         const { imdb_id, title, synopsis, genres, torrents } = movie;
         formatMovie.imdb = imdb_id;
         formatMovie.engTitle = title;
-        formatMovie.engSynopsis = synopsis;
+        formatMovie.engDescription = synopsis;
         formatMovie.engGenres = genres;
         formatMovie.torrents = [];
 
@@ -43,7 +43,7 @@ const getYtsMovies = async () => {
         const { imdb_code, title, synopsis, genres, torrents } = movie;
         formatMovie.imdb = imdb_code;
         formatMovie.engTitle = title;
-        formatMovie.engSynopsis = synopsis;
+        formatMovie.engDescription = synopsis;
         formatMovie.engGenres = genres;
         formatMovie.torrents = [];
 
@@ -104,6 +104,8 @@ const scrap = async () => {
     });
 
     console.log(filtered[0]);
+    return filtered;
 }
+
 scrap();
 // console.log(tmp);

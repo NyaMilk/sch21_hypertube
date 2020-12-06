@@ -1,6 +1,6 @@
-const db = require('../config/psql-setup');
+const { db } = require('../config/psql-setup');
 
-const sign = (username, firstname, lastname, email, password) => {
+exports.sign = (username, firstname, lastname, email, password) => {
     const sql =
         `INSERT INTO Users (displayName, userName, firstName, lastName, email, password) 
     VALUES ($1, $1, $2, $3, $4, $5) 
@@ -9,7 +9,7 @@ const sign = (username, firstname, lastname, email, password) => {
     return db.one(sql, [username, firstname, lastname, email, password]);
 };
 
-const getOnlyPass = (username) => {
+exports.getOnlyPass = (username) => {
     const sql =
         `SELECT password FROM Users 
     WHERE userName=$1 AND provider = 'hypert'`;
@@ -17,7 +17,7 @@ const getOnlyPass = (username) => {
     return db.any(sql, [username]);
 }
 
-const getEmail = (email) => {
+exports.getEmail = (email) => {
     const sql =
         `SELECT id FROM Users 
     WHERE email=$1`;
@@ -25,7 +25,7 @@ const getEmail = (email) => {
     return db.any(sql, [email]);
 }
 
-const getLogin = (username) => {
+exports.getLogin = (username) => {
     const sql =
         `SELECT id FROM Users 
     WHERE userName=$1 AND provider = 'hypert'`;
@@ -33,7 +33,7 @@ const getLogin = (username) => {
     return db.any(sql, [username]);
 }
 
-const addConfirmHash = (hash, username) => {
+exports.addConfirmHash = (hash, username) => {
     const sql =
         `UPDATE Users
     SET confirmHash = $1
@@ -43,7 +43,7 @@ const addConfirmHash = (hash, username) => {
     return db.any(sql, [hash, username]);
 }
 
-const getConfirmHash = (username) => {
+exports.getConfirmHash = (username) => {
     const sql =
         `SELECT confirmHash, createdAt FROM Users
     WHERE userName = $1`;
@@ -51,7 +51,7 @@ const getConfirmHash = (username) => {
     return db.any(sql, [username]);
 }
 
-const userDel = (username) => {
+exports.userDel = (username) => {
     const sql =
         `DELETE FROM Users 
     WHERE userName = $1 RETURNING id`;
@@ -59,7 +59,7 @@ const userDel = (username) => {
     return db.any(sql, [username]);
 }
 
-const confirmUser = (username) => {
+exports.confirmUser = (username) => {
     const sql =
         `UPDATE Users 
     SET confirm = true
@@ -68,12 +68,3 @@ const confirmUser = (username) => {
 
     return db.any(sql, [username]);
 }
-
-exports.sign = sign;
-exports.getOnlyPass = getOnlyPass;
-exports.getEmail = getEmail;
-exports.getLogin = getLogin;
-exports.addConfirmHash = addConfirmHash;
-exports.getConfirmHash = getConfirmHash;
-exports.userDel = userDel;
-exports.confirmUser = confirmUser;
