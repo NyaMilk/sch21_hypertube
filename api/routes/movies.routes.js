@@ -3,13 +3,17 @@ const { getCountCards, getCards } = require('../models/movies');
 
 router.post('/catalog/count', async (req, res) => {
     try {
-        const { rateFrom, rateTo, yearFrom, yearTo, genres } = req.body;
+        const { rateFrom, rateTo, yearFrom, yearTo, genres, search } = req.body;
 
         // тут проверку на A > B?
         // sqlFilter = `imdb >= ${rateFrom} AND imdb <= ${rateTo} AND EXTRACT(YEAR FROM year) BETWEEN ${yearFrom} AND ${yearTo} `;
         let sqlFilter = `EXTRACT(YEAR FROM dateRelease) BETWEEN ${yearFrom} AND ${yearTo} `;
         if (genres.length > 0)
-            sqlFilter += `AND genres && $1`;
+            sqlFilter += `AND genres && $1 `;
+
+        if (search.length > 0)
+            sqlFilter += `AND lower(title) like lower('%${search}%')`;
+
 
         getCountCards(genres, sqlFilter)
             .then(data => {
@@ -42,8 +46,8 @@ router.post('/catalog/count', async (req, res) => {
 
 router.post('/catalog/page', async (req, res) => {
     try {
-        
-        const { page, sort, rateFrom, rateTo, yearFrom, yearTo, genres } = req.body;
+
+        const { page, sort, rateFrom, rateTo, yearFrom, yearTo, genres, search } = req.body;
         let sqlSort = '',
             limit = page * 9;
 
@@ -57,7 +61,10 @@ router.post('/catalog/page', async (req, res) => {
         // let sqlFilter = `AND imdb >= ${rateFrom} AND imdb <= ${rateTo} AND year >= ${yearFrom} AND year <= ${yearTo} `;
         let sqlFilter = `EXTRACT(YEAR FROM dateRelease) BETWEEN ${yearFrom} AND ${yearTo} `;
         if (genres.length > 0)
-            sqlFilter += `AND genres && $1`;
+            sqlFilter += `AND genres && $1 `;
+
+        if (search.length > 0)
+            sqlFilter += `AND lower(title) like lower('%${search}%')`;
 
         getCards(genres, limit, sqlSort, sqlFilter)
             .then(data => {

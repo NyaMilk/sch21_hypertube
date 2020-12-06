@@ -10,7 +10,7 @@ const initialState = {
     yearFrom: 1900,
     yearTo: 2020,
     genres: [],
-    search: [],
+    search: "",
     cardCount: null,
     info: {}
 }
@@ -47,6 +47,9 @@ export const CatalogReducer = (state = initialState, action) => {
 
         case ActionTypes.CATALOG_GENRES_ADD:
             return { ...state, isLoading: false, infoMsg: null, genres: action.genres };
+
+        case ActionTypes.CATALOG_SEARCH_ADD:
+            return { ...state, isLoading: false, infoMsg: null, search: action.search };
 
         case ActionTypes.CATALOG_CARD_ADD:
             return { ...state, isLoading: false, infoMsg: null, info: action.payload };

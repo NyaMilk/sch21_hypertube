@@ -1,4 +1,21 @@
 {
+	"inputMsg": {
+		"login": {
+			"taken": "Login is taken",
+			"invalid": "Login is invalid"
+		},
+		"email": {
+			"taken": "Email is taken",
+			"invalid": "Email is invalid"
+		},
+		"password": {
+			"weak": "Too weak password. 8 symbols is required",
+			"match": "Password doesn't match",
+			"wrong": "Wrong password"
+		},
+		"text": "Only symbols are required",
+		"yearRange": "Year range 1900 - 2020 only"
+	},
 	"loginPage": {
 		"login": "Login",
 		"password": "Password",
@@ -15,22 +32,6 @@
 		"remind": "Forgot password?",
 		"back": "Back"
 	},
-	"inputMsg": {
-		"login": {
-			"taken": "Login is taken",
-			"invalid": "Login is invalid"
-		},
-		"email": {
-			"taken": "Email is taken",
-			"invalid": "Email is invalid"
-		},
-		"password": {
-			"weak": "Too weak password. 8 symbols is required",
-			"match": "Password doesn't match",
-			"wrong": "Wrong password"
-		},
-		"text": "Only symbols are required"
-	},
 	"profilePage": {
 		"tabOne": "Films",
 		"tabTwo": "Comments",
@@ -46,6 +47,5 @@
 		}
 	},
 	"catalogPage": {
-		"yearRange": "Year range 1900 - 2020 only"
 	}
 }

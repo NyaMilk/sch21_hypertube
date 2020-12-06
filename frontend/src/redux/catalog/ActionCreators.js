@@ -82,6 +82,15 @@ export const setGenres = (genres) => (dispatch) => {
     dispatch(catalogGenresAdd(genres));
 };
 
+export const catalogSearchAdd = (search) => ({
+    type: ActionTypes.CATALOG_SEARCH_ADD,
+    search: search
+});
+
+export const setSearch = (search) => (dispatch) => {
+    dispatch(catalogSearchAdd(search));
+};
+
 export const catalogCardAdd = (info) => ({
     type: ActionTypes.CATALOG_CARD_ADD,
     payload: info.result
@@ -89,7 +98,7 @@ export const catalogCardAdd = (info) => ({
 
 export const fetchCatalogCard = (data) => (dispatch) => {
     dispatch(catalogLoading());
-    // dispatch(setCatalogFilterStatus(null));
+    dispatch(setCatalogFilterStatus(null));
 
     return request('/api/movies/catalog/page', data, 'POST')
         .then(response => response.json())

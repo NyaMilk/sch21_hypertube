@@ -9,7 +9,7 @@ import {
 import { setUser } from '../redux/login/ActionCreators';
 import {
     fetchAllCatalog, fetchCatalogCard, initCatalog, setCatalogSort,
-    setYearFrom, setYearTo, setRateFrom, setRateTo
+    setYearFrom, setYearTo, setRateFrom, setRateTo, setGenres, setSearch
 } from '../redux/catalog/ActionCreators';
 import { useTranslation } from "react-i18next";
 import { Loading } from './Loading';
@@ -33,7 +33,9 @@ const mapDispatchToProps = (dispatch) => ({
     setYearFrom: (yearFrom) => dispatch(setYearFrom(yearFrom)),
     setYearTo: (yearTo) => dispatch(setYearTo(yearTo)),
     setRateFrom: (rateFrom) => dispatch(setRateFrom(rateFrom)),
-    setRateTo: (rateTo) => dispatch(setRateTo(rateTo))
+    setRateTo: (rateTo) => dispatch(setRateTo(rateTo)),
+    setGenres: (genres) => dispatch(setGenres(genres)),
+    setSearch: (search) => dispatch(setSearch(search))
 });
 
 function InputForm(props) {
@@ -86,17 +88,17 @@ function InputForm(props) {
 
     return (
         <Col sm={6}>
-            <FormGroup>
-                <Input
-                    type="number"
-                    name={props.name}
-                    defaultValue={props.defaultValue}
-                    onChange={inputChange}
-                    className={isValid}
-                    onBlur={checkInput}
-                />
-                <FormFeedback>{feedback}</FormFeedback>
-            </FormGroup>
+            {/* <FormGroup> */}
+            <Input
+                type="number"
+                name={props.name}
+                defaultValue={props.defaultValue}
+                onChange={inputChange}
+                className={isValid}
+                onBlur={checkInput}
+            />
+            <FormFeedback>{feedback}</FormFeedback>
+            {/* </FormGroup> */}
         </Col>
     )
 }
@@ -118,8 +120,29 @@ function Filter(props) {
         props.filter.setGenres(value);
     }
 
+    const searchFilm = (e) => {
+        const value = e.target.value.toLowerCase();
+
+        const filter = props.filter.catalog.info.filter(film => {
+            return film.title.toLowerCase().includes(value);
+        });
+        console.log("filter", filter);
+        
+        props.filter.setSearch(value);
+    };
+
+    // console.log("HERE", props.filter.search);
     return (
         <Nav expand="lg" color="light">
+
+            <Input
+                defaultValue={props.filter.catalog.search}
+                type="text"
+                // className="form-control"
+                placeholder="Search"
+                onChange={searchFilm}
+            />
+
             <Row className="catalog-sort-filter">
                 <Col xs={6}>
                     <FormGroup>
@@ -153,7 +176,7 @@ function Filter(props) {
                         </Row>
                     </ModalHeader>
                     <ModalBody className="text-center">
-                        <Row className="mt-2">
+                        {/* <Row className="mt-2">
                             <Col xs={12}>
                                 <p className="font-profile-head">Rate</p>
                             </Col>
@@ -167,7 +190,7 @@ function Filter(props) {
                                 defaultValue={props.filter.catalog.rateTo}
                                 set={props.filter.setRateTo}
                                 setStatusButton={setStatusButton} />
-                        </Row>
+                        </Row> */}
 
                         <Row>
                             <Col xs={12}>
@@ -178,13 +201,13 @@ function Filter(props) {
                                 defaultValue={props.filter.catalog.yearFrom}
                                 set={props.filter.setYearFrom}
                                 setStatusButton={setStatusButton}
-                                feedback={t("catalogPage.yearRange")} />
+                                feedback={t("inputMsg.yearRange")} />
                             <InputForm
                                 name='yearto'
                                 defaultValue={props.filter.catalog.yearTo}
                                 set={props.filter.setYearTo}
                                 setStatusButton={setStatusButton}
-                                feedback={t("catalogPage.yearRange")} />
+                                feedback={t("inputMsg.yearRange")} />
                         </Row>
 
                         {/* <Row className="mt-2">
@@ -205,7 +228,7 @@ function Filter(props) {
                         <ModalFooter className="justify-content-between">
                             <Button
                                 color="success"
-                                // className={isValidInput ? '' : 'disabled-button'}
+                                className={isValidInput ? '' : 'disabled-button'}
                                 onClick={() => { toggleModal(); props.filter.initCatalog(); }}>
                                 Clear
                             </Button>
@@ -222,7 +245,7 @@ function GenreList(props) {
     let listItems;
     if (props.genres) {
         listItems = props.genres.map((genre, item) =>
-            <span className="tags" key={item}>{genre}</span>
+            <span key={item}>{genre}</span>
         );
     }
     return (
@@ -329,7 +352,7 @@ function CardsPagination(props) {
 const Catalog = (props) => {
     const { page } = props.match.params;
     const { fetchAllCatalog, fetchCatalogCard } = props;
-    const { sort, filterStatus, rateFrom, rateTo, yearFrom, yearTo, genres } = props.catalog;
+    const { sort, filterStatus, rateFrom, rateTo, yearFrom, yearTo, genres, search } = props.catalog;
     // const { nickname } = props.login.me;
 
     useEffect(() => {
@@ -340,6 +363,7 @@ const Catalog = (props) => {
             yearFrom,
             yearTo,
             genres,
+            search,
             page
         }
 
@@ -347,7 +371,7 @@ const Catalog = (props) => {
             fetchAllCatalog(data);
             fetchCatalogCard(data);
         }
-    }, [fetchAllCatalog, fetchCatalogCard, page, sort, filterStatus, rateFrom, rateTo, yearFrom, yearTo, genres]);
+    }, [fetchAllCatalog, fetchCatalogCard, page, sort, filterStatus, rateFrom, rateTo, yearFrom, yearTo, genres, search]);
 
     console.log("props ", props);
 
@@ -375,7 +399,7 @@ const Catalog = (props) => {
     }
     else
         return (
-            <section className="users">
+            <section className="catalog">
                 <Container>
                     <Filter filter={props} />
                     <span className="font-profile-head font-message">Not found :C</span>
