@@ -1,17 +1,20 @@
 const db = require('../config/psql-setup');
 
-const getCountCards = (genre, sqlFilter) => {
-    const sql = `
-    SELECT * FROM FROM Movies WHERE ${sqlFilter}`;
+const getCountCards = (genres, sqlFilter) => {
+    const sql =
+        `SELECT * FROM Movies
+    WHERE ${sqlFilter}`;
 
-    return db.any(sql, [genre]);
+    return db.any(sql, [genres]);
 }
 
-const getCards = (params, sort, sortTags, sqlFilter) => {
-    const sql = `
-    SELECT * FROM FROM Movies WHERE ${sqlFilter}`;
+const getCards = (genres, limit, sqlSort, sqlFilter) => {
+    const sql =
+        `SELECT title, imdb, EXTRACT(YEAR FROM dateRelease) AS year, poster, genres FROM Movies
+    WHERE ${sqlFilter} ORDER BY ${sqlSort}
+    LIMIT 9 OFFSET ($2 - 9)`;
 
-    return db.any(sql, params);
+    return db.any(sql, [genres, limit]);
 }
 
 exports.getCountCards = getCountCards;

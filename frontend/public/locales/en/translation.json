@@ -44,5 +44,8 @@
 			"add": "Add friend!",
 			"remove": "Remove friend"
 		}
+	},
+	"catalogPage": {
+		"yearRange": "Year range 1900 - 2020 only"
 	}
 }

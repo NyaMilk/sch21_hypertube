@@ -1,17 +1,17 @@
 const router = require('express').Router();
 const { getCountCards, getCards } = require('../models/movies');
 
-router.post('/catalog/count/pages', async (req, res) => {
+router.post('/catalog/count', async (req, res) => {
     try {
-        const { rateFrom, rateTo, yearFrom, yearTo, genre } = req.body;
-        let sqlFilter = '';
+        const { rateFrom, rateTo, yearFrom, yearTo, genres } = req.body;
 
         // тут проверку на A > B?
-        sqlFilter = `AND age >= ${rateFrom} AND age <= ${rateTo} AND rate >= ${yearFrom} AND rate <= ${yearTo} `;
-        if (genre.length > 0)
-            sqlFilter += `AND genre && $1`;
+        // sqlFilter = `imdb >= ${rateFrom} AND imdb <= ${rateTo} AND EXTRACT(YEAR FROM year) BETWEEN ${yearFrom} AND ${yearTo} `;
+        let sqlFilter = `EXTRACT(YEAR FROM dateRelease) BETWEEN ${yearFrom} AND ${yearTo} `;
+        if (genres.length > 0)
+            sqlFilter += `AND genres && $1`;
 
-        getCountCards(genre, sqlFilter)
+        getCountCards(genres, sqlFilter)
             .then(data => {
                 if (data.length > 0) {
                     res.status(200).json({
@@ -40,24 +40,26 @@ router.post('/catalog/count/pages', async (req, res) => {
     }
 })
 
-router.post('/users/page', async (req, res) => {
+router.post('/catalog/page', async (req, res) => {
     try {
-        const { page, sort, rateFrom, rateTo, yearFrom, yearTo } = req.body;
+        
+        const { page, sort, rateFrom, rateTo, yearFrom, yearTo, genres } = req.body;
         let sqlSort = '',
-            sqlFilter = '',
             limit = page * 9;
 
         if (sort === 'yearAsc' || sort === 'yearDesc')
-            sqlSort = (sort === 'yearAsc') ? 'year ASC, rate DESC' : 'year DESC, rate DESC';
-        else if (sort === 'rateAsc' || sort === 'rateDesc')
-            sqlSort = (sort === 'rateAsc') ? 'rate ASC, year ASC' : 'rate DESC, year ASC';
+            sqlSort = (sort === 'yearAsc') ? 'year ASC' : 'year DESC';
+        // sqlSort = (sort === 'yearAsc') ? 'year ASC, rate DESC' : 'year DESC, rate DESC';
+        // else if (sort === 'rateAsc' || sort === 'rateDesc')
+        //     sqlSort = (sort === 'rateAsc') ? 'rate ASC, year ASC' : 'rate DESC, year ASC';
 
         // тут проверку на A > B?
-        sqlFilter = `AND age >= ${rateFrom} AND age <= ${rateTo} AND rate >= ${yearFrom} AND rate <= ${yearTo} `;
-        if (genre.length > 0)
-            sqlFilter += `AND genre && $1`;
+        // let sqlFilter = `AND imdb >= ${rateFrom} AND imdb <= ${rateTo} AND year >= ${yearFrom} AND year <= ${yearTo} `;
+        let sqlFilter = `EXTRACT(YEAR FROM dateRelease) BETWEEN ${yearFrom} AND ${yearTo} `;
+        if (genres.length > 0)
+            sqlFilter += `AND genres && $1`;
 
-        getCards(genre, limit, sqlSort, sqlSortTags, sqlFilter)
+        getCards(genres, limit, sqlSort, sqlFilter)
             .then(data => {
                 if (data.length > 0) {
                     res.status(200).json({

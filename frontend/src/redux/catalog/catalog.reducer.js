@@ -3,12 +3,14 @@ import * as ActionTypes from './ActionTypes';
 const initialState = {
     isLoading: true,
     infoMsg: null,
-    sort: 'all',
+    sort: 'yearAsc',
     filterStatus: null,
     rateFrom: 0,
     rateTo: 10,
-    yearFrom: 1970,
+    yearFrom: 1900,
     yearTo: 2020,
+    genres: [],
+    search: [],
     cardCount: null,
     info: {}
 }
@@ -42,6 +44,9 @@ export const CatalogReducer = (state = initialState, action) => {
 
         case ActionTypes.CATALOG_YEAR_TO_ADD:
             return { ...state, isLoading: false, infoMsg: null, yearTo: action.yearTo };
+
+        case ActionTypes.CATALOG_GENRES_ADD:
+            return { ...state, isLoading: false, infoMsg: null, genres: action.genres };
 
         case ActionTypes.CATALOG_CARD_ADD:
             return { ...state, isLoading: false, infoMsg: null, info: action.payload };

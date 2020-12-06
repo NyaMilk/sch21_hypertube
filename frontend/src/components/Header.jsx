@@ -48,7 +48,7 @@ const Header = (props) => {
                         {
                             isLogged &&
                             <NavItem>
-                                <NavLink href="/catalog">
+                                <NavLink href="/catalog/page/1">
                                     <img src={video} width="25" height="25" alt="Films" />
                                 </NavLink>
                             </NavItem>

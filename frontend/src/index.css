@@ -4,7 +4,41 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+  margin-bottom: 60px !important;
+}
+
+/* container */
+.profile,
+.profile-edit,
+.catalog {
+  padding: 20px 0;
+}
+
+/* label */
+.font-profile-head {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #5a6268;
+}
+
+/* spinner / message  */
+.page-state {
+  text-align: center;
+  padding-top: 100px;
+  background: none;
+}
+
+/* check */
+.alert-info {
+  margin: 0 auto;
+}
+
+/* style disabled */
+.disabled-button {
+  pointer-events: none;
+  opacity: 50%;
 }
 
 /* header */
@@ -37,15 +71,6 @@ body {
 .navbar .active-lng {
   background: #6c757d;
   color: #fff;
-}
-
-/* label */
-.font-profile-head {
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-  font-size: 1.2rem;
-  color: #5a6268;
 }
 
 /* footer */
@@ -145,12 +170,6 @@ body {
 }
 
 /* profile */
-
-.profile,
-.profile-edit {
-  padding: 20px 0;
-}
-
 .profile .profile-header {
   margin-bottom: 30px;
 }
@@ -209,20 +228,75 @@ body {
   overflow-x: hidden;
 } */
 
-/* spinner / message  */
-.page-state {
-  text-align: center;
-  padding-top: 100px;
-  background: none;
+/* catalog */
+.catalog .col-md-4:hover {
+  opacity: 0.9;
 }
 
-/* check */
-.alert-info {
-  margin: 0 auto;
+.catalog a {
+  color: #6c757d;
 }
 
-/* style disabled */
-.disabled-button {
+.catalog a:hover {
+  color: #6c757d;
+  text-decoration: none;
+}
+
+.card-title {
+  font-size: 1.3rem;
+}
+
+.catalog .list-group-item {
+  padding: 0.5rem;
+}
+
+.catalog-sort-filter {
+  width: 100%;
+}
+
+.catalog .catalog-filter {
+  padding: 0;
+}
+
+.modal-content .modal-body {
+  padding-top: 0;
+}
+
+.modal-content .modal-header {
+  justify-content: center;
+}
+
+.modal-content .modal-footer {
+  margin-top: 15px;
+}
+
+/* .modal-content .invalid-feedback {
+  display: block ;
+} */
+
+.catalog .modal-content .disabled-button {
   pointer-events: none;
   opacity: 50%;
+}
+
+/* pagination */
+.catalog-pagination {
+  margin: 0 auto;
+  width: 173px;
+}
+
+.catalog-pagination .pagination {
+  margin-bottom: 0;
+}
+
+.catalog .catalog-pagination ul {
+  justify-content: center;
+}
+
+.catalog-pagination .page-link {
+  color: #6c757d;
+}
+
+.catalog-pagination .page-link:hover {
+  color: #343a40;
 }

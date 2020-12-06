@@ -73,14 +73,23 @@ export const setYearTo = (yearTo) => (dispatch) => {
     dispatch(catalogYearToAdd(yearTo));
 };
 
+export const catalogGenresAdd = (genres) => ({
+    type: ActionTypes.CATALOG_GENRES_ADD,
+    genres: genres
+});
+
+export const setGenres = (genres) => (dispatch) => {
+    dispatch(catalogGenresAdd(genres));
+};
+
 export const catalogCardAdd = (info) => ({
     type: ActionTypes.CATALOG_CARD_ADD,
     payload: info.result
 });
 
-export const fetchUsersCard = (data) => (dispatch) => {
+export const fetchCatalogCard = (data) => (dispatch) => {
     dispatch(catalogLoading());
-    dispatch(setCatalogStatus(null));
+    // dispatch(setCatalogFilterStatus(null));
 
     return request('/api/movies/catalog/page', data, 'POST')
         .then(response => response.json())
@@ -94,9 +103,10 @@ export const countCardAdd = (count) => ({
 });
 
 export const fetchAllCatalog = (data) => (dispatch) => {
-    dispatch(catalogLoading());
+    // dispatch(catalogLoading());
 
-    return request('/api/movies/catalog/count/pages', data, 'POST')
+    console.log('data', data);
+    return request('/api/movies/catalog/count', data, 'POST')
         .then(response => response.json())
         .then(result => dispatch(countCardAdd(result)))
         .catch(error => dispatch(catalogFailed(error.message)));
