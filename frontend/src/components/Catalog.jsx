@@ -45,9 +45,8 @@ function InputForm(props) {
     const inputChange = (e) => {
         const { name, value } = e.target;
 
-        console.log(props.feedback);
         let isYear = (value.match(/^\d{1,4}$/)) ? true : false;
-        // let isRate = (value.match(/^\d{2,3}$/)) ? true : false; 
+        let isRate = (Number.isInteger(parseInt(value))) ? true : false; 
 
         /* мб сделать select? для года, жанра, страны */
         if (isYear) {
@@ -62,24 +61,20 @@ function InputForm(props) {
                     : (toggleValid('is-valid'), props.set(value));
             }
         }
+        if (isRate) {
+            if (name === 'ratefrom') {
+                return (value < 0 || value > 10)
+                    ? (toggleValid('is-invalid'), setFeedback("Age range 18 - 130 only"))
+                    : (toggleValid('is-valid'), props.set(value));
+            }
+            if (name === 'rateto') {
+                return (value < 0 || value > 10)
+                    ? (toggleValid('is-invalid'), setFeedback("Age range 18 - 130 only"))
+                    : (toggleValid('is-valid'), props.set(value));
+            }
+        }
         else
             toggleValid('is-invalid');
-
-
-        // if (isRate) {
-        //     if (name === 'ratefrom') {
-        //         return (value < 18 || value > 120)
-        //             ? (toggleValid('is-invalid'), setFeedback("Age range 18 - 130 only"))
-        //             : (toggleValid('is-valid'), props.set(value));
-        //     }
-        //     if (name === 'rateto') {
-        //         return (value < 18 || value > 120)
-        //             ? (toggleValid('is-invalid'), setFeedback("Age range 18 - 130 only"))
-        //             : (toggleValid('is-valid'), props.set(value));
-        //     }
-        // }
-        // else
-        //     toggleValid('is-invalid');
     };
 
     const checkInput = () => {
@@ -123,15 +118,14 @@ function Filter(props) {
     const searchFilm = (e) => {
         const value = e.target.value.toLowerCase();
 
-        const filter = props.filter.catalog.info.filter(film => {
-            return film.title.toLowerCase().includes(value);
-        });
-        console.log("filter", filter);
-        
+        // const filter = props.filter.catalog.info.filter(film => {
+        //     return film.title.toLowerCase().includes(value);
+        // });
+        // console.log("filter", filter);
+
         props.filter.setSearch(value);
     };
 
-    // console.log("HERE", props.filter.search);
     return (
         <Nav expand="lg" color="light">
 
@@ -150,8 +144,8 @@ function Filter(props) {
                             type="select"
                             onChange={e => { props.filter.setCatalogSort(e.target.value) }}
                             defaultValue={props.filter.catalog.sortType}>
-                            {/* <option value="rateAsc">Rate ↑</option>
-                            <option value="rateDesc">Rate ↓</option> */}
+                            <option value="rateAsc">Rate ↑</option>
+                            <option value="rateDesc">Rate ↓</option>
                             <option value="yearAsc">Year ↑</option>
                             <option value="yearDesc">Year ↓</option>
                         </Input>
@@ -176,7 +170,7 @@ function Filter(props) {
                         </Row>
                     </ModalHeader>
                     <ModalBody className="text-center">
-                        {/* <Row className="mt-2">
+                        <Row className="mt-2">
                             <Col xs={12}>
                                 <p className="font-profile-head">Rate</p>
                             </Col>
@@ -190,7 +184,7 @@ function Filter(props) {
                                 defaultValue={props.filter.catalog.rateTo}
                                 set={props.filter.setRateTo}
                                 setStatusButton={setStatusButton} />
-                        </Row> */}
+                        </Row>
 
                         <Row>
                             <Col xs={12}>
@@ -228,7 +222,7 @@ function Filter(props) {
                         <ModalFooter className="justify-content-between">
                             <Button
                                 color="success"
-                                className={isValidInput ? '' : 'disabled-button'}
+                                // className={isValidInput ? '' : 'disabled-button'}
                                 onClick={() => { toggleModal(); props.filter.initCatalog(); }}>
                                 Clear
                             </Button>

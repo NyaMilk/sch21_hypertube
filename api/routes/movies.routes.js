@@ -6,8 +6,7 @@ router.post('/catalog/count', async (req, res) => {
         const { rateFrom, rateTo, yearFrom, yearTo, genres, search } = req.body;
 
         // тут проверку на A > B?
-        // sqlFilter = `imdb >= ${rateFrom} AND imdb <= ${rateTo} AND EXTRACT(YEAR FROM year) BETWEEN ${yearFrom} AND ${yearTo} `;
-        let sqlFilter = `EXTRACT(YEAR FROM dateRelease) BETWEEN ${yearFrom} AND ${yearTo} `;
+        let sqlFilter = `imdb >= ${rateFrom} AND imdb <= ${rateTo} AND EXTRACT(YEAR FROM dateRelease) BETWEEN ${yearFrom} AND ${yearTo} `;
         if (genres.length > 0)
             sqlFilter += `AND genres && $1 `;
 
@@ -52,14 +51,12 @@ router.post('/catalog/page', async (req, res) => {
             limit = page * 9;
 
         if (sort === 'yearAsc' || sort === 'yearDesc')
-            sqlSort = (sort === 'yearAsc') ? 'year ASC' : 'year DESC';
-        // sqlSort = (sort === 'yearAsc') ? 'year ASC, rate DESC' : 'year DESC, rate DESC';
-        // else if (sort === 'rateAsc' || sort === 'rateDesc')
-        //     sqlSort = (sort === 'rateAsc') ? 'rate ASC, year ASC' : 'rate DESC, year ASC';
+            sqlSort = (sort === 'yearAsc') ? 'year ASC, imdb DESC' : 'year DESC, imdb DESC';
+        else if (sort === 'rateAsc' || sort === 'rateDesc')
+            sqlSort = (sort === 'rateAsc') ? 'imdb ASC, year ASC' : 'imdb DESC, year ASC';
 
         // тут проверку на A > B?
-        // let sqlFilter = `AND imdb >= ${rateFrom} AND imdb <= ${rateTo} AND year >= ${yearFrom} AND year <= ${yearTo} `;
-        let sqlFilter = `EXTRACT(YEAR FROM dateRelease) BETWEEN ${yearFrom} AND ${yearTo} `;
+        let sqlFilter = `imdb >= ${rateFrom} AND imdb <= ${rateTo} AND EXTRACT(YEAR FROM dateRelease) BETWEEN ${yearFrom} AND ${yearTo} `;
         if (genres.length > 0)
             sqlFilter += `AND genres && $1 `;
 

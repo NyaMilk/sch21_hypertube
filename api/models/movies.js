@@ -4,6 +4,7 @@ const getCountCards = (genres, sqlFilter) => {
     const sql =
         `SELECT * FROM Movies
     WHERE ${sqlFilter}`;
+    console.log(sql);
 
     return db.any(sql, [genres]);
 }
