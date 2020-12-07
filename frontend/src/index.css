@@ -10,7 +10,8 @@ body {
 /* container */
 .profile,
 .profile-edit,
-.catalog {
+.catalog,
+.film {
   padding: 20px 0;
 }
 
