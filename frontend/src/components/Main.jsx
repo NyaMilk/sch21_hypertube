@@ -6,6 +6,7 @@ import Register from './Register';
 import Remind from './Remind';
 import Restore from './Restore';
 import Catalog from './Catalog';
+import Movie from './Movie';
 import Profile from './Profile';
 import Footer from './Footer';
 
@@ -22,6 +23,7 @@ export function Main() {
                     <Route exact={true} path='/remind' component={Remind} />
                     <Route path='/remind/:email/:hash' component={Restore} />
                     <Route path='/catalog/page/:page' component={Catalog} />
+                    <Route exact={true} path='/movie/:imdb' component={Movie} />
                     <Route exact={true} path='/profile/:username' component={Profile} />
                     {/* <Route path='/edit' component={EditProfile} /> */}
                 </Switch>

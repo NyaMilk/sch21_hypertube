@@ -102,7 +102,9 @@ export const fetchCatalogCard = (data) => (dispatch) => {
 
     return request('/api/movies/catalog/page', data, 'POST')
         .then(response => response.json())
-        .then(result => dispatch(catalogCardAdd(result)))
+        .then(result => {
+            console.log(result);
+            dispatch(catalogCardAdd(result))})
         .catch(error => dispatch(catalogFailed(error.message)));
 };
 

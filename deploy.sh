@@ -8,7 +8,7 @@ case "$1" in
     npm i
     ;;
     "psql")
-    echo "Ok"
+    psql hypertube < api/psql/db.sql
     ;;
     "run")
     cd api

@@ -248,18 +248,18 @@ function GenreList(props) {
 }
 
 function FilmCards(props) {
-    console.log("film", props);
     let listItems;
     if (props.cards.length > 0) {
         listItems = props.cards.map((card, item) =>
             <Col md={4} key={item}>
-                <Link to={`/catalog/${card.title}`}>
+                <Link to={`/movie/${card.imdb}`}>
                     <Card className="mb-4 text-center">
                         {/* <CardImg width="100%" top src={`/api/image/${card.nickname}/1/${card.photos}`} alt={`Profile photo ${card.nickname}`} /> */}
-                        <CardImg width="100%" top src={testImg} alt={card.title} />
+                        {/* Подумать еще над языком */}
+                        <CardImg width="100%" top src={`https://image.tmdb.org/t/p/original${eval(`card.${props.language}poster`)}`} alt={card.title} />
                         <CardBody>
                             <CardTitle>
-                                {card.title} <Badge color="danger" pill> {card.imdb} </Badge>
+                                {card.title} <Badge color="danger" pill> {card.rate} </Badge>
                             </CardTitle>
                             <ListGroup flush>
                                 <ListGroupItem>{card.year}</ListGroupItem>
@@ -344,6 +344,7 @@ function CardsPagination(props) {
 }
 
 const Catalog = (props) => {
+    const { t, i18n } = useTranslation();
     const { page } = props.match.params;
     const { fetchAllCatalog, fetchCatalogCard } = props;
     const { sort, filterStatus, rateFrom, rateTo, yearFrom, yearTo, genres, search } = props.catalog;
@@ -385,7 +386,7 @@ const Catalog = (props) => {
             <section className="catalog">
                 <Container>
                     <Filter filter={props} />
-                    <FilmCards cards={props.catalog.info} />
+                    <FilmCards cards={props.catalog.info} language={i18n.language}/>
                     <CardsPagination getPage={page} cardCount={props.catalog.cardCount} />
                 </Container>
             </section>

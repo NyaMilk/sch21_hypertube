@@ -3,13 +3,15 @@ const { db, pgp } = require('../config/psql-setup');
 exports.insertMovies = (data) => {
     const cs = new pgp.helpers.ColumnSet([
         'imdb',
-        {name: 'engtitle', prop: 'engTitle'},
+        {name: 'entitle', prop: 'enTitle'},
         {name: 'rutitle', prop: 'ruTitle'},
-        'year',
-        {name: 'engdescription', prop: 'engDescription'},
+        'rate',
+        {name: 'daterelease', prop: 'year'},
+        {name: 'endescription', prop: 'enDescription'},
         {name: 'rudescription', prop: 'ruDescription'},
-        'poster',
-        {name: 'enggenres', prop: 'engGenres'},
+        {name: 'enposter', prop: 'enPoster'},
+        {name: 'ruposter', prop: 'ruPoster'},
+        {name: 'engenres', prop: 'enGenres'},
         {name: 'rugenres', prop: 'ruGenres'},
         'runtime',
         'torrents'
@@ -37,7 +39,7 @@ exports.getCountCards = (genres, sqlFilter) => {
 
 exports.getCards = (genres, limit, sqlSort, sqlFilter) => {
     const sql =
-        `SELECT title, imdb, EXTRACT(YEAR FROM dateRelease) AS year, poster, genres FROM Movies
+        `SELECT enTitle, ruTitle, rate, imdb, EXTRACT(YEAR FROM dateRelease) AS year, enPoster, ruPoster, enGenres, ruGenres FROM Movies
     WHERE ${sqlFilter} ORDER BY ${sqlSort}
     LIMIT 9 OFFSET ($2 - 9)`;
 

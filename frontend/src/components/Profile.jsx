@@ -33,7 +33,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 const Avatar = (props) => {
     const { username } = props;
-    const [src, setSrc] = useState()
+    const [src, setSrc] = useState();
 
     const putPhoto = (e) => {
         if (e.target.files && e.target.files[0]) {
@@ -271,7 +271,6 @@ const Profile = (props) => {
     const { username } = props.match.params;
     const { fetchProfile } = props;
 
-    console.log("profile", props);
     useEffect(() => {
         fetchProfile(username);
     }, [username]);
@@ -305,7 +304,6 @@ const Profile = (props) => {
                         <Avatar
                             username={username}
                             check={isMe}
-                            username={props.profile.info.username}
                             text={t("profilePage.change")} />
                         <Col ls="9" className="font-profile-head">
                             <h2>{props.profile.info.username}</h2>
