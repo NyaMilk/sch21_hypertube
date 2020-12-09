@@ -3,6 +3,7 @@ import { LoginReducer } from './login/login.reducer';
 import { RegisterReducer } from './register/register.reducer';
 import { CatalogReducer } from './catalog/catalog.reducer';
 import { ProfileReducer } from './profile/profile.reducer';
+import { MovieReducer } from './movie/movie.reducer';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 
@@ -14,6 +15,7 @@ export const ConfigureStore = () => {
             login: LoginReducer,
             register: RegisterReducer,
             catalog: CatalogReducer,
+            movie: MovieReducer,
             profile: ProfileReducer
         }),
         persistedState,

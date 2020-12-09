@@ -22,11 +22,11 @@ exports.insertMovies = (data) => {
     return db.none(insert);
 }
 
-exports.getMovies = () => {
+exports.getMovie = (imdb) => {
     const sql = 
-    `SELECT torrents from movies`;
+    `SELECT * from movies WHERE imdb = $1`;
 
-    return db.any(sql);
+    return db.any(sql, imdb);
 }
 
 exports.getCountCards = (genres, sqlFilter) => {
