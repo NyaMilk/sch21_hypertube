@@ -248,6 +248,8 @@ function GenreList(props) {
 }
 
 function FilmCards(props) {
+    const test = (props.language == 'en') ? 'en' : 'ru';
+
     let listItems;
     if (props.cards.length > 0) {
         listItems = props.cards.map((card, item) =>
@@ -259,6 +261,7 @@ function FilmCards(props) {
                         <CardImg width="100%" top src={`https://image.tmdb.org/t/p/original${eval(`card.${props.language}poster`)}`} alt={card.title} />
                         <CardBody>
                             <CardTitle>
+        
                                 {card.title} <Badge color="danger" pill> {card.rate} </Badge>
                             </CardTitle>
                             <ListGroup flush>
