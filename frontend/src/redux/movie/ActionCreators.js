@@ -37,3 +37,27 @@ export const fetchMovie = (imdb) => (dispatch) => {
         })
         .catch(error => dispatch(movieFailed(error.message)));
 };
+
+export const favoriteAdd = (data) => ({
+    type: ActionTypes.FAVORITE_ADD,
+    payload: data.result
+});
+
+export const favoriteFailed = (msg) => ({
+    type: ActionTypes.FAVORITE_FAILED,
+    payload: msg
+});
+
+export const fetchStatus = (me, film) => (dispatch) => {
+    dispatch(movieLoading());
+
+    const data = {
+        me: me,
+        film: film
+    }
+
+    return request('/api/movies/movie/favorite', data, 'POST')
+        .then(response => response.json())
+        .then(result => dispatch(favoriteAdd(result)))
+        .catch(error => dispatch(favoriteFailed(error.message)));
+};

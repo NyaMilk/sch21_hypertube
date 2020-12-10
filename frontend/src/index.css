@@ -4,12 +4,16 @@ html {
 }
 
 body {
-  margin-bottom: 60px !important;
+  margin-bottom: 60px;
+  color: #5a6268;
 }
 
 /* container */
 
-.profile, .profile-edit, .catalog, .movie {
+.profile,
+.profile-edit,
+.catalog,
+.movie {
   padding: 20px 0;
 }
 
@@ -124,7 +128,8 @@ header .navbar .navbar-brand {
   margin-bottom: 0;
 }
 
-.login .font-profile-head, .login .login-btn {
+.login .font-profile-head,
+.login .login-btn {
   width: 100%;
 }
 
@@ -138,7 +143,8 @@ header .navbar .navbar-brand {
   margin-top: 10px;
 }
 
-.login .login-btn, .login-btn__aside {
+.login .login-btn,
+.login-btn__aside {
   margin-top: 20px;
   font-weight: 700;
 }
@@ -313,10 +319,41 @@ header .navbar .navbar-brand {
 }
 
 /* movie */
-.movie .movie-list {
-  padding: 0 0.5rem 0 0;
+.movie .font-movie-head p {
+  font-size: 1.2rem;
+  font-weight: 700;
+  opacity: 0.5;
 }
 
-.movie .movie-list:last-child {
-  padding: 0;
+.movie .list-group-horizontal > .list-group-item:first-child,
+.movie .list-group-horizontal > .list-group-item:last-child {
+  border-bottom-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.movie .movie-list,
+.movie .movie-description {
+  padding: 0.25rem 0.5rem;
+  margin-right: 0.35rem;
+  text-transform: capitalize;
+  background: #f8f9fa;
+  border: none;
+  border-radius: 5px;
+}
+
+.movie .movie-list a {
+  text-decoration: none;
+  color: #343a40;
+}
+
+.movie .movie-list:hover {
+  background: #dee2e6;
+}
+
+.movie .movie-title {
+  margin: 0.5rem 0 0.2rem;
+}
+
+.movie .aside-button button {
+  margin: 0.5rem 0.5rem 0 0;
 }

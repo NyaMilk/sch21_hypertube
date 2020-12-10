@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, withRouter } from 'react-router-dom';
-import { Container, Row, Col, ListGroupItem, ListGroup } from 'reactstrap'
+import { Link, useParams, withRouter } from 'react-router-dom';
+import { Container, Row, Col, ListGroup, ListGroupItem, Button } from 'reactstrap'
 import { connect } from 'react-redux';
 import { fetchMovie } from '../redux/movie/ActionCreators';
 import CONFIG from '../util/const';
@@ -25,14 +25,13 @@ function GenreList(props) {
     let listItems;
     if (props.genres) {
         listItems = props.genres.map((genre, item) =>
-            <span className="movie-list" key={item}>{genre}</span>
+            <ListGroupItem className="movie-list" key={item}>
+                <Link to="#">{genre}</Link>
+            </ListGroupItem>
         );
     }
     return (
-        <p>
-            Жанр:
-            {listItems}
-        </p>
+        <ListGroup horizontal>{listItems}</ListGroup>
     );
 }
 
@@ -40,6 +39,11 @@ const Movie = (props) => {
     const { t, i18n } = useTranslation();
     const { imdb } = useParams();
     const { fetchMovie } = props;
+    const changeFilmList = (e) => {
+        if (e.target.value === 'like' || e.target.value === 'unlike') {
+            props.fetchUpdateStatus(props.me, props.film, e.target.value);
+        }
+    }
     console.log(props);
 
     useEffect(() => {
@@ -47,7 +51,6 @@ const Movie = (props) => {
     }, [fetchMovie, imdb])
 
     const title = (i18n.language === 'en') ? props.movie.info.entitle : props.movie.info.rutitle;
-    const subtitle = (i18n.language === 'en') ? '' : props.movie.info.entitle;
     const description = (i18n.language === 'en') ? props.movie.info.endescription : props.movie.info.rudescription;
     const genres = (i18n.language === 'en') ? props.movie.info.engenres : props.movie.info.rugenres;
 
@@ -68,7 +71,13 @@ const Movie = (props) => {
                     <Row className="movie-header">
                         <Col className="font-movie-head">
                             <h2>{title}</h2>
-                            <p>{subtitle}</p>
+                            <p>
+                                {`IMDb ${props.movie.info.rate} `}
+                                &bull;
+                                {` ${moment(props.movie.info.daterelease).year()} `}
+                                &bull;
+                                {` ${props.movie.info.runtime} min`}
+                            </p>
                         </Col>
                     </Row>
                     <Row>
@@ -82,19 +91,24 @@ const Movie = (props) => {
                             </video>
                         </Col>
                     </Row>
-                    {/* <AsideButton
-                        check={isMe}
-                        // info={props.login.info}
-                        status={[t("moviePage.status.add"), t("moviePage.status.remove")]} /> */}
+                    <Row className="aside-button">
+                        <Col className="aside-button">
+                            <Button color="danger"
+                                value={props.movie.favorite === 'add' ? 'remove' : 'add'}
+                                onClick={changeFilmList}>
+                                {props.movie.favorite === 'add' ? 'Remove from favorite' : 'Add to favorite'}
+                            </Button>
+                            <Button color="danger">
+                                Share
+                            </Button>
+                        </Col>
+                    </Row>
                     <Row>
                         <Col>
-                            <p>
-                                {moment(props.movie.info.daterelease).year()},
-                                COUNTRY,
-                                TIME??
-                            </p>
+                            <p className="movie-title">Жанр:</p>
                             <GenreList genres={genres} />
-                            <p>{description}</p>
+                            <p className="movie-title">Описание:</p>
+                            <p className="movie-description">{description}</p>
                         </Col>
                     </Row>
                 </Container>

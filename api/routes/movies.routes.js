@@ -148,4 +148,38 @@ router.get('/video/:imdb', function (req, res) {
     }
 });
 
+router.post('/movie/favorite', async (req, res) => {
+    try {
+        const { me, film } = req.body;
+
+        getFavorite(me, film)
+            .then(data => {
+                if (data.length > 0)
+                    res.status(200).json({
+                        result: data[0].favorite,
+                        message: "Ok",
+                        success: true
+                    });
+                else
+                    res.status(200).json({
+                        result: "None",
+                        message: "Ok",
+                        success: true
+                    })
+            })
+            .catch(() => {
+                res.status(200).json({
+                    message: "Ooops! Cannot find favorite. Try again",
+                    success: false
+                })
+            })
+    }
+    catch (e) {
+        res.status(200).json({
+            message: "Ooops! Cannot find favorite. Try again",
+            success: false
+        })
+    }
+})
+
 module.exports = router;
