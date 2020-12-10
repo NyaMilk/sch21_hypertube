@@ -17,7 +17,6 @@ const tsvJSON = (tsv) => {
 const csvJSON = (csv) => {
   const lines = csv.split('\r\n');
   const headers = lines.shift().split(',');
-  console.log(headers);
   return lines.map(line => {
     const data = line.split(',');
     return headers.reduce((obj, nextKey, index) => {

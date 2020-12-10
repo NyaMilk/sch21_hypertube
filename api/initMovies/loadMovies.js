@@ -1,13 +1,13 @@
 const axios = require("axios");
 const API_KEY = 'd022dfadcf20dc66d480566359546d3c';
-const { getRate } = require('./rate');
+const { getRate, getRuIso } = require('./rate');
 const { insertMovies } = require('../models/movies');
 
 const getPopcornMovies = async () => {
     let raw = [];
 
     console.log('*Load popcorn movies*');
-    for (let i = 1; i <= 10; i++) {
+    for (let i = 1; i <= 1; i++) {
         try {
             const res = await axios(`https://cors-anywhere.herokuapp.com/movies-v2.api-fetch.sh/movies/${i}`, { headers: { 'X-Requested-With': true } });
             raw.push(...res.data);
@@ -47,7 +47,7 @@ const getYtsMovies = async () => {
     let raw = [];
 
     console.log('*Load YTS movies*');
-    for (let i = 1; i <= 10; i++) {
+    for (let i = 1; i <= 1; i++) {
         try {
             const res = await axios(`https://yts.lt/api/v2/list_movies.json?limit=50&page=${i}`)
             raw.push(...res.data.data.movies);
@@ -109,21 +109,36 @@ const filterMovies = async () => {
             if (!movie.imdb)
                 return null;
                 
-            const res = await axios(`https://api.themoviedb.org/3/movie/${movie.imdb}?api_key=${API_KEY}&language=ru`);
-            const enRes = await axios(`https://api.themoviedb.org/3/movie/${movie.imdb}?api_key=${API_KEY}&language=en`);
+            const res = await axios(`https://api.themoviedb.org/3/movie/${movie.imdb}?api_key=${API_KEY}&append_to_response=videos&language=ru`);
+            const enRes = await axios(`https://api.themoviedb.org/3/movie/${movie.imdb}?api_key=${API_KEY}&append_to_response=videos&language=en`);
             const en_poster_path = enRes.data.poster_path;
-            const { title, genres, overview, release_date, runtime, poster_path } = res.data;
+            const enVideos = enRes.data.videos.results[0].key;
+            const { title, genres, overview, release_date, runtime, poster_path, production_countries, videos } = res.data;
 
-            if (!title || !genres || !overview || !release_date || !runtime || !poster_path)
+            if (!title || !genres || !overview || !release_date || !runtime || !poster_path 
+                || !production_countries || !enVideos || !videos.results[0].key || !en_poster_path)
                 return null;
 
+            movie.enCountries = production_countries.map((item) => {
+                return item.name;
+            })
+
+            movie.ruCountries = production_countries.map((item) => {
+                return getRuIso(item['iso_3166_1']);
+            })
+
+            movie.enPoster = en_poster_path;
+            movie.enTrailer = enVideos;
+            movie.ruTrailer = videos.results[0].key;
             movie.ruTitle = title;
             movie.ruDescription = overview;
             movie.year = release_date;
             movie.runtime = runtime;
-            movie.enPoster = en_poster_path;
             movie.ruPoster = poster_path;
             movie.ruGenres = [];
+
+            if ( !movie.enTrailer || !movie.ruTrailer)
+                return null;
 
             if (genres) {
                 for (let i = 0; i < genres.length; i++)
