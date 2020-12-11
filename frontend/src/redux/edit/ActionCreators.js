@@ -74,21 +74,14 @@ export const initFormEdit = () => (dispatch) => {
 export const fetchEditProfile = (data, login) => (dispatch) => {
     dispatch(editProfileLoading());
 
-    const p1 = request(`/api/profile/edit/tags/${login}`, data, 'POST');
-    const p2 = request(`api/profile/edit/location/${login}`, data, 'POST');
-
-    Promise.all([p1, p2])
-        .then(() => {
-            request(`/api/profile/edit/${login}`, data, 'POST')
-                .then(response => response.json())
-                .then(result => {
-                    console.log(result);
-                    dispatch(fetchUpdateLogin(result.nickname))
-                        .then(() => {
-                            dispatch(editProfileStatus(result));
-                        })
+    request(`/api/profile/edit/${login}`, data, 'POST')
+        .then(response => response.json())
+        .then(result => {
+            console.log(result);
+            dispatch(fetchUpdateLogin(result.nickname))
+                .then(() => {
+                    dispatch(editProfileStatus(result));
                 })
-                .catch(error => dispatch(editProfileFailed(error.message)));
         })
         .catch(error => dispatch(editProfileFailed(error.message)));
 };

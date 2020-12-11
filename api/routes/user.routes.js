@@ -43,7 +43,7 @@ router.post('/profile/edit/:username', async (req, res) => {
     let i = 1;
 
     for (const [key, value] of Object.entries(req.body)) {
-        if (value !== null && key !== 'newtags' && key !== 'newpass' && key !== 'oldtags' && key !== 'coords') {
+        if (value !== null && key !== 'newpass') {
             keys.push(`${key} = $${i++}`);
             params.push(value);
         }
