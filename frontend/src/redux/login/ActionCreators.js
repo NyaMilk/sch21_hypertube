@@ -10,20 +10,17 @@ export const logOut = () => (dispatch) => {
     return request(`${CONFIG.API_URL}/api/auth/logout`)
         .then(res => res.json())
         .then(() => dispatch(loginOut()))
-
 }
 
 export const loginLoading = () => ({
     type: ActionTypes.LOGIN_LOADING
 });
 
-export const addUser = (username) => ({
-    type: ActionTypes.LOGIN_USER_ADD,
-    username: username
-});
-
 export const setUser = (username) => (dispatch) => {
-    return dispatch(addUser(username))
+    return dispatch(() => ({
+        type: ActionTypes.LOGIN_USER_ADD,
+        username: username
+    }))
 }
 
 export const loginDataAdd = (info) => ({

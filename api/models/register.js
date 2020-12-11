@@ -28,7 +28,7 @@ exports.getEmail = (email) => {
 exports.getLogin = (username) => {
     const sql =
         `SELECT id FROM Users 
-    WHERE userName=$1 AND provider = 'hypert'`;
+    WHERE userName=$1`;
 
     return db.any(sql, [username]);
 }

@@ -16,58 +16,46 @@ export const formSubmit = (res) => ({
     payload: res
 });
 
-export const formLogin = (login) => ({
-    type: ActionTypes.USER_FORM_USERNAME_ADD,
-    userName: login
-});
-
 export const setLogin = (login) => (dispatch) => {
-    dispatch(formLogin(login));
+    dispatch(() => ({
+        type: ActionTypes.USER_FORM_USERNAME_ADD,
+        userName: login
+    }));
 };
-
-export const formFirstName = (firstName) => ({
-    type: ActionTypes.USER_FORM_FIRSTNAME_ADD,
-    firstName: firstName
-});
 
 export const setFirstName = (firstName) => (dispatch) => {
-    dispatch(formFirstName(firstName));
+    dispatch(() => ({
+        type: ActionTypes.USER_FORM_FIRSTNAME_ADD,
+        firstName: firstName
+    }));
 };
-
-export const formLastName = (lastName) => ({
-    type: ActionTypes.USER_FORM_LASTNAME_ADD,
-    lastName: lastName
-});
 
 export const setLastName = (lastName) => (dispatch) => {
-    dispatch(formLastName(lastName));
+    dispatch(() => ({
+        type: ActionTypes.USER_FORM_LASTNAME_ADD,
+        lastName: lastName
+    }));
 };
-
-export const formEmail = (email) => ({
-    type: ActionTypes.USER_FORM_EMAIL_ADD,
-    email: email
-});
 
 export const setEmail = (email) => (dispatch) => {
-    dispatch(formEmail(email));
+    dispatch(() => ({
+        type: ActionTypes.USER_FORM_EMAIL_ADD,
+        email: email
+    }));
 };
-
-export const formPassword = (pass) => ({
-    type: ActionTypes.USER_FORM_PASSWORD_ADD,
-    password: pass
-});
 
 export const setPassword = (pass) => (dispatch) => {
-    dispatch(formPassword(pass));
+    dispatch(() => ({
+        type: ActionTypes.USER_FORM_PASSWORD_ADD,
+        password: pass
+    }));
 };
 
-export const formRepassword = (pass) => ({
-    type: ActionTypes.USER_FORM_REPASSWORD_ADD,
-    repassword: pass
-});
-
 export const setRepassword = (pass) => (dispatch) => {
-    dispatch(formRepassword(pass));
+    dispatch(() => ({
+        type: ActionTypes.USER_FORM_REPASSWORD_ADD,
+        repassword: pass
+    }));
 };
 
 export const fetchRegister = (data) => (dispatch) => {

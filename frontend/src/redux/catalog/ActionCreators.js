@@ -1,13 +1,10 @@
 import * as ActionTypes from './ActionTypes';
 import { request } from '../../util/http';
 
-
-export const catalogClear = () => ({
-    type: ActionTypes.CATALOG_CLEAR
-});
-
 export const initCatalog = () => (dispatch) => {
-    dispatch(catalogClear());
+    dispatch(() => ({
+        type: ActionTypes.CATALOG_CLEAR
+    }));
 };
 
 export const catalogLoading = () => ({
@@ -19,76 +16,60 @@ export const catalogFailed = (msg) => ({
     payload: msg
 });
 
-export const catalogSortAdd = (sort) => ({
-    type: ActionTypes.CATALOG_SORT_ADD,
-    sort: sort
-});
-
 export const setCatalogSort = (sort) => (dispatch) => {
-    dispatch(catalogSortAdd(sort));
+    dispatch(() => ({
+        type: ActionTypes.CATALOG_SORT_ADD,
+        sort: sort
+    }));
 };
-
-export const catalogFilterStatus = (status) => ({
-    type: ActionTypes.CATALOG_FILTER_ADD,
-    status: status
-});
 
 export const setCatalogFilterStatus = (status) => (dispatch) => {
-    dispatch(catalogFilterStatus(status));
+    dispatch(() => ({
+        type: ActionTypes.CATALOG_FILTER_ADD,
+        status: status
+    }));
 }
 
-export const catalogRateFromAdd = (rateFrom) => ({
-    type: ActionTypes.CATALOG_RATE_FROM_ADD,
-    rateFrom: rateFrom
-});
-
 export const setRateFrom = (rateFrom) => (dispatch) => {
-    dispatch(catalogRateFromAdd(rateFrom));
+    dispatch(() => ({
+        type: ActionTypes.CATALOG_RATE_FROM_ADD,
+        rateFrom: rateFrom
+    }));
 };
-
-export const catalogRateToAdd = (rateTo) => ({
-    type: ActionTypes.CATALOG_RATE_TO_ADD,
-    rateTo: rateTo
-});
 
 export const setRateTo = (rateTo) => (dispatch) => {
-    dispatch(catalogRateToAdd(rateTo));
+    dispatch(() => ({
+        type: ActionTypes.CATALOG_RATE_TO_ADD,
+        rateTo: rateTo
+    }));
 };
-
-export const catalogYearFromAdd = (yearFrom) => ({
-    type: ActionTypes.CATALOG_YEAR_FROM_ADD,
-    yearFrom: yearFrom
-});
 
 export const setYearFrom = (yearFrom) => (dispatch) => {
-    dispatch(catalogYearFromAdd(yearFrom));
+    dispatch(() => ({
+        type: ActionTypes.CATALOG_YEAR_FROM_ADD,
+        yearFrom: yearFrom
+    }));
 };
-
-export const catalogYearToAdd = (yearTo) => ({
-    type: ActionTypes.CATALOG_YEAR_TO_ADD,
-    yearTo: yearTo
-});
 
 export const setYearTo = (yearTo) => (dispatch) => {
-    dispatch(catalogYearToAdd(yearTo));
+    dispatch(() => ({
+        type: ActionTypes.CATALOG_YEAR_TO_ADD,
+        yearTo: yearTo
+    }));
 };
-
-export const catalogGenresAdd = (genres) => ({
-    type: ActionTypes.CATALOG_GENRES_ADD,
-    genres: genres
-});
 
 export const setGenres = (genres) => (dispatch) => {
-    dispatch(catalogGenresAdd(genres));
+    dispatch(() => ({
+        type: ActionTypes.CATALOG_GENRES_ADD,
+        genres: genres
+    }));
 };
 
-export const catalogSearchAdd = (search) => ({
-    type: ActionTypes.CATALOG_SEARCH_ADD,
-    search: search
-});
-
 export const setSearch = (search) => (dispatch) => {
-    dispatch(catalogSearchAdd(search));
+    dispatch(() => ({
+        type: ActionTypes.CATALOG_SEARCH_ADD,
+        search: search
+    }));
 };
 
 export const catalogCardAdd = (info) => ({
