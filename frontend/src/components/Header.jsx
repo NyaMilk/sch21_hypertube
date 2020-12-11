@@ -2,8 +2,10 @@ import React, { useEffect } from "react";
 import { withRouter, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Container, Navbar, NavbarBrand, Nav, NavItem, NavLink } from 'reactstrap';
-import { logOut } from '../redux/login/ActionCreators';
+import { logOut, setUser, setUserFailed } from '../redux/login/ActionCreators';
 import { useTranslation } from "react-i18next";
+import { request } from '../util/http';
+import CONFIG from '../util/const';
 
 const video = '/img/head-video.svg';
 const user = '/img/head-user.svg';
@@ -16,7 +18,9 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    logOut: () => dispatch(logOut())
+    logOut: () => dispatch(logOut()),
+    setUser: (username) => dispatch(setUser(username)),
+    setUserFailed: (msg) => dispatch(setUserFailed(msg))
 });
 
 const Header = (props) => {
@@ -29,11 +33,19 @@ const Header = (props) => {
     const isLogged = props.login.isLogged;
     const path = props.location.pathname;
     const history = useHistory();
+    const { setUser, setUserFailed } = props;
 
     useEffect(() => {
         if (!isLogged && !path.includes('/register') && !path.includes('/remind'))
             history.push('/login');
     }, [isLogged, history]);
+
+    useEffect(() => {
+        request(`${CONFIG.API_URL}/api/auth/success`)
+            .then(res => res.json())
+            .then(data => (data.user) ? setUser(data.user) : setUserFailed(data.message))
+            .catch((e) => setUserFailed(e.message))
+    }, [request, setUser, setUserFailed])
 
     return (
         <header className="header">

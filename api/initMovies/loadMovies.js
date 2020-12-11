@@ -7,7 +7,7 @@ const getPopcornMovies = async () => {
     let raw = [];
 
     console.log('*Load popcorn movies*');
-    for (let i = 1; i <= 1; i++) {
+    for (let i = 1; i <= 3; i++) {
         try {
             const res = await axios(`https://cors-anywhere.herokuapp.com/movies-v2.api-fetch.sh/movies/${i}`, { headers: { 'X-Requested-With': true } });
             raw.push(...res.data);
@@ -47,7 +47,7 @@ const getYtsMovies = async () => {
     let raw = [];
 
     console.log('*Load YTS movies*');
-    for (let i = 1; i <= 1; i++) {
+    for (let i = 1; i <= 3; i++) {
         try {
             const res = await axios(`https://yts.lt/api/v2/list_movies.json?limit=50&page=${i}`)
             raw.push(...res.data.data.movies);
@@ -116,7 +116,7 @@ const filterMovies = async () => {
             const { title, genres, overview, release_date, runtime, poster_path, production_countries, videos } = res.data;
 
             if (!title || !genres || !overview || !release_date || !runtime || !poster_path 
-                || !production_countries || !enVideos || !videos.results[0].key || !en_poster_path)
+                || !production_countries || !enVideos || !videos.results[0].key || !en_poster_path || !title.match(/[А-я]$/))
                 return null;
 
             movie.enCountries = production_countries.map((item) => {
@@ -127,10 +127,10 @@ const filterMovies = async () => {
                 return getRuIso(item['iso_3166_1']);
             })
 
+            movie.ruTitle = title;
             movie.enPoster = en_poster_path;
             movie.enTrailer = enVideos;
             movie.ruTrailer = videos.results[0].key;
-            movie.ruTitle = title;
             movie.ruDescription = overview;
             movie.year = release_date;
             movie.runtime = runtime;

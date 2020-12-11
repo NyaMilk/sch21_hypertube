@@ -2,12 +2,13 @@ const router = require('express').Router();
 const { getProfile, editProfile } = require("../models/user");
 const bcrypt = require('bcrypt');
 
-router.get('/profile/:nickname', async (req, res) => {
+router.get('/profile/:username', async (req, res) => {
     try {
-        const nickname = req.params.nickname;
+        const { username } = req.params;
 
-        getProfile(nickname)
+        getProfile(username)
             .then(data => {
+                console.log(data);
                 if (data.length > 0) {
                     res.status(200).json({
                         result: data[0],
@@ -35,8 +36,8 @@ router.get('/profile/:nickname', async (req, res) => {
     }
 })
 
-router.post('/profile/edit/:nickname', async (req, res) => {
-    const login = req.params.nickname;
+router.post('/profile/edit/:username', async (req, res) => {
+    const { username } = req.params;
     let keys = [];
     let params = [];
     let i = 1;
@@ -59,14 +60,14 @@ router.post('/profile/edit/:nickname', async (req, res) => {
     if (params.length === 0) {
         res.status(200).json({
             msg: 'wow',
-            nickname: login,
+            nickname: username,
             success: true
         })
         return;
     }
 
     const que = keys.join(', ');
-    params.push(login);
+    params.push(username);
     editProfile(que, params, i)
         .then(data => {
             res.status(200).json({

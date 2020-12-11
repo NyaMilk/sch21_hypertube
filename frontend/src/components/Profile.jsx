@@ -125,9 +125,9 @@ function InputForm(props) {
             <p className="font-profile-head">{props.label}</p>
             <Input
                 type={props.type || 'text'}
-                placeholder={props.placeholder || ''}
+                placeholder={props.placeholder || ''} 
                 name={props.name}
-                defaultValue={props.me || ''}
+                defaultValue={props.value || ''}
                 onChange={inputChange}
                 onBlur={props.checkBtn}
                 className={isValid}
@@ -141,7 +141,7 @@ function EditProfile(props) {
     const { t } = useTranslation();
     const [modal, setModal] = useState(false);
     const [message, setMessage] = useState();
-
+    const { displayname, firstname, lastname, about, email } = props.info;
     const toggleModal = () => setModal(!modal);
 
     const [isActiveBtn, toggleBtn] = useState(true);
@@ -178,28 +178,28 @@ function EditProfile(props) {
                 <ModalBody>
                     <InputForm
                         name='login'
-                        // me={props.info.username}
+                        value={displayname}
                         label={t("loginPage.login")}
                         feedback={[t("inputMsg.login.taken"), t("inputMsg.login.invalid")]}
                         // set={props.setLogin}
                         checkBtn={checkBtn} />
                     <InputForm
                         name='firstName'
-                        // me={props.info.firstname}
+                        value={firstname}
                         label={t("loginPage.firstName")}
                         feedback={t("inputMsg.text")}
                         // set={props.setFirstName}
                         checkBtn={checkBtn} />
                     <InputForm
                         name='lastName'
-                        // me={props.info.lastname}
+                        value={lastname}
                         label={t("loginPage.lastName")}
                         feedback={t("inputMsg.text")}
                         // set={props.setLastName}
                         checkBtn={checkBtn} />
                     <InputForm
                         name='email'
-                        // me={props.info.email}
+                        value={email}
                         label={t("loginPage.email")}
                         feedback={[t("inputMsg.email.taken"), t("inputMsg.email.invalid")]}
                         // set={props.setEmail}
@@ -207,14 +207,14 @@ function EditProfile(props) {
                         type="email" />
                     <InputForm
                         name='about'
-                        // me={props.info.about}
+                        value={about}
                         label={t("profilePage.about")}
                         // set={props.setAbout}
                         checkBtn={checkBtn} />
 
                     <InputForm
                         name='currentPass'
-                        // login={props.info.username}
+                        login={displayname}
                         label={t("profilePage.curpassword")}
                         feedback={t("inputMsg.password.wrong")}
                         checkBtn={checkBtn}
@@ -269,6 +269,7 @@ const Profile = (props) => {
     const { t } = useTranslation();
     const { me } = props.login;
     const { username } = props.match.params;
+    const { displayname, firstname, lastname, about } = props.profile.info;
     const { fetchProfile } = props;
 
     useEffect(() => {
@@ -298,17 +299,17 @@ const Profile = (props) => {
                 <Container>
                     <AsideButton
                         check={isMe}
-                        // info={props.login.info}
+                        info={props.profile.info}
                         status={[t("profilePage.status.add"), t("profilePage.status.remove")]} />
                     <Row className="profile-header">
                         <Avatar
-                            username={username}
+                            username={displayname}
                             check={isMe}
                             text={t("profilePage.change")} />
                         <Col ls="9" className="font-profile-head">
-                            <h2>{props.profile.info.username}</h2>
-                            <p>{props.profile.info.firstname} {props.profile.info.lastname}</p>
-                            <p>{props.profile.info.about}</p>
+                            <h2>{displayname}</h2>
+                            <p>{firstname} {lastname}</p>
+                            <p>{about}</p>
                         </Col>
                     </Row>
 

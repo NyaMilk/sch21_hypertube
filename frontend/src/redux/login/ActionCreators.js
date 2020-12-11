@@ -7,7 +7,10 @@ export const loginOut = () => ({
 })
 
 export const logOut = () => (dispatch) => {
-    return dispatch(loginOut());
+    return request(`${CONFIG.API_URL}/api/auth/logout`)
+        .then(res => res.json())
+        .then(() => dispatch(loginOut()))
+
 }
 
 export const loginLoading = () => ({
@@ -22,6 +25,7 @@ export const addUser = (username) => ({
 export const setUser = (username) => (dispatch) => {
     return dispatch(addUser(username))
 }
+
 export const loginDataAdd = (info) => ({
     type: ActionTypes.LOGIN_DATA_ADD,
     payload: info
@@ -31,6 +35,10 @@ export const loginFailed = (msg) => ({
     type: ActionTypes.LOGIN_FAILED,
     payload: msg
 });
+
+export const setUserFailed = (msg) => (dispatch) => {
+    return dispatch(loginFailed(msg))
+}
 
 export const localAuth = (username, password) => (dispatch) => {
     dispatch(loginLoading());
@@ -53,11 +61,10 @@ export const localAuth = (username, password) => (dispatch) => {
         .catch(error => dispatch(loginFailed(error.message)));
 }
 
-
-export const fetchUpdateLogin = (login) => (dispatch) => {
+export const fetchUpdateLogin = (username) => (dispatch) => {
     dispatch(loginLoading());
 
-    return request(`/api/user/login/${login}`)
+    return request(`/api/user/login/${username}`)
         .then(res => res.json())
         .then(result => {
             if (result.success === true) {
