@@ -49,3 +49,12 @@ exports.getCards = (genres, limit, sqlSort, sqlFilter) => {
 
     return db.any(sql, [genres, limit]);
 }
+
+exports.getFavorite = (me, film) => {
+    const sql =
+        `SELECT status FROM Favorite
+    WHERE idUser = (SELECT id FROM Users WHERE displayName = $1)
+    AND idFilm = $2`;
+  
+    return db.any(sql, [me, film]);
+}
