@@ -117,9 +117,18 @@ router.get('/movie/:imdb', function (req, res) {
         })
 });
 
-router.get('/video/:imdb', function (req, res) {
-    const path = 'data/test.mp4';
+router.get('/video/:imdb/:quality', function (req, res) {
+    const { imdb, quality } = req.params;
+    let path;
+    if (quality == '720')
+        path = 'data/test.mp4';
+    else
+        path = 'data/test2.mp4';
+
+
     const stat = fs.statSync(path);
+
+
     const fileSize = stat.size;
     const range = req.headers.range;
     if (range) {

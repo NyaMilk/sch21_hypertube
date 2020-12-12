@@ -61,8 +61,15 @@ const Options = (props) => {
             <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
                 <DropdownToggle caret color="danger">Movie</DropdownToggle>
                 <DropdownMenu >
-                    <DropdownItem active onClick={() => props.togglePlayer(true)}>360</DropdownItem>
-                    <DropdownItem>720</DropdownItem>
+                    <DropdownItem active onClick={() => {
+                        props.togglePlayer(true)
+                        props.setQuality('480')
+                    }}>
+                        360</DropdownItem>
+                    <DropdownItem onClick={() => {
+                        props.togglePlayer(true)
+                        props.setQuality('720')
+                    }}>720</DropdownItem>
                 </DropdownMenu>
             </ButtonDropdown>
         </Col>
@@ -73,6 +80,7 @@ const Movie = (props) => {
     const { t, i18n } = useTranslation();
     const { imdb } = useParams();
     const [moviePlayer, togglePlayer] = useState(true);
+    const [quality, setQuality] = useState('720');
     const { fetchMovie } = props;
     const { entitle, rutitle, endescription, rudescription,
         engenres, rugenres, entrailer, rutrailer, rate, daterelease, runtime } = props.movie.info;
@@ -116,9 +124,9 @@ const Movie = (props) => {
                         <Col>
                             {
                                 moviePlayer &&
-                                <video id="videoPlayer" className="embed-responsive" controls>
-                                    <source src={`${CONFIG.API_URL}/api/movies/video/${imdb}`} type="video/mp4" />
-                                    
+                                <video key={quality} id="videoPlayer" className="embed-responsive" controls>
+                                    <source src={`${CONFIG.API_URL}/api/movies/video/${imdb}/${quality}`} type="video/mp4" />
+
                                     <track label="English" kind="subtitles" srclang="en" src="captions/vtt/sintel-en.vtt" default />
                                     <track label="Deutsch" kind="subtitles" srclang="de" src="captions/vtt/sintel-de.vtt" />
                                     <track label="Español" kind="subtitles" srclang="es" src="captions/vtt/sintel-es.vtt" />
@@ -136,6 +144,7 @@ const Movie = (props) => {
                         <Options
                             favorite={props.movie.favorite}
                             togglePlayer={togglePlayer}
+                            setQuality={setQuality}
                         />
                     </Row>
                     <Row>
