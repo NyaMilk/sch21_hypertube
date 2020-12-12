@@ -2,7 +2,7 @@ import * as ActionTypes from './ActionTypes';
 import { request } from '../../util/http';
 
 export const initCatalog = () => (dispatch) => {
-    dispatch(() => ({
+    dispatch(({
         type: ActionTypes.CATALOG_CLEAR
     }));
 };
@@ -17,56 +17,56 @@ export const catalogFailed = (msg) => ({
 });
 
 export const setCatalogSort = (sort) => (dispatch) => {
-    dispatch(() => ({
+    dispatch(({
         type: ActionTypes.CATALOG_SORT_ADD,
         sort: sort
     }));
 };
 
 export const setCatalogFilterStatus = (status) => (dispatch) => {
-    dispatch(() => ({
+    dispatch(({
         type: ActionTypes.CATALOG_FILTER_ADD,
         status: status
     }));
 }
 
 export const setRateFrom = (rateFrom) => (dispatch) => {
-    dispatch(() => ({
+    dispatch(({
         type: ActionTypes.CATALOG_RATE_FROM_ADD,
         rateFrom: rateFrom
     }));
 };
 
 export const setRateTo = (rateTo) => (dispatch) => {
-    dispatch(() => ({
+    dispatch(({
         type: ActionTypes.CATALOG_RATE_TO_ADD,
         rateTo: rateTo
     }));
 };
 
 export const setYearFrom = (yearFrom) => (dispatch) => {
-    dispatch(() => ({
+    dispatch(({
         type: ActionTypes.CATALOG_YEAR_FROM_ADD,
         yearFrom: yearFrom
     }));
 };
 
 export const setYearTo = (yearTo) => (dispatch) => {
-    dispatch(() => ({
+    dispatch(({
         type: ActionTypes.CATALOG_YEAR_TO_ADD,
         yearTo: yearTo
     }));
 };
 
 export const setGenres = (genres) => (dispatch) => {
-    dispatch(() => ({
+    dispatch(({
         type: ActionTypes.CATALOG_GENRES_ADD,
         genres: genres
     }));
 };
 
 export const setSearch = (search) => (dispatch) => {
-    dispatch(() => ({
+    dispatch(({
         type: ActionTypes.CATALOG_SEARCH_ADD,
         search: search
     }));

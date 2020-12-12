@@ -17,7 +17,7 @@ export const loginLoading = () => ({
 });
 
 export const setUser = (username) => (dispatch) => {
-    return dispatch(() => ({
+    return dispatch(({
         type: ActionTypes.LOGIN_USER_ADD,
         username: username
     }))

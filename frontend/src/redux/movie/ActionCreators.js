@@ -2,7 +2,7 @@ import * as ActionTypes from './ActionTypes';
 import { request } from '../../util/http';
 
 export const initMovie = () => (dispatch) => {
-    dispatch(() => ({
+    dispatch(({
         type: ActionTypes.MOVIE_CLEAR
     }));
 };

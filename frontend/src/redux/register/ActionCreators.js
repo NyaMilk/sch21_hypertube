@@ -17,21 +17,21 @@ export const formSubmit = (res) => ({
 });
 
 export const setLogin = (login) => (dispatch) => {
-    dispatch(() => ({
+    dispatch(({
         type: ActionTypes.USER_FORM_USERNAME_ADD,
         userName: login
     }));
 };
 
 export const setFirstName = (firstName) => (dispatch) => {
-    dispatch(() => ({
+    dispatch(({
         type: ActionTypes.USER_FORM_FIRSTNAME_ADD,
         firstName: firstName
     }));
 };
 
 export const setLastName = (lastName) => (dispatch) => {
-    dispatch(() => ({
+    dispatch(({
         type: ActionTypes.USER_FORM_LASTNAME_ADD,
         lastName: lastName
     }));
@@ -45,14 +45,14 @@ export const setEmail = (email) => (dispatch) => {
 };
 
 export const setPassword = (pass) => (dispatch) => {
-    dispatch(() => ({
+    dispatch(({
         type: ActionTypes.USER_FORM_PASSWORD_ADD,
         password: pass
     }));
 };
 
 export const setRepassword = (pass) => (dispatch) => {
-    dispatch(() => ({
+    dispatch(({
         type: ActionTypes.USER_FORM_REPASSWORD_ADD,
         repassword: pass
     }));

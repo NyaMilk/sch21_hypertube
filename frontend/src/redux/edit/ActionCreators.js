@@ -21,35 +21,35 @@ export const editProfileFailed = (msg) => ({
 });
 
 export const setLogin = (nickname) => (dispatch) => {
-    dispatch(() => ({
+    dispatch(({
         type: ActionTypes.NICKNAME_ADD,
         nickname: nickname
     }));
 };
 
 export const setFirstName = (firstname) => (dispatch) => {
-    dispatch(() => ({
+    dispatch(({
         type: ActionTypes.FIRSTNAME_ADD,
         firstname: firstname
     }));
 };
 
 export const setLastName = (lastname) => (dispatch) => {
-    dispatch(() => ({
+    dispatch(({
         type: ActionTypes.LASTNAME_ADD,
         lastname: lastname
     }));
 };
 
 export const setEmail = (email) => (dispatch) => {
-    dispatch(() => ({
+    dispatch(({
         type: ActionTypes.EMAIL_ADD,
         email: email
     }));
 };
 
 export const setAbout = (about) => (dispatch) => {
-    dispatch(() => ({
+    dispatch(({
         type: ActionTypes.ABOUT_ADD,
         about: about
     }));
@@ -61,7 +61,7 @@ export const editPasswordStatusAdd = (status) => ({
 });
 
 export const setNewPassword = (pass) => (dispatch) => {
-    dispatch(() => ({
+    dispatch(({
         type: ActionTypes.NEWPASSWORD_ADD,
         newpass: newpass
     }));

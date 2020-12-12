@@ -41,41 +41,50 @@ function GenreList(props) {
 const Options = (props) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
-    const toggle = () => setDropdownOpen(prevState => !prevState);
-
-    return (
-        <Col>
-            <ButtonGroup>
-                <Button color="primary" >Trailer</Button>
-                <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
-                    <DropdownToggle caret>Movie</DropdownToggle>
-                    <DropdownMenu>
-                        <DropdownItem active>360</DropdownItem>
-                        <DropdownItem>720</DropdownItem>
-                    </DropdownMenu>
-                </ButtonDropdown>
-            </ButtonGroup>
-        </Col >
-    );
-}
-
-const Movie = (props) => {
-    const { t, i18n } = useTranslation();
-    const { imdb } = useParams();
-    const { fetchMovie } = props;
     const changeFilmList = (e) => {
         if (e.target.value === 'like' || e.target.value === 'unlike') {
             props.fetchUpdateStatus(props.me, props.film, e.target.value);
         }
     }
 
+    const toggle = () => setDropdownOpen(prevState => !prevState);
+
+    return (
+        <Col className="aside-button">
+            <Button color="danger"
+                value={props.favorite === 'add' ? 'remove' : 'add'}
+                onClick={changeFilmList}>
+                {props.favorite === 'add' ? 'Remove from favorite' : 'Add to favorite'}
+            </Button>
+            <Button color="danger">Share</Button>
+            <Button color="danger" onClick={() => props.togglePlayer(false)}>Trailer</Button>
+            <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
+                <DropdownToggle caret color="danger">Movie</DropdownToggle>
+                <DropdownMenu >
+                    <DropdownItem active onClick={() => props.togglePlayer(true)}>360</DropdownItem>
+                    <DropdownItem>720</DropdownItem>
+                </DropdownMenu>
+            </ButtonDropdown>
+        </Col>
+    );
+}
+
+const Movie = (props) => {
+    const { t, i18n } = useTranslation();
+    const { imdb } = useParams();
+    const [moviePlayer, togglePlayer] = useState(true);
+    const { fetchMovie } = props;
+    const { entitle, rutitle, endescription, rudescription,
+        engenres, rugenres, entrailer, rutrailer, rate, daterelease, runtime } = props.movie.info;
+
     useEffect(() => {
         fetchMovie(imdb)
     }, [fetchMovie, imdb])
 
-    const title = (i18n.language === 'en') ? props.movie.info.entitle : props.movie.info.rutitle;
-    const description = (i18n.language === 'en') ? props.movie.info.endescription : props.movie.info.rudescription;
-    const genres = (i18n.language === 'en') ? props.movie.info.engenres : props.movie.info.rugenres;
+    const title = (i18n.language === 'en') ? entitle : rutitle;
+    const description = (i18n.language === 'en') ? endescription : rudescription;
+    const genres = (i18n.language === 'en') ? engenres : rugenres;
+    const trailer = (i18n.language === 'en') ? entrailer : rutrailer;
 
     if (props.movie.isLoading) {
         return (
@@ -95,39 +104,39 @@ const Movie = (props) => {
                         <Col className="font-movie-head">
                             <h2>{title}</h2>
                             <p>
-                                {`IMDb ${props.movie.info.rate} `}
+                                {`IMDb ${rate} `}
                                 &bull;
-                                {` ${moment(props.movie.info.daterelease).year()} `}
+                                {` ${moment(daterelease).year()} `}
                                 &bull;
-                                {` ${props.movie.info.runtime} min`}
+                                {` ${runtime} min`}
                             </p>
                         </Col>
                     </Row>
                     <Row>
-                        <Options />
-                    </Row>
-                    <Row>
                         <Col>
-                            <video id="videoPlayer" className="embed-responsive" controls>
-                                <source src={`${CONFIG.API_URL}/api/movies/video/${imdb}`} type="video/mp4" />
-
-                                <track label="English" kind="subtitles" srclang="en" src="captions/vtt/sintel-en.vtt" default />
-                                <track label="Deutsch" kind="subtitles" srclang="de" src="captions/vtt/sintel-de.vtt" />
-                                <track label="Español" kind="subtitles" srclang="es" src="captions/vtt/sintel-es.vtt" />
-                            </video>
+                            {
+                                moviePlayer &&
+                                <video id="videoPlayer" className="embed-responsive" controls>
+                                    <source src={`${CONFIG.API_URL}/api/movies/video/${imdb}`} type="video/mp4" />
+                                    
+                                    <track label="English" kind="subtitles" srclang="en" src="captions/vtt/sintel-en.vtt" default />
+                                    <track label="Deutsch" kind="subtitles" srclang="de" src="captions/vtt/sintel-de.vtt" />
+                                    <track label="Español" kind="subtitles" srclang="es" src="captions/vtt/sintel-es.vtt" />
+                                </video>
+                            }
+                            {
+                                !moviePlayer &&
+                                <iframe id="videoPlayer" className="embed-responsive" height="420" controls
+                                    src={`https://www.youtube.com/embed/${trailer}`}>
+                                </iframe>
+                            }
                         </Col>
                     </Row>
                     <Row className="aside-button">
-                        <Col className="aside-button">
-                            <Button color="danger"
-                                value={props.movie.favorite === 'add' ? 'remove' : 'add'}
-                                onClick={changeFilmList}>
-                                {props.movie.favorite === 'add' ? 'Remove from favorite' : 'Add to favorite'}
-                            </Button>
-                            <Button color="danger">
-                                Share
-                            </Button>
-                        </Col>
+                        <Options
+                            favorite={props.movie.favorite}
+                            togglePlayer={togglePlayer}
+                        />
                     </Row>
                     <Row>
                         <Col>
@@ -138,7 +147,7 @@ const Movie = (props) => {
                         </Col>
                     </Row>
                 </Container>
-            </section>
+            </section >
         );
     }
     else
