@@ -5,7 +5,7 @@ import {
     DropdownToggle, DropdownMenu, DropdownItem, ButtonGroup, ButtonDropdown
 } from 'reactstrap'
 import { connect } from 'react-redux';
-import { fetchMovie } from '../redux/movie/ActionCreators';
+import { fetchMovie, fetchFavoriteFilm, fetchUpdateFavoriteFilm } from '../redux/movie/ActionCreators';
 import CONFIG from '../util/const';
 import { useTranslation } from "react-i18next";
 import { Loading } from './Loading';
@@ -15,13 +15,16 @@ import moment from 'moment';
 
 const mapStateToProps = (state) => {
     return {
+        login: state.login,
         catalog: state.catalog,
         movie: state.movie
     }
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    fetchMovie: (imdb) => dispatch(fetchMovie(imdb))
+    fetchMovie: (imdb) => dispatch(fetchMovie(imdb)),
+    fetchFavoriteFilm: (user, film) => dispatch(fetchFavoriteFilm(user, film)),
+    fetchUpdateFavoriteFilm: (user, film, status, newStatus) => dispatch(fetchUpdateFavoriteFilm(user, film, status, newStatus))
 });
 
 function GenreList(props) {
@@ -42,8 +45,8 @@ const Options = (props) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const changeFilmList = (e) => {
-        if (e.target.value === 'like' || e.target.value === 'unlike') {
-            props.fetchUpdateStatus(props.me, props.film, e.target.value);
+        if (e.target.value === 'add' || e.target.value === 'none') {
+            props.fetchUpdateFavoriteFilm(props.me, props.film, props.favorite, e.target.value);
         }
     }
 
@@ -52,7 +55,7 @@ const Options = (props) => {
     return (
         <Col className="aside-button">
             <Button color="danger"
-                value={props.favorite === 'add' ? 'remove' : 'add'}
+                value={props.favorite === 'add' ? 'none' : 'add'}
                 onClick={changeFilmList}>
                 {props.favorite === 'add' ? 'Remove from favorite' : 'Add to favorite'}
             </Button>
@@ -81,13 +84,15 @@ const Movie = (props) => {
     const { imdb } = useParams();
     const [moviePlayer, togglePlayer] = useState(true);
     const [quality, setQuality] = useState('720');
-    const { fetchMovie } = props;
+    const { fetchMovie, fetchFavoriteFilm } = props;
     const { entitle, rutitle, endescription, rudescription,
         engenres, rugenres, entrailer, rutrailer, rate, daterelease, runtime } = props.movie.info;
+    const me = props.login.me;
 
     useEffect(() => {
-        fetchMovie(imdb)
-    }, [fetchMovie, imdb])
+        fetchMovie(imdb);
+        fetchFavoriteFilm(me, imdb);
+    }, [fetchMovie, imdb, me])
 
     const title = (i18n.language === 'en') ? entitle : rutitle;
     const description = (i18n.language === 'en') ? endescription : rudescription;
@@ -127,9 +132,9 @@ const Movie = (props) => {
                                 <video key={quality} id="videoPlayer" className="embed-responsive" controls>
                                     <source src={`${CONFIG.API_URL}/api/movies/video/${imdb}/${quality}`} type="video/mp4" />
 
-                                    <track label="English" kind="subtitles" srclang="en" src="captions/vtt/sintel-en.vtt" default />
-                                    <track label="Deutsch" kind="subtitles" srclang="de" src="captions/vtt/sintel-de.vtt" />
-                                    <track label="Español" kind="subtitles" srclang="es" src="captions/vtt/sintel-es.vtt" />
+                                    <track label="English" kind="subtitles" srcLang="en" src="captions/vtt/sintel-en.vtt" default />
+                                    <track label="Deutsch" kind="subtitles" srcLang="de" src="captions/vtt/sintel-de.vtt" />
+                                    <track label="Español" kind="subtitles" srcLang="es" src="captions/vtt/sintel-es.vtt" />
                                 </video>
                             }
                             {
@@ -143,6 +148,9 @@ const Movie = (props) => {
                     <Row className="aside-button">
                         <Options
                             favorite={props.movie.favorite}
+                            me={me}
+                            film={props.movie.info.imdb}
+                            fetchUpdateFavoriteFilm={props.fetchUpdateFavoriteFilm}
                             togglePlayer={togglePlayer}
                             setQuality={setQuality}
                         />

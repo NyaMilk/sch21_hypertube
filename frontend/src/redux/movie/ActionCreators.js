@@ -45,7 +45,7 @@ export const favoriteFailed = (msg) => ({
     payload: msg
 });
 
-export const fetchStatus = (me, film) => (dispatch) => {
+export const fetchFavoriteFilm = (me, film) => (dispatch) => {
     dispatch(movieLoading());
 
     const data = {
@@ -56,5 +56,28 @@ export const fetchStatus = (me, film) => (dispatch) => {
     return request('/api/movies/movie/favorite', data, 'POST')
         .then(response => response.json())
         .then(result => dispatch(favoriteAdd(result)))
+        .catch(error => dispatch(favoriteFailed(error.message)));
+};
+
+export const fetchUpdateFavoriteFilm = (me, film, status, newStatus) => (dispatch) => {
+    dispatch(movieLoading());
+
+    const data = {
+        me: me,
+        film: film,
+        status: status,
+        newStatus: newStatus
+    }
+
+    return request('/api/movies/movie/favorite/update', data, 'POST')
+        .then(response => response.json())
+        .then(result => {
+            if (result.message === 'Ok') {
+                dispatch(favoriteAdd(result));
+            }
+            else {
+                dispatch(favoriteFailed(result.message));
+            }
+        })
         .catch(error => dispatch(favoriteFailed(error.message)));
 };

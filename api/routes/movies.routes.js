@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const fs = require('fs');
-const { getCountCards, getCards, getMovie } = require('../models/movies');
+const { getCountCards, getCards, getMovie, getFavorite, deleteFavoriteFiml, insertFavoriteFiml } = require('../models/movies');
 
 router.post('/catalog/count', async (req, res) => {
     try {
@@ -165,16 +165,16 @@ router.post('/movie/favorite', async (req, res) => {
             .then(data => {
                 if (data.length > 0)
                     res.status(200).json({
-                        result: data[0].favorite,
+                        result: "add",
                         message: "Ok",
                         success: true
                     });
                 else
                     res.status(200).json({
-                        result: "None",
+                        result: "none",
                         message: "Ok",
                         success: true
-                    })
+                    });
             })
             .catch(() => {
                 res.status(200).json({
@@ -190,5 +190,41 @@ router.post('/movie/favorite', async (req, res) => {
         })
     }
 })
+
+router.post('/movie/favorite/update', async (req, res) => {
+    try {
+        const { me, film, status, newStatus } = req.body;
+        const promise = (status === 'add') ? deleteFavoriteFiml(me, film) : insertFavoriteFiml(me, film);
+
+        promise
+            .then(data => {
+                if (data)
+                    res.status(200).json({
+                        result: newStatus,
+                        message: "Ok",
+                        success: true
+                    });
+                else
+                    res.status(200).json({
+                        message: "No favorite",
+                        success: false
+                    })
+            })
+            .catch(() => {
+                res.status(200).json({
+                    message: "Ooops! Cannot update favorite. Try again",
+                    success: false
+                })
+            })
+
+    }
+    catch (e) {
+        res.status(200).json({
+            message: "Ooops! Cannot update favorite. Try again",
+            success: false
+        })
+    }
+})
+
 
 module.exports = router;

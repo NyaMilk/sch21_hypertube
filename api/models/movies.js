@@ -52,9 +52,28 @@ exports.getCards = (genres, limit, sqlSort, sqlFilter) => {
 
 exports.getFavorite = (me, film) => {
     const sql =
-        `SELECT status FROM Favorite
+        `SELECT createdAt FROM FavoriteMovies
     WHERE idUser = (SELECT id FROM Users WHERE displayName = $1)
     AND idFilm = $2`;
   
     return db.any(sql, [me, film]);
+}
+
+exports.insertFavoriteFiml = (me, film) => {
+    const sql =
+        `INSERT INTO FavoriteMovies (idUser, idFilm)
+    VALUES ((SELECT id FROM Users WHERE displayName = $1), $2)
+    RETURNING createdAt`;
+  
+    return db.one(sql, [me, film]);
+}
+
+exports.deleteFavoriteFiml = (me, film) => {
+    const sql =
+        `DELETE FROM FavoriteMovies
+    WHERE idUser = (SELECT id FROM Users WHERE displayName = $1)
+    AND idFilm = $2
+    RETURNING idFilm`;
+  
+    return db.one(sql, [me, film]);
 }
