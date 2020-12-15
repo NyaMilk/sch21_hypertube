@@ -4,7 +4,8 @@ const initialState = {
     isLoading: true,
     infoMsg: null,
     favorite: null,
-    info: {}
+    info: {},
+    comments: {}
 }
 
 export const MovieReducer = (state = initialState, action) => {
@@ -27,6 +28,9 @@ export const MovieReducer = (state = initialState, action) => {
 
         case ActionTypes.FAVORITE_FAILED:
             return { ...state, isLoading: false, infoMsg: action.payload, favorite: null };
+
+        case ActionTypes.COMMENTS_ADD:
+            return { ...state, isLoading: false, infoMsg: null, comments: action.payload };
 
         default:
             return state;

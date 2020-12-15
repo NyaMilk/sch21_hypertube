@@ -3,32 +3,32 @@ const { db, pgp } = require('../config/psql-setup');
 exports.insertMovies = (data) => {
     const cs = new pgp.helpers.ColumnSet([
         'imdb',
-        {name: 'entitle', prop: 'enTitle'},
-        {name: 'rutitle', prop: 'ruTitle'},
+        { name: 'entitle', prop: 'enTitle' },
+        { name: 'rutitle', prop: 'ruTitle' },
         'rate',
-        {name: 'daterelease', prop: 'year'},
-        {name: 'encountries', prop: 'enCountries'},
-        {name: 'rucountries', prop: 'ruCountries'},
-        {name: 'endescription', prop: 'enDescription'},
-        {name: 'rudescription', prop: 'ruDescription'},
-        {name: 'enposter', prop: 'enPoster'},
-        {name: 'ruposter', prop: 'ruPoster'},
-        {name: 'entrailer', prop: 'enTrailer'},
-        {name: 'rutrailer', prop: 'ruTrailer'},
-        {name: 'engenres', prop: 'enGenres'},
-        {name: 'rugenres', prop: 'ruGenres'},
+        { name: 'daterelease', prop: 'year' },
+        { name: 'encountries', prop: 'enCountries' },
+        { name: 'rucountries', prop: 'ruCountries' },
+        { name: 'endescription', prop: 'enDescription' },
+        { name: 'rudescription', prop: 'ruDescription' },
+        { name: 'enposter', prop: 'enPoster' },
+        { name: 'ruposter', prop: 'ruPoster' },
+        { name: 'entrailer', prop: 'enTrailer' },
+        { name: 'rutrailer', prop: 'ruTrailer' },
+        { name: 'engenres', prop: 'enGenres' },
+        { name: 'rugenres', prop: 'ruGenres' },
         'runtime',
         'torrents'
-    ], {table: 'movies'});
-    
+    ], { table: 'movies' });
+
     const insert = pgp.helpers.insert(data, cs);
 
     return db.none(insert);
 }
 
 exports.getMovie = (imdb) => {
-    const sql = 
-    `SELECT * from movies WHERE imdb = $1`;
+    const sql =
+        `SELECT * from movies WHERE imdb = $1`;
 
     return db.any(sql, imdb);
 }
@@ -55,7 +55,7 @@ exports.getFavorite = (me, film) => {
         `SELECT createdAt FROM FavoriteMovies
     WHERE idUser = (SELECT id FROM Users WHERE displayName = $1)
     AND idFilm = $2`;
-  
+
     return db.any(sql, [me, film]);
 }
 
@@ -64,7 +64,7 @@ exports.insertFavoriteFiml = (me, film) => {
         `INSERT INTO FavoriteMovies (idUser, idFilm)
     VALUES ((SELECT id FROM Users WHERE displayName = $1), $2)
     RETURNING createdAt`;
-  
+
     return db.one(sql, [me, film]);
 }
 
@@ -74,6 +74,26 @@ exports.deleteFavoriteFiml = (me, film) => {
     WHERE idUser = (SELECT id FROM Users WHERE displayName = $1)
     AND idFilm = $2
     RETURNING idFilm`;
-  
+
     return db.one(sql, [me, film]);
+}
+
+exports.insertComment = (me, film, comment) => {
+    const sql =
+        `INSERT INTO Comments (idUser, idFilm, comment)
+    VALUES ((SELECT id FROM Users WHERE displayName = $1), $2, $3)
+    RETURNING createdAt`;
+
+    return db.one(sql, [me, film, comment]);
+}
+
+exports.getComments = (imdb) => {
+    const sql =
+        `SELECT u.displayName, c.comment, c.createdAt
+    FROM Users u
+    JOIN Comments c
+    ON u.id = c.idUser
+    WHERE idFilm = $1`;
+
+    return db.any(sql, imdb);
 }

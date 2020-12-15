@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const fs = require('fs');
-const { getCountCards, getCards, getMovie, getFavorite, deleteFavoriteFiml, insertFavoriteFiml } = require('../models/movies');
+const { getCountCards, getCards, getMovie, getFavorite, deleteFavoriteFiml, insertFavoriteFiml, insertComment, getComments } = require('../models/movies');
 
 router.post('/catalog/count', async (req, res) => {
     try {
@@ -42,7 +42,7 @@ router.post('/catalog/count', async (req, res) => {
             success: false
         })
     }
-})
+});
 
 router.post('/catalog/page', async (req, res) => {
     try {
@@ -91,7 +91,7 @@ router.post('/catalog/page', async (req, res) => {
             success: false
         })
     }
-})
+});
 
 router.get('/movie/:imdb', function (req, res) {
     const { imdb } = req.params;
@@ -189,7 +189,7 @@ router.post('/movie/favorite', async (req, res) => {
             success: false
         })
     }
-})
+});
 
 router.post('/movie/favorite/update', async (req, res) => {
     try {
@@ -224,7 +224,50 @@ router.post('/movie/favorite/update', async (req, res) => {
             success: false
         })
     }
-})
+});
 
+router.post('/movie/comment', async (req, res) => {
+    try {
+        const { me, film, comment } = req.body;
+
+        insertComment(me, film, comment)
+            .then(() => {
+                res.status(200).json({
+                    message: "Ok",
+                    success: true
+                });
+            })
+            .catch(() => {
+                res.status(200).json({
+                    message: "Ooops! Cannot update comment. Try again",
+                    success: false
+                })
+            })
+    }
+    catch (e) {
+        res.status(200).json({
+            message: "Ooops! Cannot update comment. Try again",
+            success: false
+        })
+    }
+});
+
+router.get('/movie/comments/:imdb', function (req, res) {
+    const { imdb } = req.params;
+
+    getComments(imdb)
+        .then(data => {
+            res.status(200).json({
+                data: data,
+                success: true
+            })
+        })
+        .catch(() => {
+            res.status(200).json({
+                success: false,
+                message: "Ooops! Not found comments"
+            })
+        })
+});
 
 module.exports = router;

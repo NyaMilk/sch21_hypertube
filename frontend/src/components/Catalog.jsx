@@ -46,7 +46,7 @@ function InputForm(props) {
         const { name, value } = e.target;
 
         let isYear = (value.match(/^\d{1,4}$/)) ? true : false;
-        let isRate = (Number.isInteger(parseInt(value))) ? true : false; 
+        let isRate = (Number.isInteger(parseInt(value))) ? true : false;
 
         /* мб сделать select? для года, жанра, страны */
         if (isYear) {
@@ -261,7 +261,7 @@ function FilmCards(props) {
                         <CardImg width="100%" top src={`https://image.tmdb.org/t/p/original${eval(`card.${props.language}poster`)}`} alt={card.title} />
                         <CardBody>
                             <CardTitle>
-        
+
                                 {card.title} <Badge color="danger" pill> {card.rate} </Badge>
                             </CardTitle>
                             <ListGroup flush>
@@ -381,7 +381,7 @@ const Catalog = (props) => {
     }
     else if (props.catalog.infoMsg) {
         return (
-            <Info />
+            <Info message={props.movie.infoMsg} />
         );
     }
     else if (props.catalog.info != null) {
@@ -389,7 +389,7 @@ const Catalog = (props) => {
             <section className="catalog">
                 <Container>
                     <Filter filter={props} />
-                    <FilmCards cards={props.catalog.info} language={i18n.language}/>
+                    <FilmCards cards={props.catalog.info} language={i18n.language} />
                     <CardsPagination getPage={page} cardCount={props.catalog.cardCount} />
                 </Container>
             </section>

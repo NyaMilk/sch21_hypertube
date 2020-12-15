@@ -2,16 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams, withRouter } from 'react-router-dom';
 import {
     Container, Row, Col, ListGroup, ListGroupItem, Button,
-    DropdownToggle, DropdownMenu, DropdownItem, ButtonGroup, ButtonDropdown
+    DropdownToggle, DropdownMenu, DropdownItem, ButtonDropdown, Input, Nav, NavItem, NavLink, TabContent, TabPane, InputGroup, Media
 } from 'reactstrap'
 import { connect } from 'react-redux';
-import { fetchMovie, fetchFavoriteFilm, fetchUpdateFavoriteFilm } from '../redux/movie/ActionCreators';
+import { fetchMovie, fetchFavoriteFilm, fetchUpdateFavoriteFilm, fetchComments } from '../redux/movie/ActionCreators';
 import CONFIG from '../util/const';
 import { useTranslation } from "react-i18next";
 import { Loading } from './Loading';
 import { Info } from './Info';
 import NotFound from './NotFound';
 import moment from 'moment';
+import classnames from 'classnames';
+import { request } from '../util/http';
 
 const mapStateToProps = (state) => {
     return {
@@ -24,11 +26,13 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
     fetchMovie: (imdb) => dispatch(fetchMovie(imdb)),
     fetchFavoriteFilm: (user, film) => dispatch(fetchFavoriteFilm(user, film)),
-    fetchUpdateFavoriteFilm: (user, film, status, newStatus) => dispatch(fetchUpdateFavoriteFilm(user, film, status, newStatus))
+    fetchUpdateFavoriteFilm: (user, film, status, newStatus) => dispatch(fetchUpdateFavoriteFilm(user, film, status, newStatus)),
+    fetchComments: (film) => dispatch(fetchComments(film))
 });
 
 function GenreList(props) {
     let listItems;
+
     if (props.genres) {
         listItems = props.genres.map((genre, item) =>
             <ListGroupItem className="movie-list" key={item}>
@@ -79,20 +83,74 @@ const Options = (props) => {
     );
 }
 
+function Comments(props) {
+    if (props.comments.length > 0) {
+        const listItems = props.comments.map((comment, item) =>
+            <Col xs="12" className="mt-4" key={item}>
+                <Media>
+                    <Media left middle>
+                        <Media object src={`${CONFIG.API_URL}/api/image/${comment.displayname}/1`} alt={`Profile photo ${comment.displayname}`} />
+                    </Media>
+                    <Media body className="ml-4">
+                        <Link to={`/profile/${comment.displayname}`}>
+                            <Media heading>{comment.displayname}, {moment(comment.date).fromNow()}</Media>
+                        </Link>
+                        <p>{comment.comment}</p>
+                    </Media>
+                </Media>
+            </Col>
+        );
+        return (
+            <Row>{listItems}</Row>
+        );
+    }
+    else
+        return (
+            <span className="font-profile-head font-message">Нет ни одного комментария Nobody had commented</span>
+        );
+}
+
 const Movie = (props) => {
     const { t, i18n } = useTranslation();
     const { imdb } = useParams();
     const [moviePlayer, togglePlayer] = useState(true);
     const [quality, setQuality] = useState('720');
-    const { fetchMovie, fetchFavoriteFilm } = props;
+    const { fetchMovie, fetchFavoriteFilm, fetchComments } = props;
     const { entitle, rutitle, endescription, rudescription,
         engenres, rugenres, entrailer, rutrailer, rate, daterelease, runtime } = props.movie.info;
     const me = props.login.me;
 
     useEffect(() => {
         fetchMovie(imdb);
+        fetchComments(imdb);
         fetchFavoriteFilm(me, imdb);
-    }, [fetchMovie, imdb, me])
+    }, [fetchMovie, fetchComments, fetchFavoriteFilm, imdb, me]);
+
+    const [activeTab, setActiveTab] = useState('1');
+    const toggle = tab => {
+        if (activeTab !== tab) setActiveTab(tab);
+    }
+
+    const [textComment, setComment] = useState('');
+    const [message, setMsg] = useState();
+
+    const addComments = () => {
+        const data = {
+            me: me,
+            film: imdb,
+            comment: textComment
+        }
+
+        setComment('');
+        request('/api/movies/movie/comment', data, 'POST')
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    fetchComments(imdb);
+                }
+            })
+            .catch(error => setMsg(error.message));
+    }
 
     const title = (i18n.language === 'en') ? entitle : rutitle;
     const description = (i18n.language === 'en') ? endescription : rudescription;
@@ -104,9 +162,9 @@ const Movie = (props) => {
             <Loading />
         );
     }
-    else if (props.movie.infoMsg) {
+    else if (props.movie.infoMsg || message) {
         return (
-            <Info />
+            <Info message={props.movie.infoMsg || message} />
         );
     }
     else if (props.movie.info != null) {
@@ -125,7 +183,7 @@ const Movie = (props) => {
                             </p>
                         </Col>
                     </Row>
-                    <Row>
+                    {/* <Row>
                         <Col>
                             {
                                 moviePlayer &&
@@ -144,23 +202,61 @@ const Movie = (props) => {
                                 </iframe>
                             }
                         </Col>
-                    </Row>
+                    </Row> */}
                     <Row className="aside-button">
                         <Options
                             favorite={props.movie.favorite}
                             me={me}
-                            film={props.movie.info.imdb}
+                            film={imdb}
                             fetchUpdateFavoriteFilm={props.fetchUpdateFavoriteFilm}
                             togglePlayer={togglePlayer}
                             setQuality={setQuality}
                         />
                     </Row>
-                    <Row>
+
+                    <Row className="page-tabs">
                         <Col>
-                            <p className="movie-title">Жанр:</p>
-                            <GenreList genres={genres} />
-                            <p className="movie-title">Описание:</p>
-                            <p className="movie-description">{description}</p>
+                            <Nav tabs>
+                                <NavItem>
+                                    <NavLink className={classnames({ active: activeTab === '1' })} onClick={() => { toggle('1'); }}>
+                                        {/* {t("profilePage.tabOne")} */}
+                                        Описание
+                                    </NavLink>
+                                </NavItem>
+                                <NavItem>
+                                    <NavLink className={classnames({ active: activeTab === '2' })} onClick={() => { toggle('2'); }}>
+                                        {/* {t("profilePage.tabTwo")} */}
+                                        Комментарий
+                                    </NavLink>
+                                </NavItem>
+                            </Nav>
+                            <TabContent activeTab={activeTab}>
+                                <TabPane tabId="1">
+                                    <Row>
+                                        <Col>
+                                            <p className="movie-title">Жанр:</p>
+                                            <GenreList genres={genres} />
+                                            <p className="movie-title">Сюжет:</p>
+                                            <p className="movie-description">{description}</p>
+                                        </Col>
+                                    </Row>
+                                </TabPane>
+                                <TabPane tabId="2">
+                                    <Row>
+                                        <Col className="movie-comment">
+                                            <p className="movie-title">Оставьте свой комментарий:</p>
+                                            <InputGroup>
+                                                <Input name='comment' value={textComment} onChange={e => setComment(e.target.value)} />
+                                                <Button color='secondary' onClick={addComments}>Send</Button>
+                                            </InputGroup>
+                                        </Col>
+                                    </Row>
+                                    <Comments
+                                        me={me}
+                                        imdb={imdb}
+                                        comments={props.movie.comments} />
+                                </TabPane>
+                            </TabContent>
                         </Col>
                     </Row>
                 </Container>
