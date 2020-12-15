@@ -9,7 +9,7 @@ exports.getProfile = (nickname) => {
 }
 
 exports.editProfile = (que, params, i) => {
-    const sql = `UPDATE Users SET ${que} WHERE nickName = $${i} RETURNING nickName`;
+    const sql = `UPDATE Users SET ${que} WHERE userName = $${i} RETURNING userName`;
 
     return db.one(sql, params);
 }

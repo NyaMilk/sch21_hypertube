@@ -86,22 +86,26 @@ const Options = (props) => {
 function Comments(props) {
     if (props.comments.length > 0) {
         const listItems = props.comments.map((comment, item) =>
-            <Col xs="12" className="mt-4" key={item}>
-                <Media>
-                    <Media left middle>
-                        <Media object src={`${CONFIG.API_URL}/api/image/${comment.displayname}/1`} alt={`Profile photo ${comment.displayname}`} />
-                    </Media>
-                    <Media body className="ml-4">
-                        <Link to={`/profile/${comment.displayname}`}>
-                            <Media heading>{comment.displayname}, {moment(comment.date).fromNow()}</Media>
-                        </Link>
-                        <p>{comment.comment}</p>
-                    </Media>
+            <Media className="mt-2  " key={item}>
+                <Media left middle>
+                    <Media object src={`${CONFIG.API_URL}/api/image/${comment.displayname}/1`} alt={`Profile photo ${comment.displayname}`} />
                 </Media>
-            </Col>
+                <Media body className="ml-4">
+
+                    <Media heading>
+                        <Link to={`/profile/${comment.displayname}`}>
+                            {comment.displayname} 
+                        </Link>
+                        {' '}
+                        <span className="movie-tabs-item">{moment(comment.createdat).fromNow()}</span></Media>
+                    <p>{comment.comment}</p>
+                </Media>
+            </Media>
         );
         return (
-            <Row>{listItems}</Row>
+            <Col className="movie-comments-list">
+                {listItems}
+            </Col>
         );
     }
     else

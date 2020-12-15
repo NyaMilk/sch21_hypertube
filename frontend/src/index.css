@@ -55,7 +55,7 @@ body {
 }
 
 .profile .page-tabs .nav-tabs,
-.movie .profile-tabs .nav-tabs {
+.movie .page-tabs .nav-tabs {
   margin-bottom: 1rem;
 }
 
@@ -208,6 +208,10 @@ header .navbar .navbar-brand {
 }
 
 /* profile */
+.profile .tab-content {
+  height: 400px;
+  overflow-x: hidden;
+}
 
 .profile .profile-header {
   margin-bottom: 30px;
@@ -331,6 +335,10 @@ header .navbar .navbar-brand {
 }
 
 /* movie */
+.movie .page-tabs {
+  margin-top: 2rem;
+}
+
 .movie .font-movie-head p {
   font-size: 1.2rem;
   font-weight: 700;
@@ -347,7 +355,6 @@ header .navbar .navbar-brand {
 .movie .movie-description {
   padding: 0.25rem 0.5rem;
   margin-right: 0.35rem;
-
   background: #f8f9fa;
   border: none;
   border-radius: 5px;
@@ -387,3 +394,33 @@ header .navbar .navbar-brand {
   border-bottom-right-radius: 5px;
 }
 
+.movie-comments-list {
+  height: 400px;
+  overflow-x: hidden;
+  margin-top: 1rem;
+  padding-left: 0;
+}
+
+.movie .media-heading a {
+  color: #343a40;
+}
+
+.movie .media-heading a:hover {
+  text-decoration: none;
+  opacity: 0.7;
+}
+
+.movie .media-heading {
+  font-size: 1.2rem;
+}
+
+.movie .movie-tabs-item {
+  opacity: 0.5;
+  font-size: 1rem;
+}
+
+.movie .media {
+  background: #f8f9fa;
+  padding: 0.5rem 0px 0.5rem 0.5rem;
+  border-radius: 5px;
+}
