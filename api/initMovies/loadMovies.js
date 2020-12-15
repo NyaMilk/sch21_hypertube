@@ -32,8 +32,9 @@ const getPopcornMovies = async () => {
         formatMovie.torrents = [];
 
         if (torrents && torrents.en) {
-            for (key in torrents.en)
+            for (key in torrents.en) {
                 formatMovie.torrents.push([key, torrents.en[key].url]);
+            }
         }
 
         return (formatMovie.torrents.length > 0) ? formatMovie : null;

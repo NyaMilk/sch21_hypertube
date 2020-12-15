@@ -46,7 +46,7 @@ CREATE TABLE Movies
     runtime integer,
     subtitles text,
     torrents text[] NOT NULL,
-    isDownloaded boolean DEFAULT FALSE,
+    downloads text[],
     path text
 );
 

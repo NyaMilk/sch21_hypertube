@@ -83,7 +83,7 @@ const Movie = (props) => {
     const { t, i18n } = useTranslation();
     const { imdb } = useParams();
     const [moviePlayer, togglePlayer] = useState(true);
-    const [quality, setQuality] = useState('720');
+    const [quality, setQuality] = useState('720p');
     const { fetchMovie, fetchFavoriteFilm } = props;
     const { entitle, rutitle, endescription, rudescription,
         engenres, rugenres, entrailer, rutrailer, rate, daterelease, runtime } = props.movie.info;
@@ -130,11 +130,11 @@ const Movie = (props) => {
                             {
                                 moviePlayer &&
                                 <video key={quality} id="videoPlayer" className="embed-responsive" controls>
-                                    <source src={`${CONFIG.API_URL}/api/movies/video/${imdb}/${quality}`} type="video/mp4" />
+                                    <source src={`${CONFIG.API_URL}/api/stream/movie/${imdb}/${quality}`} type="video/mp4" />
 
-                                    <track label="English" kind="subtitles" srcLang="en" src="captions/vtt/sintel-en.vtt" default />
+                                    {/* <track label="English" kind="subtitles" srcLang="en" src="captions/vtt/sintel-en.vtt" default />
                                     <track label="Deutsch" kind="subtitles" srcLang="de" src="captions/vtt/sintel-de.vtt" />
-                                    <track label="Español" kind="subtitles" srcLang="es" src="captions/vtt/sintel-es.vtt" />
+                                    <track label="Español" kind="subtitles" srcLang="es" src="captions/vtt/sintel-es.vtt" /> */}
                                 </video>
                             }
                             {
