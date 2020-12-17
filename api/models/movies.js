@@ -87,13 +87,49 @@ exports.insertComment = (me, film, comment) => {
     return db.one(sql, [me, film, comment]);
 }
 
-exports.getComments = (imdb) => {
+exports.getComments = (me, film) => {
     const sql =
-        `SELECT u.displayName, c.comment, c.createdAt
+        `SELECT u.displayName, c.id, c.comment, c.createdAt, l.status,
+    ((SELECT count(status) FROM CommentsLike WHERE idComment = c.id AND status LIKE 'like') -
+    (SELECT count(status) FROM CommentsLike WHERE idComment = c.id AND status LIKE 'dislike')) count
     FROM Users u
-    JOIN Comments c
-    ON u.id = c.idUser
-    WHERE idFilm = $1`;
+    JOIN Comments c ON u.id = c.idUser
+    LEFT JOIN (select status, idComment from CommentsLike WHERE idUser = (SELECT id FROM Users WHERE displayName=$1)) l
+    ON l.idComment = c.id
+    WHERE c.idFilm = $2`;
 
-    return db.any(sql, imdb);
+    return db.any(sql, [me, film]);
+}
+
+exports.checkStatus = (me, idComment) => {
+    const sql =
+        `SELECT status FROM CommentsLike
+    WHERE idUser = (SELECT id FROM Users WHERE displayName=$1) AND idComment = $2`;
+
+    return db.any(sql, [me, idComment]);
+}
+
+exports.updateStatus = (me, idComment, status) => {
+    const sql =
+        `UPDATE CommentsLike SET status = $3
+        WHERE idUser = (SELECT id FROM Users WHERE displayName=$1) AND idComment = $2`;
+
+    return db.any(sql, [me, idComment, status]);
+}
+
+exports.insertStatus = (me, idComment, status) => {
+    const sql =
+        `INSERT INTO CommentsLike (idUser, idComment, status)
+    VALUES ((SELECT id FROM Users WHERE displayName=$1), $2, $3)`;
+
+    return db.any(sql, [me, idComment, status]);
+}
+
+exports.deleteStatus = (me, idComment) => {
+    const sql =
+        `DELETE FROM CommentsLike
+    WHERE idUser = (SELECT id FROM Users WHERE displayName=$1) AND idComment = $2
+    RETURNING idComment`;
+
+    return db.any(sql, [me, idComment]);
 }

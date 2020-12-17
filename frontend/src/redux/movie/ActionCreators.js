@@ -85,10 +85,15 @@ export const commentsAdd = (data) => ({
     payload: data
 });
 
-export const fetchComments = (imdb) => (dispatch) => {
+export const fetchComments = (me, film) => (dispatch) => {
     // dispatch(movieLoading());
 
-    return request(`/api/movies/movie/comments/${imdb}`)
+    const data = {
+        me: me,
+        film: film
+    }
+
+    return request('/api/movies/movie/comments', data, 'POST')
         .then(response => response.json())
         .then(result => {
             if (result.success)

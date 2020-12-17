@@ -41,10 +41,14 @@ body {
   margin: 0 auto;
 }
 
-/* style disabled */
+/* style disabled / opacity */
 
 .disabled-button {
   pointer-events: none;
+  opacity: 50%;
+}
+
+.opacity-button {
   opacity: 50%;
 }
 
@@ -423,4 +427,22 @@ header .navbar .navbar-brand {
   background: #f8f9fa;
   padding: 0.5rem 0px 0.5rem 0.5rem;
   border-radius: 5px;
+}
+
+.movie .media-heading {
+  display: flex;
+  justify-content: space-between;
+}
+
+.movie-comment-footer {
+  display: flex;
+}
+
+.movie-comment-footer input {
+  width: 40px;
+  padding: 0.5rem;
+}
+
+.movie-comment-footer span {
+  padding: 0.5rem;
 }

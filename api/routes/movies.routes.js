@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const fs = require('fs');
-const { getCountCards, getCards, getMovie, getFavorite, deleteFavoriteFiml, insertFavoriteFiml, insertComment, getComments } = require('../models/movies');
+const { getCountCards, getCards, getMovie, getFavorite, deleteFavoriteFiml, insertFavoriteFiml, insertComment, getComments,
+    checkStatus, updateStatus, insertStatus, deleteStatus } = require('../models/movies');
 
 router.post('/catalog/count', async (req, res) => {
     try {
@@ -252,22 +253,103 @@ router.post('/movie/comment', async (req, res) => {
     }
 });
 
-router.get('/movie/comments/:imdb', function (req, res) {
-    const { imdb } = req.params;
+router.post('/movie/comments', async (req, res) => {
+    try {
+        const { me, film } = req.body;
 
-    getComments(imdb)
-        .then(data => {
-            res.status(200).json({
-                data: data,
-                success: true
+        getComments(me, film)
+            .then(data => {
+                res.status(200).json({
+                    data: data,
+                    success: true
+                })
             })
-        })
-        .catch(() => {
-            res.status(200).json({
-                success: false,
-                message: "Ooops! Not found comments"
+            .catch(() => {
+                res.status(200).json({
+                    success: false,
+                    message: "Ooops! Not found comments"
+                })
             })
+    }
+    catch (e) {
+        res.status(200).json({
+            success: false,
+            message: "Ooops! Not found comments"
         })
+    }
+});
+
+router.post('/movie/comment/like', async (req, res) => {
+    try {
+        const { me, idComment, status } = req.body;
+        console.log(req.body);
+
+        checkStatus(me, idComment)
+            .then((data) => {
+                if (data.length > 0) {
+                    if (status === data[0].status) {
+                        console.log('here');
+                        deleteStatus(me, idComment)
+                            .then((data) => {
+                                console.log(data);
+                                res.status(200).json({
+                                    message: "Ok",
+                                    success: true
+                                })
+                            })
+                            .catch((e) => {
+                                console.log(e.message);
+                                res.status(200).json({
+                                    message: "Ooops! Cannot update like. Try again" + e.message,
+                                    success: false
+                                })
+                            })
+                    }
+                    else {
+                        updateStatus(me, idComment, status)
+                            .then(() => {
+                                res.status(200).json({
+                                    message: "Ok",
+                                    success: true
+                                })
+                            })
+                            .catch(() => {
+                                res.status(200).json({
+                                    message: "Ooops! Cannot update like. Try again",
+                                    success: false
+                                })
+                            })
+                    }
+                }
+                else {
+                    insertStatus(me, idComment, status)
+                        .then(() => {
+                            res.status(200).json({
+                                message: "Ok",
+                                success: true
+                            })
+                        })
+                        .catch(() => {
+                            res.status(200).json({
+                                message: "Ooops! Cannot update like. Try again",
+                                success: false
+                            })
+                        })
+                }
+            })
+            .catch(() => {
+                res.status(200).json({
+                    message: "Ooops! Cannot update like. Try again",
+                    success: false
+                })
+            })
+    }
+    catch (e) {
+        res.status(200).json({
+            message: "Ooops! Cannot update like. Try again" + e.message,
+            success: false
+        })
+    }
 });
 
 module.exports = router;

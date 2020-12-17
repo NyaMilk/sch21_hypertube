@@ -73,7 +73,7 @@ const Login = (props) => {
 
     useEffect(() => {
         if (props.login.isLogged) {
-            history.push("/catalog");
+            history.push("/catalog/page/1");
         }
     }, [props.login.isLogged, history]);
 

@@ -72,11 +72,10 @@ CREATE TABLE Comments (
 );
 
 CREATE TABLE CommentsLike (
-    id SERIAL,
     idUser int,
     idComment int,
+    status text,
     createdAt timestamp DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (id),
     FOREIGN KEY (idUser) REFERENCES Users (id),
     FOREIGN KEY (idComment) REFERENCES Comments (id)
 );

@@ -13,9 +13,12 @@ export const Info = (props) => {
         }
     }, [isVisible]);
 
+    // if (props.info === 'alert')
     return (
-        // <div>
-        <Alert isOpen={isVisible} color={color}>{props.message}</Alert>
-        // </div>
+        <Alert isOpen={props.info === 'alert' ? isVisible : ''} color={color}>{props.message}</Alert>
     );
+    // if (props.info === 'message')
+    //     return (
+    //         <Alert color={color}>{props.register.infoMsg}</Alert>
+    //     );
 }
