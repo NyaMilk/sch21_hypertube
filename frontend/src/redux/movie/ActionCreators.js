@@ -103,3 +103,10 @@ export const fetchComments = (me, film) => (dispatch) => {
         })
         .catch(error => dispatch(movieFailed(error.message)));
 };
+
+export const setQuality = (quality) => (dispatch) => {
+    dispatch(({
+        type: ActionTypes.QUALITY_ADD,
+        payload: quality
+    }));
+};

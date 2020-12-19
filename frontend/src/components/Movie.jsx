@@ -5,7 +5,7 @@ import {
     DropdownToggle, DropdownMenu, DropdownItem, ButtonDropdown, Input, Nav, NavItem, NavLink, TabContent, TabPane, InputGroup, Media, Modal, ModalHeader, ModalBody, ModalFooter
 } from 'reactstrap'
 import { connect } from 'react-redux';
-import { fetchMovie, fetchFavoriteFilm, fetchUpdateFavoriteFilm, fetchComments } from '../redux/movie/ActionCreators';
+import { fetchMovie, fetchFavoriteFilm, fetchUpdateFavoriteFilm, fetchComments, setQuality } from '../redux/movie/ActionCreators';
 import CONFIG from '../util/const';
 import { useTranslation } from "react-i18next";
 import { Loading } from './Loading';
@@ -17,9 +17,12 @@ import { request } from '../util/http';
 
 const like = '/img/like.svg';
 const dislike = '/img/dislike.svg';
-const star = '/img/star.svg';
-const starfull = '/img/share.svg';
+const book = '/img/book.svg';
+const bookfull = '/img/bookfull.svg';
 const share = '/img/share.svg';
+const movie = '/img/movie.svg';
+const gear = '/img/gear.svg';
+const imdb_logo = '/img/imdbc.png';
 
 const mapStateToProps = (state) => {
     return {
@@ -33,21 +36,30 @@ const mapDispatchToProps = (dispatch) => ({
     fetchMovie: (imdb) => dispatch(fetchMovie(imdb)),
     fetchFavoriteFilm: (user, film) => dispatch(fetchFavoriteFilm(user, film)),
     fetchUpdateFavoriteFilm: (user, film, status, newStatus) => dispatch(fetchUpdateFavoriteFilm(user, film, status, newStatus)),
-    fetchComments: (me, film) => dispatch(fetchComments(me, film))
+    fetchComments: (me, film) => dispatch(fetchComments(me, film)),
+    setQuality: (quality) => dispatch(setQuality(quality))
 });
 
-function GenreList(props) {
-    let listItems;
 
-    if (props.genres) {
-        listItems = props.genres.map((genre, item) =>
-            <ListGroupItem className="movie-list" key={item}>
-                <Link to="#">{genre}</Link>
-            </ListGroupItem>
-        );
+function QualitiesList(props) {
+    let listItems;
+    let last = props.qualities[props.qualities.length - 1];
+
+    useEffect(() => {
+        props.setQuality(last[0]);
+    }, []);
+
+    if (props.qualities) {
+        listItems = props.qualities.map((quality, item) =>
+            <DropdownItem key={item} onClick={() => props.setQuality(quality[0])}>
+                {quality[0]}
+            </DropdownItem>
+        )
     }
     return (
-        <ListGroup horizontal>{listItems}</ListGroup>
+        <DropdownMenu >
+            {listItems}
+        </DropdownMenu>
     );
 }
 
@@ -61,62 +73,59 @@ const Options = (props) => {
     }
 
     const toggle = () => setDropdownOpen(prevState => !prevState);
-
-    const [show, setModal] = useState(false);
-    const toggleModal = () => setModal(!show);
-
-    const testClick = (e) => {
-        console.log('here');
-        console.log(e.target.value);
-    }
-
+    const [modalShare, setShare] = useState(false);
+    const [modalTrailer, setTrailer] = useState(false);
+    const toggleShare = () => setShare(!modalShare);
+    const toggleTrailer = () => setTrailer(!modalTrailer);
     return (
 
         <Col className="aside-button">
+            <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
+                <DropdownToggle id="btn-quality">
+                    <img src={gear} width='30' alt="Quality" />
+                    {props.quality}
+                </DropdownToggle>
+                <QualitiesList qualities={props.qualities} setQuality={props.setQuality} />
+            </ButtonDropdown>
 
-            {/* <Button color="danger"
-                value={props.favorite === 'add' ? 'none' : 'add'}
-                onClick={changeFilmList}>
-                {props.favorite === 'add' ? 'Remove from favorite' : 'Add to favorite'}
-            </Button> */}
             <input
                 type="image"
                 value={props.favorite === 'add' ? 'none' : 'add'}
                 onClick={changeFilmList}
-                src={props.favorite === 'add' ? starfull : star}
-                width='40'
+                src={props.favorite === 'add' ? bookfull : book}
+                width='30'
                 alt="favorite" />
 
             <input
                 type="image"
-                onClick={toggleModal}
+                onClick={toggleShare}
                 src={share}
-                width='40'
+                width='30'
                 alt="share" />
-
-            <Modal isOpen={show} toggle={toggleModal} >
-                <ModalHeader toggle={toggleModal}>
+            <Modal isOpen={modalShare} toggle={toggleShare} >
+                <ModalHeader toggle={toggleShare}>
                     <p>Share</p>
                 </ModalHeader>
                 <ModalBody className="text-center">
                 </ModalBody>
             </Modal>
 
-            <Button color="danger" onClick={() => props.togglePlayer(false)}>Trailer</Button>
-            <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
-                <DropdownToggle caret color="danger">Movie</DropdownToggle>
-                <DropdownMenu >
-                    <DropdownItem active onClick={() => {
-                        props.togglePlayer(true)
-                        props.setQuality('480')
-                    }}>
-                        360</DropdownItem>
-                    <DropdownItem onClick={() => {
-                        props.togglePlayer(true)
-                        props.setQuality('720')
-                    }}>720</DropdownItem>
-                </DropdownMenu>
-            </ButtonDropdown>
+            <input
+                type="image"
+                onClick={toggleTrailer}
+                src={movie}
+                width='30'
+                alt="movie" />
+            <Modal className='modalTrailer' isOpen={modalTrailer} toggle={toggleTrailer}>
+                <ModalHeader toggle={toggleTrailer}>
+                    <p>Trailer</p>
+                </ModalHeader>
+                <ModalBody className="text-center">
+                    <iframe id="videoPlayer" className="embed-responsive" height="420" controls
+                        src={`https://www.youtube.com/embed/${props.trailer}`}>
+                    </iframe>
+                </ModalBody>
+            </Modal>
         </Col>
     );
 }
@@ -195,22 +204,6 @@ function Comments(props) {
                         </div>
                     </Media>
                     <p>{comment.comment}</p>
-
-                    {/* <div className="movie-comment-footer">
-                        <input
-                            type="image"
-                            className={comment.status === 'like' ? 'opacity-button' : ''}
-                            name='like'
-                            onClick={e => setLike(e, comment.id)}
-                            src={like} alt="like" />
-                        <span>{comment.count}</span>
-                        <input
-                            type="image"
-                            className={comment.status === 'dislike' ? 'opacity-button' : ''}
-                            name='dislike'
-                            onClick={e => setLike(e, comment.id)}
-                            src={dislike} alt="dislike" />
-                    </div> */}
                 </Media>
             </Media>
         );
@@ -249,14 +242,27 @@ function Comments(props) {
         );
 }
 
+function GenreList(props) {
+    let listItems;
+
+    if (props.genres) {
+        listItems = props.genres.map((genre, item) =>
+            <ListGroupItem className="movie-list" key={item}>
+                <Link to="#">{genre}</Link>
+            </ListGroupItem>
+        );
+    }
+    return (
+        <ListGroup horizontal>{listItems}</ListGroup>
+    );
+}
+
 const Movie = (props) => {
     const { t, i18n } = useTranslation();
     const { imdb } = useParams();
-    const [moviePlayer, togglePlayer] = useState(true);
-    const [quality, setQuality] = useState('720');
-    const { fetchMovie, fetchFavoriteFilm, fetchComments } = props;
-    const { entitle, rutitle, endescription, rudescription,
-        engenres, rugenres, entrailer, rutrailer, rate, daterelease, runtime } = props.movie.info;
+    const { fetchMovie, fetchFavoriteFilm, fetchComments, setQuality } = props;
+    const { entitle, rutitle, endescription, rudescription, torrents,
+        engenres, rugenres, entrailer, rutrailer, rate, daterelease, runtime, enposter, ruposter } = props.movie.info;
     const me = props.login.me;
 
     const [message, setMsg] = useState();
@@ -276,6 +282,7 @@ const Movie = (props) => {
     const description = (i18n.language === 'en') ? endescription : rudescription;
     const genres = (i18n.language === 'en') ? engenres : rugenres;
     const trailer = (i18n.language === 'en') ? entrailer : rutrailer;
+    const poster = (i18n.language === 'en') ? enposter : ruposter;
 
     if (props.movie.isLoading) {
         return (
@@ -296,44 +303,39 @@ const Movie = (props) => {
                         <Info info='alert' message={message} />
                     }
                     <Row className="movie-header">
-                        <Col className="font-movie-head">
-                            <h2>{title}</h2>
-                            <p>
-                                {`IMDb ${rate} `}
-                                &bull;
-                                {` ${moment(daterelease).year()} `}
-                                &bull;
-                                {` ${runtime} min`}
-                            </p>
+                        <Col>
+                            <div className="font-movie-head">
+                                <h2>
+                                    {title}
+                                </h2>
+                                <div>
+                                    <img src={imdb_logo} height="40" alt="IMDb logo" />
+                                    <p> {rate}</p>
+                                </div>
+                            </div>
                         </Col>
                     </Row>
-                    {/* <Row>
+                    <Row>
                         <Col>
-                            {
-                                moviePlayer &&
-                                <video key={quality} id="videoPlayer" className="embed-responsive" controls>
-                                    <source src={`${CONFIG.API_URL}/api/movies/video/${imdb}/${quality}`} type="video/mp4" />
+                            <video key={props.movie.quality} id="videoPlayer" className="embed-responsive" poster={`https://image.tmdb.org/t/p/original/${poster}`} controls>
+                                <source src={`${CONFIG.API_URL}/api/movies/video/${imdb}/${props.movie.quality}`} type="video/mp4" />
 
-                                    <track label="English" kind="subtitles" srcLang="en" src="captions/vtt/sintel-en.vtt" default />
-                                    <track label="Deutsch" kind="subtitles" srcLang="de" src="captions/vtt/sintel-de.vtt" />
-                                    <track label="Español" kind="subtitles" srcLang="es" src="captions/vtt/sintel-es.vtt" />
-                                </video>
-                            }
-                            {
-                                !moviePlayer &&
-                                <iframe id="videoPlayer" className="embed-responsive" height="420" controls
-                                    src={`https://www.youtube.com/embed/${trailer}`}>
-                                </iframe>
-                            }
+                                {/* <track label="English" kind="subtitles" srcLang="en" src="captions/vtt/sintel-en.vtt" default />
+                                <track label="Deutsch" kind="subtitles" srcLang="de" src="captions/vtt/sintel-de.vtt" />
+                                <track label="Español" kind="subtitles" srcLang="es" src="captions/vtt/sintel-es.vtt" /> */}
+                            </video>
+
                         </Col>
-                    </Row> */}
+                    </Row>
                     <Row className="aside-button">
                         <Options
                             favorite={props.movie.favorite}
                             me={me}
                             film={imdb}
+                            trailer={trailer}
+                            quality={props.movie.quality}
+                            qualities={torrents}
                             fetchUpdateFavoriteFilm={props.fetchUpdateFavoriteFilm}
-                            togglePlayer={togglePlayer}
                             setQuality={setQuality}
                         />
                     </Row>
@@ -358,8 +360,20 @@ const Movie = (props) => {
                                 <TabPane tabId="1">
                                     <Row>
                                         <Col>
+                                            <p className="movie-title">
+                                                Год:
+                                                <span className="movie-description">{moment(daterelease).year()}</span>
+                                            </p>
+
+                                            <p className="movie-title">
+                                                Продолжительность:
+                                                <span className="movie-description">{runtime} min</span>
+                                            </p>
+
                                             <p className="movie-title">Жанр:</p>
                                             <GenreList genres={genres} />
+
+
                                             <p className="movie-title">Сюжет:</p>
                                             <p className="movie-description">{description}</p>
                                         </Col>
