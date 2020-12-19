@@ -282,25 +282,21 @@ router.post('/movie/comments', async (req, res) => {
 router.post('/movie/comment/like', async (req, res) => {
     try {
         const { me, idComment, status } = req.body;
-        console.log(req.body);
 
         checkStatus(me, idComment)
             .then((data) => {
                 if (data.length > 0) {
                     if (status === data[0].status) {
-                        console.log('here');
                         deleteStatus(me, idComment)
                             .then((data) => {
-                                console.log(data);
                                 res.status(200).json({
                                     message: "Ok",
                                     success: true
                                 })
                             })
                             .catch((e) => {
-                                console.log(e.message);
                                 res.status(200).json({
-                                    message: "Ooops! Cannot update like. Try again" + e.message,
+                                    message: "Ooops! Cannot update like. Try again",
                                     success: false
                                 })
                             })

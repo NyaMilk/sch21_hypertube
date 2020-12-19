@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams, withRouter } from 'react-router-dom';
 import {
     Container, Row, Col, ListGroup, ListGroupItem, Button,
-    DropdownToggle, DropdownMenu, DropdownItem, ButtonDropdown, Input, Nav, NavItem, NavLink, TabContent, TabPane, InputGroup, Media
+    DropdownToggle, DropdownMenu, DropdownItem, ButtonDropdown, Input, Nav, NavItem, NavLink, TabContent, TabPane, InputGroup, Media, Modal, ModalHeader, ModalBody, ModalFooter
 } from 'reactstrap'
 import { connect } from 'react-redux';
 import { fetchMovie, fetchFavoriteFilm, fetchUpdateFavoriteFilm, fetchComments } from '../redux/movie/ActionCreators';
@@ -17,6 +17,9 @@ import { request } from '../util/http';
 
 const like = '/img/like.svg';
 const dislike = '/img/dislike.svg';
+const star = '/img/star.svg';
+const starfull = '/img/share.svg';
+const share = '/img/share.svg';
 
 const mapStateToProps = (state) => {
     return {
@@ -59,14 +62,46 @@ const Options = (props) => {
 
     const toggle = () => setDropdownOpen(prevState => !prevState);
 
+    const [show, setModal] = useState(false);
+    const toggleModal = () => setModal(!show);
+
+    const testClick = (e) => {
+        console.log('here');
+        console.log(e.target.value);
+    }
+
     return (
+
         <Col className="aside-button">
-            <Button color="danger"
+
+            {/* <Button color="danger"
                 value={props.favorite === 'add' ? 'none' : 'add'}
                 onClick={changeFilmList}>
                 {props.favorite === 'add' ? 'Remove from favorite' : 'Add to favorite'}
-            </Button>
-            <Button color="danger">Share</Button>
+            </Button> */}
+            <input
+                type="image"
+                value={props.favorite === 'add' ? 'none' : 'add'}
+                onClick={changeFilmList}
+                src={props.favorite === 'add' ? starfull : star}
+                width='40'
+                alt="favorite" />
+
+            <input
+                type="image"
+                onClick={toggleModal}
+                src={share}
+                width='40'
+                alt="share" />
+
+            <Modal isOpen={show} toggle={toggleModal} >
+                <ModalHeader toggle={toggleModal}>
+                    <p>Share</p>
+                </ModalHeader>
+                <ModalBody className="text-center">
+                </ModalBody>
+            </Modal>
+
             <Button color="danger" onClick={() => props.togglePlayer(false)}>Trailer</Button>
             <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
                 <DropdownToggle caret color="danger">Movie</DropdownToggle>
@@ -249,7 +284,7 @@ const Movie = (props) => {
     }
     else if (props.movie.infoMsg) {
         return (
-            <Info message={props.movie.infoMsg} />
+            <Info info='message' message={props.movie.infoMsg} />
         );
     }
     else if (props.movie.info != null) {
@@ -258,7 +293,7 @@ const Movie = (props) => {
                 <Container>
                     {
                         message &&
-                        <Info message={message} info='alert' />
+                        <Info info='alert' message={message} />
                     }
                     <Row className="movie-header">
                         <Col className="font-movie-head">

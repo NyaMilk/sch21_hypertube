@@ -10,10 +10,7 @@ body {
 
 /* container */
 
-.profile,
-.profile-edit,
-.catalog,
-.movie {
+.profile, .profile-edit, .catalog, .movie {
   padding: 20px 0;
 }
 
@@ -53,22 +50,21 @@ body {
 }
 
 /* tab */
-.profile .nav-tabs .nav-link,
-.movie .nav-tabs .nav-link {
+
+.profile .nav-tabs .nav-link, .movie .nav-tabs .nav-link {
   cursor: pointer;
 }
 
-.profile .page-tabs .nav-tabs,
-.movie .page-tabs .nav-tabs {
+.profile .page-tabs .nav-tabs, .movie .page-tabs .nav-tabs {
   margin-bottom: 1rem;
 }
 
-.profile .nav-item a,
-.movie .nav-item a {
+.profile .nav-item a, .movie .nav-item a {
   color: rgba(0, 0, 0, 0.5);
 }
 
 /* media bootstrap */
+
 .media-object {
   width: 75px;
   height: 75px;
@@ -156,8 +152,7 @@ header .navbar .navbar-brand {
   margin-bottom: 0;
 }
 
-.login .font-profile-head,
-.login .login-btn {
+.login .font-profile-head, .login .login-btn {
   width: 100%;
 }
 
@@ -171,8 +166,7 @@ header .navbar .navbar-brand {
   margin-top: 10px;
 }
 
-.login .login-btn,
-.login-btn__aside {
+.login .login-btn, .login-btn__aside {
   margin-top: 20px;
   font-weight: 700;
 }
@@ -212,6 +206,7 @@ header .navbar .navbar-brand {
 }
 
 /* profile */
+
 .profile .tab-content {
   height: 400px;
   overflow-x: hidden;
@@ -339,6 +334,7 @@ header .navbar .navbar-brand {
 }
 
 /* movie */
+
 .movie .page-tabs {
   margin-top: 2rem;
 }
@@ -349,14 +345,12 @@ header .navbar .navbar-brand {
   opacity: 0.5;
 }
 
-.movie .list-group-horizontal > .list-group-item:first-child,
-.movie .list-group-horizontal > .list-group-item:last-child {
+.movie .list-group-horizontal>.list-group-item:first-child, .movie .list-group-horizontal>.list-group-item:last-child {
   border-bottom-left-radius: 5px;
   border-top-right-radius: 5px;
 }
 
-.movie .movie-list,
-.movie .movie-description {
+.movie .movie-list, .movie .movie-description {
   padding: 0.25rem 0.5rem;
   margin-right: 0.35rem;
   background: #f8f9fa;
@@ -392,8 +386,7 @@ header .navbar .navbar-brand {
   border-radius: 5px;
 }
 
-.input-group > .custom-select:not(:last-child),
-.input-group > .form-control:not(:last-child) {
+.input-group>.custom-select:not(:last-child), .input-group>.form-control:not(:last-child) {
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
 }

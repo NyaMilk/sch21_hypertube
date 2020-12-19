@@ -51,7 +51,7 @@ const Header = (props) => {
         <header className="header">
             <Container>
                 <Navbar color="light" light expand="xs">
-                    <NavbarBrand href="/catalog">Hypertube</NavbarBrand>
+                    <NavbarBrand href="/catalog/page/1">Hypertube</NavbarBrand>
                     <Nav className="ml-auto" navbar>
                         <Navbar>
                             {
