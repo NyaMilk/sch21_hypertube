@@ -12,6 +12,7 @@ import { Loading } from './Loading';
 import { Info } from './Info';
 import NotFound from './NotFound';
 import moment from 'moment';
+import 'moment/locale/ru';
 import classnames from 'classnames';
 import { request } from '../util/http';
 
@@ -23,6 +24,9 @@ const share = '/img/share.svg';
 const movie = '/img/movie.svg';
 const gear = '/img/gear.svg';
 const imdb_logo = '/img/imdbc.png';
+const twitter = '/img/twitter.svg';
+const facebook = '/img/facebook.svg';
+const vk = '/img/vk.svg';
 
 const mapStateToProps = (state) => {
     return {
@@ -39,7 +43,6 @@ const mapDispatchToProps = (dispatch) => ({
     fetchComments: (me, film) => dispatch(fetchComments(me, film)),
     setQuality: (quality) => dispatch(setQuality(quality))
 });
-
 
 function QualitiesList(props) {
     let listItems;
@@ -78,7 +81,6 @@ const Options = (props) => {
     const toggleShare = () => setShare(!modalShare);
     const toggleTrailer = () => setTrailer(!modalTrailer);
     return (
-
         <Col className="aside-button">
             <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
                 <DropdownToggle id="btn-quality">
@@ -87,6 +89,21 @@ const Options = (props) => {
                 </DropdownToggle>
                 <QualitiesList qualities={props.qualities} setQuality={props.setQuality} />
             </ButtonDropdown>
+
+            <button className="aside-button-trailer" onClick={toggleTrailer}>
+                <img src={movie} width="30" alt="movie" />
+                {props.t("moviePage.playTrailer")}
+            </button>
+            <Modal className='modalTrailer' isOpen={modalTrailer} toggle={toggleTrailer}>
+                <ModalHeader toggle={toggleTrailer}>
+                    <p>{props.t("moviePage.trailer")}</p>
+                </ModalHeader>
+                <ModalBody className="text-center">
+                    <iframe id="videoPlayer" className="embed-responsive" height="420" controls
+                        src={`https://www.youtube.com/embed/${props.trailer}`}>
+                    </iframe>
+                </ModalBody>
+            </Modal>
 
             <input
                 type="image"
@@ -104,26 +121,21 @@ const Options = (props) => {
                 alt="share" />
             <Modal isOpen={modalShare} toggle={toggleShare} >
                 <ModalHeader toggle={toggleShare}>
-                    <p>Share</p>
+                    <p>{props.t("moviePage.share")}</p>
                 </ModalHeader>
-                <ModalBody className="text-center">
-                </ModalBody>
-            </Modal>
-
-            <input
-                type="image"
-                onClick={toggleTrailer}
-                src={movie}
-                width='30'
-                alt="movie" />
-            <Modal className='modalTrailer' isOpen={modalTrailer} toggle={toggleTrailer}>
-                <ModalHeader toggle={toggleTrailer}>
-                    <p>Trailer</p>
-                </ModalHeader>
-                <ModalBody className="text-center">
-                    <iframe id="videoPlayer" className="embed-responsive" height="420" controls
-                        src={`https://www.youtube.com/embed/${props.trailer}`}>
-                    </iframe>
+                <ModalBody className="aside-button-share">
+                    <a target="_blank" title="facebook" href={`http://www.facebook.com/sharer.php?u=http://localhost:3000/movie/${props.film}&text=True%20story`}>
+                        <img src={facebook} alt="fb" />
+                        Facebook
+                    </a>
+                    <a target="_blank" title="twitter" href={`http://twitter.com/share?url=http://localhost:3000/movie/${props.film}&text=True%20story`}>
+                        <img src={twitter} alt="tw" />
+                        Twitter
+                    </a>
+                    <a target="_blank" title="vk" href={`http://vk.com/share.php?url=http://localhost:3000/movie/${props.film}&text=True%20story`}>
+                        <img src={vk} alt="vk" />
+                        VKontakte
+                    </a>
                 </ModalBody>
             </Modal>
         </Col>
@@ -172,6 +184,7 @@ function Comments(props) {
             })
             .catch(error => setMsg(error.message));
     }
+
     if (props.comments.length > 0) {
         const listItems = props.comments.map((comment, item) =>
             <Media className="mt-2" key={item}>
@@ -211,10 +224,10 @@ function Comments(props) {
             <div>
                 <Row>
                     <Col className="movie-comment">
-                        <p className="movie-title">Оставьте свой комментарий:</p>
+                        <p className="movie-title">{props.t("moviePage.comment")}</p>
                         <InputGroup>
                             <Input name='comment' value={textComment} onChange={e => setComment(e.target.value)} />
-                            <Button color='secondary' onClick={addComments}>Send</Button>
+                            <Button color='secondary' onClick={addComments}>{props.t("moviePage.send")}</Button>
                         </InputGroup>
                     </Col>
                 </Row>
@@ -227,17 +240,16 @@ function Comments(props) {
     else
         return (
             <div>
-
                 <Row>
                     <Col className="movie-comment">
-                        <p className="movie-title">Оставьте свой комментарий:</p>
+                        <p className="movie-title">{props.t("moviePage.comment")}</p>
                         <InputGroup>
                             <Input name='comment' value={textComment} onChange={e => setComment(e.target.value)} />
-                            <Button color='secondary' onClick={addComments}>Send</Button>
+                            <Button color='secondary' onClick={addComments}>{props.t("moviePage.send")}</Button>
                         </InputGroup>
                     </Col>
                 </Row>
-                <span className="movie-comments-list font-profile-head font-message">Нет ни одного комментария Nobody had commented</span>
+                <span className="movie-comments-list font-profile-head font-message">{props.t("moviePage.nobody")}</span>
             </div>
         );
 }
@@ -284,6 +296,8 @@ const Movie = (props) => {
     const trailer = (i18n.language === 'en') ? entrailer : rutrailer;
     const poster = (i18n.language === 'en') ? enposter : ruposter;
 
+    (i18n.language === 'en') ? moment.locale('en') : moment.locale('ru');
+
     if (props.movie.isLoading) {
         return (
             <Loading />
@@ -328,6 +342,7 @@ const Movie = (props) => {
                         </Col>
                     </Row>
                     <Row className="aside-button">
+                    {/* <Row > */}
                         <Options
                             favorite={props.movie.favorite}
                             me={me}
@@ -335,6 +350,7 @@ const Movie = (props) => {
                             trailer={trailer}
                             quality={props.movie.quality}
                             qualities={torrents}
+                            t={t}
                             fetchUpdateFavoriteFilm={props.fetchUpdateFavoriteFilm}
                             setQuality={setQuality}
                         />
@@ -345,14 +361,12 @@ const Movie = (props) => {
                             <Nav tabs>
                                 <NavItem>
                                     <NavLink className={classnames({ active: activeTab === '1' })} onClick={() => { toggle('1'); }}>
-                                        {/* {t("profilePage.tabOne")} */}
-                                        Описание
+                                        {t("moviePage.tabOne")}
                                     </NavLink>
                                 </NavItem>
                                 <NavItem>
                                     <NavLink className={classnames({ active: activeTab === '2' })} onClick={() => { toggle('2'); }}>
-                                        {/* {t("profilePage.tabTwo")} */}
-                                        Комментарий
+                                        {t("moviePage.tabTwo")}
                                     </NavLink>
                                 </NavItem>
                             </Nav>
@@ -361,20 +375,23 @@ const Movie = (props) => {
                                     <Row>
                                         <Col>
                                             <p className="movie-title">
-                                                Год:
-                                                <span className="movie-description">{moment(daterelease).year()}</span>
+                                                {t("moviePage.release")}
+                                                <span className="movie-description">{moment(daterelease).format('LL')}</span>
                                             </p>
 
                                             <p className="movie-title">
-                                                Продолжительность:
-                                                <span className="movie-description">{runtime} min</span>
+                                                {t("moviePage.runtime")}
+                                                <span className="movie-description">{runtime} {t("moviePage.min")}</span>
                                             </p>
 
-                                            <p className="movie-title">Жанр:</p>
+                                            <p className="movie-title">
+                                                {t("moviePage.genres")}
+                                            </p>
                                             <GenreList genres={genres} />
 
-
-                                            <p className="movie-title">Сюжет:</p>
+                                            <p className="movie-title">
+                                                {t("moviePage.story")}
+                                            </p>
                                             <p className="movie-description">{description}</p>
                                         </Col>
                                     </Row>
@@ -384,6 +401,7 @@ const Movie = (props) => {
                                         me={me}
                                         imdb={imdb}
                                         comments={props.movie.comments}
+                                        t={t}
                                         setMsg={setMsg}
                                         fetchComments={fetchComments} />
                                 </TabPane>

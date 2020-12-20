@@ -398,7 +398,30 @@ header .navbar .navbar-brand {
 }
 
 .movie .aside-button > * {
-  margin: 0.5rem 0 0 1rem;
+  margin: 0.5rem 0 0 1.2rem;
+}
+
+.aside-button-share {
+  display: flex;
+  flex-direction: column;
+}
+
+.aside-button-share a {
+  color: #6c757d;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 25px;
+  margin-left: 25px;
+}
+
+.aside-button-share a:hover {
+  text-decoration: none;
+  opacity: 0.5;
+}
+
+.aside-button-share img {
+  width: 60px;
+  margin-right: 10px;
 }
 
 .movie-comment .movie-title {
@@ -471,17 +494,23 @@ header .navbar .navbar-brand {
   justify-content: flex-end;
 }
 
-.movie #btn-quality {
+.movie #btn-quality,
+.aside-button-trailer {
   margin: 0;
   padding: 0;
   background: none;
   border: none;
   color: inherit;
   font-weight: 700;
+  text-align: end;
+}
+
+.aside-button-trailer img {
+  margin-right: 10px;
 }
 
 .movie #btn-quality img {
-  margin-right: 10px;
+  margin-right: 7px;
 }
 
 .btn-group > .btn-group:not(:last-child) > .btn,
@@ -500,9 +529,22 @@ header .navbar .navbar-brand {
   background-color: #6c757d;
 }
 
+/* media */
 @media (min-width: 576px) {
   .modalTrailer {
     /* max-width: none; */
     max-width: 800px;
+  }
+}
+
+@media (max-width: 576px) {
+  /* movie */
+  .movie .aside-button > * {
+    margin: 0.5rem 0 0 0;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  .movie .media-left {
+    display: none;
   }
 }
