@@ -1,2 +1,5 @@
 /node_modules
-/movies/tt*
+/files/lolo
+/testTorrent
+/psql/mgrass.sql
+/api/movies/*

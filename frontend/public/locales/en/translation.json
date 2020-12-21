@@ -46,6 +46,21 @@
 			"remove": "Remove friend"
 		}
 	},
-	"catalogPage": {
+	"catalogPage": {},
+	"moviePage": {
+		"tabOne": "About",
+		"tabTwo": "Comments",
+		"release": "Release date:",
+		"runtime": "Runtime:",
+		"min": "min",
+		"genres": "Genres:",
+		"country": "Country:",
+		"story": "Storyline:",
+		"comment": "Leave your comment:",
+		"send": "Send",
+		"playTrailer": "Play trailer",
+		"trailer": "Trailer",
+		"share": "Share",
+		"nobody": "Nobody had commented"
 	}
 }

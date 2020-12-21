@@ -324,7 +324,7 @@ const Profile = (props) => {
     }
     else if (props.profile.infoMsg) {
         return (
-            <Info />
+            <Info message={props.movie.infoMsg}/>
         );
     }
     else if (props.profile.info != null) {
@@ -360,7 +360,7 @@ const Profile = (props) => {
                         </Col>
                     </Row>
 
-                    <Row className="profile-tabs">
+                    <Row className="page-tabs">
                         <Col>
                             <Nav tabs>
                                 <NavItem>
