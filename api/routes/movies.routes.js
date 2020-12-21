@@ -50,7 +50,7 @@ router.post('/catalog/page', async (req, res) => {
 
         const { page, sort, rateFrom, rateTo, yearFrom, yearTo, genres, search } = req.body;
         let sqlSort = '',
-            limit = page * 9;
+            limit = page * 16;
 
         if (sort === 'yearAsc' || sort === 'yearDesc')
             sqlSort = (sort === 'yearAsc') ? 'year ASC, rate DESC' : 'year DESC, rate DESC';

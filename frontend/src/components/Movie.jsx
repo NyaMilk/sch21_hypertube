@@ -254,6 +254,21 @@ function Comments(props) {
         );
 }
 
+function CountriesList(props) {
+    let listItems;
+
+    if (props.countries) {
+        listItems = props.countries.map((country, item) =>
+            <ListGroupItem className="movie-list" key={item}>
+                <Link to="#">{country}</Link>
+            </ListGroupItem>
+        );
+    }
+    return (
+        <ListGroup horizontal>{listItems}</ListGroup>
+    );
+}
+
 function GenreList(props) {
     let listItems;
 
@@ -273,7 +288,7 @@ const Movie = (props) => {
     const { t, i18n } = useTranslation();
     const { imdb } = useParams();
     const { fetchMovie, fetchFavoriteFilm, fetchComments, setQuality } = props;
-    const { entitle, rutitle, endescription, rudescription, torrents,
+    const { entitle, rutitle, endescription, rudescription, torrents, encountries, rucountries,
         engenres, rugenres, entrailer, rutrailer, rate, daterelease, runtime, enposter, ruposter } = props.movie.info;
     const me = props.login.me;
 
@@ -294,6 +309,7 @@ const Movie = (props) => {
     const description = (i18n.language === 'en') ? endescription : rudescription;
     const genres = (i18n.language === 'en') ? engenres : rugenres;
     const trailer = (i18n.language === 'en') ? entrailer : rutrailer;
+    const countries = (i18n.language === 'en') ? encountries : rucountries;
     const poster = (i18n.language === 'en') ? enposter : ruposter;
 
     (i18n.language === 'en') ? moment.locale('en') : moment.locale('ru');
@@ -342,7 +358,7 @@ const Movie = (props) => {
                         </Col>
                     </Row>
                     <Row className="aside-button">
-                    {/* <Row > */}
+                        {/* <Row > */}
                         <Options
                             favorite={props.movie.favorite}
                             me={me}
@@ -388,6 +404,11 @@ const Movie = (props) => {
                                                 {t("moviePage.genres")}
                                             </p>
                                             <GenreList genres={genres} />
+
+                                            <p className="movie-title">
+                                                {t("moviePage.country")}
+                                            </p>
+                                            <CountriesList countries={countries} />
 
                                             <p className="movie-title">
                                                 {t("moviePage.story")}

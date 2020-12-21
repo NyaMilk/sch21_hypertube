@@ -204,10 +204,10 @@ function Filter(props) {
                                 feedback={t("inputMsg.yearRange")} />
                         </Row>
 
-                        {/* <Row className="mt-2">
+                        <Row className="mt-2">
                             <Col xs={12} className="mb-1">
-                                <p className="font-profile-head">Tags</p>
-                                <Input type='select' multiple defaultValue={props.filter.filter.tags} onChange={e => tagsHandle(e)}>
+                                <p className="font-profile-head">Genres</p>
+                                <Input type='select' multiple defaultValue={props.filter.catalog.genres} onChange={e => tagsHandle(e)}>
                                     <option value="sport">sport</option>
                                     <option value="movie">movie</option>
                                     <option value="food">food</option>
@@ -217,7 +217,7 @@ function Filter(props) {
                                     <option value="animal">animal</option>
                                 </Input>
                             </Col>
-                        </Row> */}
+                        </Row>
 
                         <ModalFooter className="justify-content-between">
                             <Button
@@ -239,41 +239,41 @@ function GenreList(props) {
     let listItems;
     if (props.genres) {
         listItems = props.genres.map((genre, item) =>
-            <span key={item}>{genre}</span>
+            <span key={item}>{genre}{' '}</span>
         );
     }
     return (
-        <ListGroupItem>{listItems}</ListGroupItem>
+        <ListGroupItem className="movie-list">{listItems}</ListGroupItem>
     );
 }
 
 function FilmCards(props) {
-    const test = (props.language == 'en') ? 'en' : 'ru';
-
     let listItems;
+    console.log("props", props);
+
     if (props.cards.length > 0) {
-        listItems = props.cards.map((card, item) =>
-            <Col md={4} key={item}>
+        listItems = props.cards.map((card, item) => {
+            const poster = (props.lang === 'en') ? card.enposter : card.ruposter;
+            const title = (props.lang === 'en') ? card.entitle : card.rutitle;
+            const genres = (props.lang === 'en') ? card.engenres : card.rugenres;
+
+            return (<Col md={3} key={item}>
                 <Link to={`/movie/${card.imdb}`}>
                     <Card className="mb-4 text-center">
-                        {/* <CardImg width="100%" top src={`/api/image/${card.nickname}/1/${card.photos}`} alt={`Profile photo ${card.nickname}`} /> */}
-                        {/* Подумать еще над языком */}
-                        <CardImg width="100%" top src={`https://image.tmdb.org/t/p/original${eval(`card.${props.language}poster`)}`} alt={card.title} />
+                        <CardImg top src={`https://image.tmdb.org/t/p/original/${poster}`} alt={title} />
                         <CardBody>
                             <CardTitle>
-
-                                {card.title} <Badge color="danger" pill> {card.rate} </Badge>
+                                {title} <Badge color="danger" pill> {card.rate} </Badge>
                             </CardTitle>
                             <ListGroup flush>
                                 <ListGroupItem>{card.year}</ListGroupItem>
-                                <GenreList genres={card.genres} />
+                                <GenreList genres={genres} />
                             </ListGroup>
-
                         </CardBody>
                     </Card>
                 </Link>
-            </Col>
-        );
+            </Col>)
+        });
     }
     return (
         <Row>{listItems}</Row>
@@ -281,7 +281,7 @@ function FilmCards(props) {
 }
 
 function CardsPagination(props) {
-    const countPages = Math.ceil(props.cardCount / 9);
+    const countPages = Math.ceil(props.cardCount / 16);
 
     if (countPages > 1) {
         let count,
@@ -351,6 +351,7 @@ const Catalog = (props) => {
     const { page } = props.match.params;
     const { fetchAllCatalog, fetchCatalogCard } = props;
     const { sort, filterStatus, rateFrom, rateTo, yearFrom, yearTo, genres, search } = props.catalog;
+    // const { enposter, ruposter, entitle, rutitle, engenres, rugenres } = props.catalog.info;
     // const { nickname } = props.login.me;
 
     useEffect(() => {
@@ -371,9 +372,6 @@ const Catalog = (props) => {
         }
     }, [fetchAllCatalog, fetchCatalogCard, page, sort, filterStatus, rateFrom, rateTo, yearFrom, yearTo, genres, search]);
 
-    console.log("props ", props);
-
-
     if (props.catalog.isLoading) {
         return (
             <Loading />
@@ -389,7 +387,10 @@ const Catalog = (props) => {
             <section className="catalog">
                 <Container>
                     <Filter filter={props} />
-                    <FilmCards cards={props.catalog.info} language={i18n.language} />
+                    <FilmCards
+                        cards={props.catalog.info}
+                        lang={i18n.language}
+                        t={t} />
                     <CardsPagination getPage={page} cardCount={props.catalog.cardCount} />
                 </Container>
             </section>

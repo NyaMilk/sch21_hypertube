@@ -45,7 +45,7 @@ exports.getCards = (genres, limit, sqlSort, sqlFilter) => {
     const sql =
         `SELECT enTitle, ruTitle, rate, imdb, EXTRACT(YEAR FROM dateRelease) AS year, enPoster, ruPoster, enGenres, ruGenres FROM Movies
     WHERE ${sqlFilter} ORDER BY ${sqlSort}
-    LIMIT 9 OFFSET ($2 - 9)`;
+    LIMIT 16 OFFSET ($2 - 16)`;
 
     return db.any(sql, [genres, limit]);
 }

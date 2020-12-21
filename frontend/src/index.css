@@ -285,6 +285,17 @@ header .navbar .navbar-brand {
   font-size: 1.3rem;
 }
 
+/* .card-img-top {
+  max-height: 350px;
+  object-fit: cover;
+} */
+
+.catalog .movie-list p {
+  margin: 0;
+  text-transform: capitalize;
+
+}
+
 .catalog .list-group-item {
   padding: 0.5rem;
 }
