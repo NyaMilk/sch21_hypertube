@@ -44,3 +44,10 @@ app.use('/api/stream', streamRoutes);
 // app.use('/api/torrent', torrentRoutes);
 
 app.listen(keys.apiPort, () => console.log('App on ' + keys.apiPort));
+
+const httpServer = require('http').createServer();
+const io = require('socket.io')(httpServer);
+
+require('./routes/socket.routes')(io);
+
+httpServer.listen(keys.socketPort, () => console.log('Socket on ' + keys.socketPort));

@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import {
-    Alert, Container, Row, Col, Nav, NavItem, NavLink, Card, CardImg, CardBody, TabContent, TabPane, Button, Media, Input, Label,
-    UncontrolledButtonDropdown, DropdownMenu, DropdownItem, DropdownToggle, Modal, ModalHeader, ModalBody, ModalFooter,
+    Container, Row, Col, Nav, NavItem, NavLink, TabContent, TabPane, Button, Input, Label,
+    Modal, ModalHeader, ModalBody, ModalFooter,
     FormFeedback
 } from 'reactstrap';
 import classnames from 'classnames';
-import { fetchProfile, fetchView, fetchLike, fetchStatus, fetchUpdateStatus, fetchUpdateView, fetchReport } from '../redux/profile/ActionCreators';
+import { fetchProfile } from '../redux/profile/ActionCreators';
+import {
+    setLogin, setFirstName, setLastName, setEmail,
+    setAbout, setNewPassword, fetchEditProfile
+} from '../redux/edit/ActionCreators';
 import { fetchUpdateLogin } from '../redux/login/ActionCreators';
 import { Loading } from './Loading';
 import { Info } from './Info';
 import NotFound from './NotFound';
 import { request } from '../util/http';
-import moment from 'moment';
 import { useTranslation } from "react-i18next";
 import CONFIG from '../util/const';
 import { isValidInput, isValidPassword } from '../util/check';
@@ -22,13 +24,21 @@ import { isValidInput, isValidPassword } from '../util/check';
 const mapStateToProps = (state) => {
     return {
         login: state.login,
-        profile: state.profile
+        profile: state.profile,
+        edit: state.edit
     }
 }
 
 const mapDispatchToProps = (dispatch) => ({
     fetchUpdateLogin: (username) => dispatch(fetchUpdateLogin(username)),
-    fetchProfile: (username) => dispatch(fetchProfile(username))
+    fetchProfile: (username) => dispatch(fetchProfile(username)),
+    setLogin: (login) => dispatch(setLogin(login)),
+    setFirstName: (firstName) => dispatch(setFirstName(firstName)),
+    setLastName: (lastName) => dispatch(setLastName(lastName)),
+    setEmail: (email) => dispatch(setEmail(email)),
+    setAbout: (about) => dispatch(setAbout(about)),
+    setNewPassword: (newPass) => dispatch(setNewPassword(newPass)),
+    fetchEditProfile: (data, username) => dispatch(fetchEditProfile(data, username))
 });
 
 const Avatar = (props) => {
@@ -74,13 +84,14 @@ const Avatar = (props) => {
     );
 }
 
-function InputForm(props) {
+const InputForm = (props) => {
     const [isValid, toggleValid] = useState('');
     const [feedback, setFeedback] = useState('Oopsy!');
 
     const inputChange = (e) => {
         const { name, value } = e.target;
-        if (name === 'login' || name === 'email' || name === 'lastName' || name === 'firstName' || name === 'currentPass' || name === 'newPass') {
+        if (name === 'login' || name === 'email' || name === 'lastName' || name === 'firstName'
+            || name === 'currentPass' || name === 'newPass') {
             if (isValidInput(name, value)) {
                 toggleValid('is-valid');
                 if (name === 'email' || name === 'login') {
@@ -102,7 +113,6 @@ function InputForm(props) {
                     request('/api/register/check/pass', data, 'POST')
                         .then(res => res.json())
                         .then(result => {
-                            console.log('h2', result);
                             if (result.success !== true) {
                                 toggleValid('is-invalid');
                                 setFeedback(props.feedback)
@@ -110,8 +120,9 @@ function InputForm(props) {
                         })
                 }
 
-                // if (name !== 'currentPass')
-                //     props.set(value)
+                if (name !== 'currentPass') {
+                    props.set(value);
+                }
             }
             else {
                 toggleValid('is-invalid');
@@ -125,7 +136,7 @@ function InputForm(props) {
             <p className="font-profile-head">{props.label}</p>
             <Input
                 type={props.type || 'text'}
-                placeholder={props.placeholder || ''} 
+                placeholder={props.placeholder || ''}
                 name={props.name}
                 defaultValue={props.value || ''}
                 onChange={inputChange}
@@ -141,22 +152,33 @@ function EditProfile(props) {
     const { t } = useTranslation();
     const [modal, setModal] = useState(false);
     const [message, setMessage] = useState();
-    const { displayname, firstname, lastname, about, email } = props.info;
+    const { displayname, firstname, lastname, about, email, provider } = props.info;
+    const { setLogin, setFirstName, setLastName, setEmail, setAbout, setNewPassword, fetchEditProfile } = props;
+
     const toggleModal = () => setModal(!modal);
 
     const [isActiveBtn, toggleBtn] = useState(true);
 
     const checkBtn = () => {
+        console.log(props);
         const countInvalidInputs = document.querySelectorAll(".is-invalid").length;
-        countInvalidInputs === 0 ? toggleBtn(false) : toggleBtn(true);
+        countInvalidInputs === 0 ? toggleBtn(true) : toggleBtn(false);
     }
 
-    const reportSubmit = () => {
+    const save = () => {
+        const { username, firstname, lastname, about, email, newpass } = props.edit;
+
         const data = {
-            me: props.me
+            displayname: username,
+            firstname: firstname,
+            lastname: lastname,
+            email: email,
+            about: about,
+            newpass: newpass
         }
-        // props.fetch(data);
-        setModal(!modal);
+
+        fetchEditProfile(data, displayname);
+        toggleModal();
     }
 
     return (
@@ -181,54 +203,57 @@ function EditProfile(props) {
                         value={displayname}
                         label={t("loginPage.login")}
                         feedback={[t("inputMsg.login.taken"), t("inputMsg.login.invalid")]}
-                        // set={props.setLogin}
+                        set={setLogin}
                         checkBtn={checkBtn} />
                     <InputForm
                         name='firstName'
                         value={firstname}
                         label={t("loginPage.firstName")}
                         feedback={t("inputMsg.text")}
-                        // set={props.setFirstName}
+                        set={setFirstName}
                         checkBtn={checkBtn} />
                     <InputForm
                         name='lastName'
                         value={lastname}
                         label={t("loginPage.lastName")}
                         feedback={t("inputMsg.text")}
-                        // set={props.setLastName}
+                        set={setLastName}
                         checkBtn={checkBtn} />
                     <InputForm
                         name='email'
                         value={email}
                         label={t("loginPage.email")}
                         feedback={[t("inputMsg.email.taken"), t("inputMsg.email.invalid")]}
-                        // set={props.setEmail}
+                        set={setEmail}
                         checkBtn={checkBtn}
                         type="email" />
                     <InputForm
                         name='about'
                         value={about}
                         label={t("profilePage.about")}
-                        // set={props.setAbout}
+                        set={setAbout}
                         checkBtn={checkBtn} />
 
-                    <InputForm
-                        name='currentPass'
-                        login={displayname}
-                        label={t("profilePage.curpassword")}
-                        feedback={t("inputMsg.password.wrong")}
-                        checkBtn={checkBtn}
-                        type='password' />
-                    <InputForm
-                        name='newPass'
-                        label={t("profilePage.newpassword")}
-                        // set={props.setNewPassword}
-                        feedback={t("inputMsg.password.weak")}
-                        checkBtn={checkBtn}
-                        type='password' />
+                    {provider == "hypert" &&
+                        <InputForm
+                            name='currentPass'
+                            login={displayname}
+                            label={t("profilePage.curpassword")}
+                            feedback={t("inputMsg.password.wrong")}
+                            checkBtn={checkBtn}
+                            type='password' />
+                        &&
+                        <InputForm
+                            name='newPass'
+                            label={t("profilePage.newpassword")}
+                            set={setNewPassword}
+                            feedback={t("inputMsg.password.weak")}
+                            checkBtn={checkBtn}
+                            type='password' />
+                    }
                 </ModalBody>
                 <ModalFooter className="justify-content-between">
-                    <Button color="success" onClick={reportSubmit} message={message}>Save</Button>
+                    <Button color="success" onClick={save} message={message} disabled={!isActiveBtn}>Save</Button>
                     <Button color="secondary" onClick={toggleModal}>Cancel</Button>
                 </ModalFooter>
             </Modal>
@@ -244,10 +269,21 @@ function AsideButton(props) {
     }
 
     if (props.check) {
+        const { setLogin, setFirstName, setLastName, setEmail,
+             setAbout, setNewPassword, fetchEditProfile, edit } = props;
+
         return (
             <Row className="aside-button">
                 <EditProfile
                     info={props.info}
+                    setLogin={setLogin}
+                    setFirstName={setFirstName}
+                    setLastName={setLastName}
+                    setEmail={setEmail}
+                    setAbout={setAbout}
+                    setNewPassword={setNewPassword}
+                    fetchEditProfile={fetchEditProfile}
+                    edit={edit}
                 />
             </Row>
         );
@@ -269,8 +305,8 @@ const Profile = (props) => {
     const { t } = useTranslation();
     const { me } = props.login;
     const { username } = props.match.params;
-    const { displayname, firstname, lastname, about } = props.profile.info;
-    const { fetchProfile } = props;
+    const { fetchProfile, setLogin, setFirstName, setLastName,
+        setEmail, setAbout, setNewPassword, fetchEditProfile } = props;
 
     useEffect(() => {
         fetchProfile(username);
@@ -292,6 +328,7 @@ const Profile = (props) => {
         );
     }
     else if (props.profile.info != null) {
+        const { displayname, firstname, lastname, about, provider } = props.profile.info;
         const isMe = (me === username);
 
         return (
@@ -300,7 +337,17 @@ const Profile = (props) => {
                     <AsideButton
                         check={isMe}
                         info={props.profile.info}
-                        status={[t("profilePage.status.add"), t("profilePage.status.remove")]} />
+                        status={[t("profilePage.status.add"), t("profilePage.status.remove")]}
+                        setLogin={setLogin}
+                        setFirstName={setFirstName}
+                        setLastName={setLastName}
+                        setEmail={setEmail}
+                        setAbout={setAbout}
+                        setNewPassword={setNewPassword}
+                        fetchEditProfile={fetchEditProfile}
+                        provider={provider}
+                        edit={props.edit}
+                    />
                     <Row className="profile-header">
                         <Avatar
                             username={displayname}

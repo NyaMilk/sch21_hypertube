@@ -9,7 +9,8 @@ const SCHOOL_TOKENS = {
 };
 
 const PORTS = {
-  apiPort: "5000"
+  apiPort: "5000",
+  socketPort: "5001"
 };
 
 const DB_LOGIN = "super";

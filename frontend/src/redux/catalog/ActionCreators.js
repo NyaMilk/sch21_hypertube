@@ -17,7 +17,7 @@ export const catalogFailed = (msg) => ({
 });
 
 export const setCatalogSort = (sort) => (dispatch) => {
-    dispatch(({
+    return dispatch(({
         type: ActionTypes.CATALOG_SORT_ADD,
         sort: sort
     }));

@@ -6,9 +6,7 @@ const fs = require('fs');
 router.get('/movie/:imdb/:quality', async (req, res) => {
     try {
         const stream = (path, res) => {
-            const fullPath = `${path.substr(-4,4)}/${path}`; 
-
-            const stat = fs.statSync(fullPath, res);
+            const stat = fs.statSync(path, res);
             const fileSize = stat.size;
             const range = req.headers.range;
 
@@ -37,6 +35,7 @@ router.get('/movie/:imdb/:quality', async (req, res) => {
                 fs.createReadStream(path).pipe(res)
             }
         }
+
         const { imdb, quality } = req.params;
         const dirPath = `${process.cwd()}/movies/${imdb}_${quality}`;
         const path = await getPath(imdb, quality);
@@ -44,7 +43,6 @@ router.get('/movie/:imdb/:quality', async (req, res) => {
             let newPath;
             const magnet = await getMagnet(imdb, quality);
             console.log('magnet', magnet);
-            const dirPath = `${process.cwd()}/movies/${imdb}_${quality}`;
             const options = {
                 connections: 100,
                 uploads: 10,
@@ -53,7 +51,7 @@ router.get('/movie/:imdb/:quality', async (req, res) => {
                 dht: true,
                 tracker: true
             }
-            console.log('path', dirPath);
+
             const engine = torrentStream(magnet, options);
 
             engine
@@ -97,7 +95,8 @@ router.get('/movie/:imdb/:quality', async (req, res) => {
         }
         else {
             await updateMovie(imdb, quality);
-            stream(path, res);
+            console.log('this path', `${dirPath}/${path}`);
+            stream(`${dirPath}/${path}`, res);
         }
     } catch (e) {
         console.log(e.message);

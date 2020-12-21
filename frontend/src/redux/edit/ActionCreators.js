@@ -20,36 +20,36 @@ export const editProfileFailed = (msg) => ({
     payload: msg
 });
 
-export const setLogin = (nickname) => (dispatch) => {
-    dispatch(({
-        type: ActionTypes.NICKNAME_ADD,
-        nickname: nickname
+export const setLogin = (username) => (dispatch) => {
+    return dispatch(({
+        type: ActionTypes.USERNAME_ADD,
+        username: username
     }));
 };
 
 export const setFirstName = (firstname) => (dispatch) => {
-    dispatch(({
+    return dispatch(({
         type: ActionTypes.FIRSTNAME_ADD,
         firstname: firstname
     }));
 };
 
 export const setLastName = (lastname) => (dispatch) => {
-    dispatch(({
+    return dispatch(({
         type: ActionTypes.LASTNAME_ADD,
         lastname: lastname
     }));
 };
 
 export const setEmail = (email) => (dispatch) => {
-    dispatch(({
+    return dispatch(({
         type: ActionTypes.EMAIL_ADD,
         email: email
     }));
 };
 
 export const setAbout = (about) => (dispatch) => {
-    dispatch(({
+    return dispatch(({
         type: ActionTypes.ABOUT_ADD,
         about: about
     }));
@@ -61,9 +61,9 @@ export const editPasswordStatusAdd = (status) => ({
 });
 
 export const setNewPassword = (pass) => (dispatch) => {
-    dispatch(({
+    return dispatch(({
         type: ActionTypes.NEWPASSWORD_ADD,
-        newpass: newpass
+        newpass: pass
     }));
 };
 
@@ -74,11 +74,11 @@ export const initFormEdit = () => (dispatch) => {
 export const fetchEditProfile = (data, login) => (dispatch) => {
     dispatch(editProfileLoading());
 
-    request(`/api/profile/edit/${login}`, data, 'POST')
+    return request(`/api/user/profile/edit/${login}`, data, 'POST')
         .then(response => response.json())
         .then(result => {
             console.log(result);
-            dispatch(fetchUpdateLogin(result.nickname))
+            dispatch(fetchUpdateLogin(result.username))
                 .then(() => {
                     dispatch(editProfileStatus(result));
                 })
