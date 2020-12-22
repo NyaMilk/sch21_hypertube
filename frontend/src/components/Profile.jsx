@@ -234,7 +234,7 @@ function EditProfile(props) {
                         set={setAbout}
                         checkBtn={checkBtn} />
 
-                    {provider == "hypert" &&
+                    {provider === "hypert" &&
                         <InputForm
                             name='currentPass'
                             login={displayname}
@@ -264,13 +264,26 @@ function EditProfile(props) {
 function AsideButton(props) {
     const changeStatus = (e) => {
         if (e.target.value === 'add' || e.target.value === 'remove') {
-            // props.fetchUpdateStatus(props.me, props.you, props.status, e.target.value);
+            const data = {
+                me: props.me,
+                you: props.name,
+                status: e.target.value
+            }
+            
+            request('/api/users/profile/friends', data, 'POST')
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        props.fetchProfile(props.name);
+                    }
+                })
+                .catch(error => props.setMsg(error.message));
         }
     }
 
     if (props.check) {
         const { setLogin, setFirstName, setLastName, setEmail,
-             setAbout, setNewPassword, fetchEditProfile, edit } = props;
+            setAbout, setNewPassword, fetchEditProfile, edit } = props;
 
         return (
             <Row className="aside-button">
@@ -310,12 +323,14 @@ const Profile = (props) => {
 
     useEffect(() => {
         fetchProfile(username);
-    }, [username]);
+    }, [fetchProfile, username]);
 
     const [activeTab, setActiveTab] = useState('1');
     const toggle = tab => {
         if (activeTab !== tab) setActiveTab(tab);
     }
+
+    const [message, setMsg] = useState();
 
     if (props.profile.isLoading) {
         return (
@@ -324,7 +339,7 @@ const Profile = (props) => {
     }
     else if (props.profile.infoMsg) {
         return (
-            <Info message={props.movie.infoMsg}/>
+            <Info message={props.movie.infoMsg} />
         );
     }
     else if (props.profile.info != null) {
@@ -334,6 +349,10 @@ const Profile = (props) => {
         return (
             <section className="profile text-break">
                 <Container>
+                    {
+                        message &&
+                        <Info info='alert' message={message} />
+                    }
                     <AsideButton
                         check={isMe}
                         info={props.profile.info}
@@ -347,6 +366,11 @@ const Profile = (props) => {
                         fetchEditProfile={fetchEditProfile}
                         provider={provider}
                         edit={props.edit}
+                        setMsg={setMsg}
+                        me={me}
+                        name={username}
+                        fetchProfile={fetchProfile}
+
                     />
                     <Row className="profile-header">
                         <Avatar

@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { getProfile, editProfile } = require("../models/user");
+const { getProfile, editProfile, insertFriend, deleteFriend } = require("../models/user");
 const bcrypt = require('bcrypt');
 const { getFavoriteMovies, getProfileComments } = require('../models/movies');
 
@@ -89,21 +89,21 @@ router.post('/profile/edit/:username', async (req, res) => {
 
 router.get('/profile/favorites/movies/:me', function (req, res) {
     try {
-    const { me } = req.params;
-    
-    getFavoriteMovies(me)
-        .then(data =>{
-            res.status(200).json({
-                success: true,
-                result: data
-            });
-        })
-        .catch(() => {
-            res.status(200).json({
-                success: false,
-                message: "Ooops! Not found favorite films"
+        const { me } = req.params;
+
+        getFavoriteMovies(me)
+            .then(data => {
+                res.status(200).json({
+                    success: true,
+                    result: data
+                });
             })
-        })
+            .catch(() => {
+                res.status(200).json({
+                    success: false,
+                    message: "Ooops! Not found favorite films"
+                })
+            })
     } catch (e) {
         res.status(200).json({
             success: false,
@@ -114,21 +114,21 @@ router.get('/profile/favorites/movies/:me', function (req, res) {
 
 router.get('/profile/comments/:me', function (req, res) {
     try {
-    const { me } = req.params;
-    
-    getProfileComments(me)
-        .then(data =>{
-            res.status(200).json({
-                success: true,
-                result: data
-            });
-        })
-        .catch(() => {
-            res.status(200).json({
-                success: false,
-                message: "Ooops! Not found favorite films"
+        const { me } = req.params;
+
+        getProfileComments(me)
+            .then(data => {
+                res.status(200).json({
+                    success: true,
+                    result: data
+                });
             })
-        })
+            .catch(() => {
+                res.status(200).json({
+                    success: false,
+                    message: "Ooops! Not found favorite films"
+                })
+            })
     } catch (e) {
         res.status(200).json({
             success: false,
@@ -136,4 +136,40 @@ router.get('/profile/comments/:me', function (req, res) {
         })
     }
 });
+
+router.post('/profile/friends', async (req, res) => {
+    try {
+        console.log(req.body);
+        const { me, you, status } = req.body;
+        const promise = (status === 'add') ? insertFriend(me, you) : deleteFriend(me, you);
+
+        promise
+            .then(data => {
+                if (data.length > 0)
+                    res.status(200).json({
+                        message: "Ok",
+                        success: true
+                    });
+                else
+                    res.status(200).json({
+                        message: "No such friend",
+                        success: false
+                    })
+            })
+            .catch(() => {
+                res.status(200).json({
+                    message: "Ooops! Cannot update friend list. Try again",
+                    success: false
+                })
+            })
+
+    }
+    catch (e) {
+        res.status(200).json({
+            message: "Ooops! Cannot update friend list. Try again",
+            success: false
+        })
+    }
+});
+
 module.exports = router;
