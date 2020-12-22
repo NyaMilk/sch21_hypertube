@@ -293,7 +293,6 @@ header .navbar .navbar-brand {
 .catalog .movie-list p {
   margin: 0;
   text-transform: capitalize;
-
 }
 
 .catalog .list-group-item {
@@ -308,9 +307,13 @@ header .navbar .navbar-brand {
   padding: 0;
 }
 
-/* .modal-content .modal-body {
+.modal-content .modal-body {
   padding-top: 0;
-} */
+}
+
+.modal-body .font-profile-head {
+  margin-bottom: 1.5rem;
+}
 
 .modal-content .modal-header {
   justify-content: center;
@@ -320,13 +323,13 @@ header .navbar .navbar-brand {
   margin-top: 15px;
 }
 
-/* .modal-content .invalid-feedback {
-  display: block ;
-} */
-
 .catalog .modal-content .disabled-button {
   pointer-events: none;
   opacity: 50%;
+}
+
+.catalog input[name="search"] {
+  margin-bottom: 1rem;
 }
 
 /* pagination */

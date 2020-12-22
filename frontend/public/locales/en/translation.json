@@ -14,7 +14,8 @@
 			"wrong": "Wrong password"
 		},
 		"text": "Only symbols are required",
-		"yearRange": "Year range 1900 - 2020 only"
+		"yearRange": "Year range 1900 - 2021 only",
+		"rateRange": "Rate range 0 - 10 only"
 	},
 	"loginPage": {
 		"login": "Login",
@@ -46,7 +47,17 @@
 			"remove": "Remove friend"
 		}
 	},
-	"catalogPage": {},
+	"catalogPage": {
+		"search": "Search",
+		"rate": "Rate",
+		"year": "Year",
+		"name": "Name",
+		"filter": "Filter",
+		"genre": "Genre",
+		"clear": "Clean",
+		"cancel": "Cancel",
+		"not": "Not found :C"
+	},
 	"moviePage": {
 		"tabOne": "About",
 		"tabTwo": "Comments",

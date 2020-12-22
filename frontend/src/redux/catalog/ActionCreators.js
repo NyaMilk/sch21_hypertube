@@ -77,11 +77,11 @@ export const catalogCardAdd = (info) => ({
     payload: info.result
 });
 
-export const fetchCatalogCard = (data) => (dispatch) => {
+export const fetchCatalogCard = (data, lang) => (dispatch) => {
     dispatch(catalogLoading());
     dispatch(setCatalogFilterStatus(null));
 
-    return request('/api/movies/catalog/page', data, 'POST')
+    return request(`/api/movies/catalog/page/${lang}`, data, 'POST')
         .then(response => response.json())
         .then(result => {
             console.log(result);

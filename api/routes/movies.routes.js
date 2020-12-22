@@ -45,17 +45,24 @@ router.post('/catalog/count', async (req, res) => {
     }
 });
 
-router.post('/catalog/page', async (req, res) => {
+router.post('/catalog/page/:lang', async (req, res) => {
     try {
 
-        const { page, sort, rateFrom, rateTo, yearFrom, yearTo, genres, search } = req.body;
+        const { page, sort, rateFrom, rateTo, yearFrom, yearTo, genres, search } = req.body,
+            { lang } = req.params;
+
         let sqlSort = '',
+            title,
             limit = page * 16;
 
         if (sort === 'yearAsc' || sort === 'yearDesc')
             sqlSort = (sort === 'yearAsc') ? 'year ASC, rate DESC' : 'year DESC, rate DESC';
-        else if (sort === 'rateAsc' || sort === 'rateDesc')
+        if (sort === 'rateAsc' || sort === 'rateDesc')
             sqlSort = (sort === 'rateAsc') ? 'rate ASC, year ASC' : 'rate DESC, year ASC';
+        if (sort === 'nameAsc' || sort === 'nameDesc') {
+            title = (lang === 'en') ? 'entitle' : 'rutitle';
+            sqlSort = (sort === 'nameAsc') ? `${title} ASC, rate DESC` : `${title} DESC, rate DESC`;
+        }
 
         // тут проверку на A > B?
         let sqlFilter = `rate >= ${rateFrom} AND rate <= ${rateTo} AND EXTRACT(YEAR FROM dateRelease) BETWEEN ${yearFrom} AND ${yearTo} `;
@@ -63,7 +70,7 @@ router.post('/catalog/page', async (req, res) => {
             sqlFilter += `AND genres && $1 `;
 
         if (search.length > 0)
-            sqlFilter += `AND lower(title) like lower('%${search}%')`;
+            sqlFilter += `AND lower(entitle) like lower('%${search}%') OR lower(rutitle) like lower('%${search}%')`;
 
         getCards(genres, limit, sqlSort, sqlFilter)
             .then(data => {
