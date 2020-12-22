@@ -2,20 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
-    Nav, Container, Row, Col, FormGroup, Input, Button, Card, CardBody, CardImg, CardTitle, Badge,
-    ListGroup, ListGroupItem, Pagination, PaginationItem, PaginationLink, Modal, ModalHeader, ModalBody, ModalFooter,
+    Nav, Container, Row, Col, FormGroup, Input, Button, Card, CardBody,
+    CardImg, CardTitle, Badge, ListGroup, ListGroupItem, Pagination, PaginationItem,
+    PaginationLink, Modal, ModalHeader, ModalBody, ModalFooter,
     FormFeedback
 } from 'reactstrap';
 import { setUser } from '../redux/login/ActionCreators';
 import {
-    fetchAllCatalog, fetchCatalogCard, initCatalog, setCatalogSort,
-    setYearFrom, setYearTo, setRateFrom, setRateTo, setGenres, setSearch
+    fetchAllCatalog, fetchCatalogCard, fetchRuAllGenres, fetchEnAllGenres,
+    initCatalog, setCatalogSort, setYearFrom, setYearTo,
+    setRateFrom, setRateTo, setGenres, setSearch
 } from '../redux/catalog/ActionCreators';
 import { useTranslation } from "react-i18next";
 import { Loading } from './Loading';
 import { Info } from './Info';
 
-const testImg = "/img/0.jpg";
 
 const mapStateToProps = (state) => {
     return {
@@ -26,6 +27,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
     setUser: (username) => dispatch(setUser(username)),
+    fetchEnAllGenres: () => dispatch(fetchEnAllGenres()),
+    fetchRuAllGenres: () => dispatch(fetchRuAllGenres()),
     fetchAllCatalog: (sort) => dispatch(fetchAllCatalog(sort)),
     fetchCatalogCard: (sort, lang) => dispatch(fetchCatalogCard(sort, lang)),
     initCatalog: () => dispatch(initCatalog()),
@@ -352,7 +355,7 @@ function CardsPagination(props) {
 const Catalog = (props) => {
     const { t, i18n } = useTranslation();
     const { page } = props.match.params;
-    const { fetchAllCatalog, fetchCatalogCard } = props;
+    const { fetchAllCatalog, fetchCatalogCard, fetchEnAllGenres, fetchRuAllGenres } = props;
     const { sort, filterStatus, rateFrom, rateTo, yearFrom, yearTo, genres, search } = props.catalog;
     // const { enposter, ruposter, entitle, rutitle, engenres, rugenres } = props.catalog.info;
     // const { nickname } = props.login.me;
@@ -375,6 +378,13 @@ const Catalog = (props) => {
             fetchCatalogCard(data, lang);
         }
     }, [fetchAllCatalog, fetchCatalogCard, page, sort, filterStatus, rateFrom, rateTo, yearFrom, yearTo, genres, search, lang]);
+
+    useEffect( async () => {
+        if (page > 0) {
+            await fetchRuAllGenres();
+            await fetchEnAllGenres();
+        }
+    }, [fetchEnAllGenres, fetchRuAllGenres, page]);
 
     if (props.catalog.isLoading) {
         return (

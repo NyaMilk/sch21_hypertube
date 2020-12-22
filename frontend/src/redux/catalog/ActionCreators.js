@@ -1,5 +1,6 @@
 import * as ActionTypes from './ActionTypes';
 import { request } from '../../util/http';
+import CONFIG from '../../util/const';
 
 export const initCatalog = () => (dispatch) => {
     dispatch(({
@@ -72,6 +73,20 @@ export const setSearch = (search) => (dispatch) => {
     }));
 };
 
+export const addRuGenres = (genres) => (dispatch) => {
+    dispatch(({
+        type: ActionTypes.CATALOG_RU_ALL_GENRES_ADD,
+        genres: genres
+    }))
+};
+
+export const addEnGenres = (genres) => (dispatch) => {
+    dispatch(({
+        type: ActionTypes.CATALOG_EN_ALL_GENRES_ADD,
+        genres: genres
+    }))
+};
+
 export const catalogCardAdd = (info) => ({
     type: ActionTypes.CATALOG_CARD_ADD,
     payload: info.result
@@ -83,9 +98,7 @@ export const fetchCatalogCard = (data, lang) => (dispatch) => {
 
     return request(`/api/movies/catalog/page/${lang}`, data, 'POST')
         .then(response => response.json())
-        .then(result => {
-            console.log(result);
-            dispatch(catalogCardAdd(result))})
+        .then(result => dispatch(catalogCardAdd(result)))
         .catch(error => dispatch(catalogFailed(error.message)));
 };
 
@@ -97,9 +110,35 @@ export const countCardAdd = (count) => ({
 export const fetchAllCatalog = (data) => (dispatch) => {
     // dispatch(catalogLoading());
 
-    console.log('data', data);
     return request('/api/movies/catalog/count', data, 'POST')
         .then(response => response.json())
         .then(result => dispatch(countCardAdd(result)))
-        .catch(error => dispatch(catalogFailed(error.message)));
+        .catch(error => dispatch(catalogFailed('geg1' + error.message)));
+};
+
+export const fetchEnAllGenres = () => async (dispatch) => {
+
+    return fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${CONFIG.API_TMDB_KEY}&language=en-US`)
+        .then(response => response.json())
+        .then(result => {
+            const formatted = result.genres.map((item) => {
+                return item.name;
+            })
+            dispatch(addEnGenres(formatted));
+        })
+        .catch(error => dispatch(catalogFailed(error.message)))
+};
+
+export const fetchRuAllGenres = (data) => async (dispatch) => {
+    // dispatch(catalogLoading());
+
+    return fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${CONFIG.API_TMDB_KEY}&language=ru-RU`)
+        .then(response => response.json())
+        .then(result => {
+            const formatted = result.genres.map((item) => {
+                return item.name;
+            })
+            dispatch(addRuGenres(formatted));
+        })
+        .catch(error => dispatch(catalogFailed('geg' + error.message)))
 };
