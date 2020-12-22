@@ -133,3 +133,22 @@ exports.deleteStatus = (me, idComment) => {
 
     return db.any(sql, [me, idComment]);
 }
+
+exports.getFavoriteMovies = (me) => {
+    const sql = 
+    `SELECT m.enTitle, m.enPoster, m.enGenres, m.enDescription, m.ruTitle, 
+    m.ruPoster, m.ruGenres, m.ruDescription, m.runtime, f.createdAt FROM Movies m, FavoriteMovies f 
+    WHERE m.imdb = f.idfilm AND f.idUser = 
+    (SELECT id FROM Users WHERE displayName=$1)`;
+
+    return db.any(sql, [me]);
+}
+
+exports.getProfileComments = (me) => {
+    const sql = 
+    `SELECT idFilm, comment, createdAt 
+    FROM Comments 
+    WHERE idUser = (SELECT id FROM Users WHERE displayName=$1)`
+
+    return db.any(sql, [me]);
+}

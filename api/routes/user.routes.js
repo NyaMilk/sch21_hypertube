@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { getProfile, editProfile } = require("../models/user");
 const bcrypt = require('bcrypt');
+const { getFavoriteMovies, getProfileComments } = require('../models/movies');
 
 router.get('/profile/:username', async (req, res) => {
     try {
@@ -86,4 +87,53 @@ router.post('/profile/edit/:username', async (req, res) => {
         })
 })
 
+router.get('/profile/favorites/movies/:me', function (req, res) {
+    try {
+    const { me } = req.params;
+    
+    getFavoriteMovies(me)
+        .then(data =>{
+            res.status(200).json({
+                success: true,
+                result: data
+            });
+        })
+        .catch(() => {
+            res.status(200).json({
+                success: false,
+                message: "Ooops! Not found favorite films"
+            })
+        })
+    } catch (e) {
+        res.status(200).json({
+            success: false,
+            message: "Ooops! Not found favorite films"
+        })
+    }
+});
+
+router.get('/profile/comments/:me', function (req, res) {
+    try {
+    const { me } = req.params;
+    
+    getProfileComments(me)
+        .then(data =>{
+            res.status(200).json({
+                success: true,
+                result: data
+            });
+        })
+        .catch(() => {
+            res.status(200).json({
+                success: false,
+                message: "Ooops! Not found favorite films"
+            })
+        })
+    } catch (e) {
+        res.status(200).json({
+            success: false,
+            message: "Ooops! Not found favorite films"
+        })
+    }
+});
 module.exports = router;
