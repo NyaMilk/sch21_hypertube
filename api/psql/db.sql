@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS Movies CASCADE;
 DROP TABLE IF EXISTS FavoriteMovies CASCADE;
 DROP TABLE IF EXISTS Comments CASCADE;
 DROP TABLE IF EXISTS CommentsLike CASCADE;
+DROP TABLE IF EXISTS Friends CASCADE;
 DROP TYPE providers CASCADE;
 
 CREATE TYPE providers AS ENUM ('hypert', 'github', 'school42');
@@ -32,7 +33,7 @@ CREATE TABLE Movies
     id SERIAL,
     imdb text NOT NULL UNIQUE,
     rate numeric NOT NULL,
-    enTitle text NOT NULL,
+    enTitle text NOT NULL, 
     ruTitle text NOT NULL,
     dateRelease timestamp,
     enPoster text,
@@ -78,6 +79,14 @@ CREATE TABLE CommentsLike (
     createdAt timestamp DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (idUser) REFERENCES Users (id),
     FOREIGN KEY (idComment) REFERENCES Comments (id)
+);
+
+CREATE TABLE Friends (
+    idFrom int,
+    idTo int,
+    createdAt timestamp DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (idFrom) REFERENCES Users (id),
+    FOREIGN KEY (idTo) REFERENCES Users (id)
 );
 
 INSERT INTO Users (displayName, userName, firstName, lastName, email, password, confirm) VALUES
