@@ -3,11 +3,11 @@ const { getProfile, editProfile, insertFriend, deleteFriend } = require("../mode
 const bcrypt = require('bcrypt');
 const { getFavoriteMovies, getProfileComments } = require('../models/movies');
 
-router.get('/profile/:username', async (req, res) => {
+router.get('/profile/:you/:me', async (req, res) => {
     try {
-        const { username } = req.params;
+        const { you, me } = req.params;
 
-        getProfile(username)
+        getProfile(you, me)
             .then(data => {
                 if (data.length > 0) {
                     res.status(200).json({
@@ -139,7 +139,7 @@ router.get('/profile/comments/:me', function (req, res) {
 
 router.post('/profile/friends', async (req, res) => {
     try {
-        console.log(req.body);
+
         const { me, you, status } = req.body;
         const promise = (status === 'add') ? insertFriend(me, you) : deleteFriend(me, you);
 

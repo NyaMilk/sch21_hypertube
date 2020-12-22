@@ -16,10 +16,10 @@ export const profileFailed = (msg) => ({
     payload: msg
 });
 
-export const fetchProfile = (nickname) => (dispatch) => {
+export const fetchProfile = (you, me) => (dispatch) => {
     dispatch(profileLoading());
 
-    return request(`${CONFIG.API_URL}/api/user/profile/${nickname}`)
+    return request(`${CONFIG.API_URL}/api/user/profile/${you}/${me}`)
         .then(response => response.json())
         .then(result => {
             console.log(result);
