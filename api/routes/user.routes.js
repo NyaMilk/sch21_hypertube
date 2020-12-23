@@ -112,7 +112,7 @@ router.get('/profile/favorites/movies/:me', function (req, res) {
     }
 });
 
-router.get('/profile/comments/:me', function (req, res) {
+router.get('/profile/get_comments/comments/:me', function (req, res) {
     try {
         const { me } = req.params;
 

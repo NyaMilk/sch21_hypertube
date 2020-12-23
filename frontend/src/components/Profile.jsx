@@ -7,7 +7,7 @@ import {
     FormFeedback
 } from 'reactstrap';
 import classnames from 'classnames';
-import { fetchProfile } from '../redux/profile/ActionCreators';
+import { fetchProfile, fetchViews, fetchComments } from '../redux/profile/ActionCreators';
 import {
     setLogin, setFirstName, setLastName, setEmail,
     setAbout, setNewPassword, fetchEditProfile
@@ -32,6 +32,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
     fetchUpdateLogin: (username) => dispatch(fetchUpdateLogin(username)),
     fetchProfile: (you, me) => dispatch(fetchProfile(you, me)),
+    fetchComments: (username) => dispatch(fetchComments(username)),
+    fetchViews: (you, me) => dispatch(fetchViews(you, me)),
     setLogin: (login) => dispatch(setLogin(login)),
     setFirstName: (firstName) => dispatch(setFirstName(firstName)),
     setLastName: (lastName) => dispatch(setLastName(lastName)),
@@ -316,12 +318,23 @@ const Profile = (props) => {
     const { t } = useTranslation();
     const { me } = props.login;
     const { username } = props.match.params;
-    const { fetchProfile, setLogin, setFirstName, setLastName,
+    const { fetchProfile, fetchViews, fetchComments, setLogin, setFirstName, setLastName,
         setEmail, setAbout, setNewPassword, fetchEditProfile } = props;
 
     useEffect(() => {
         fetchProfile(username, me);
     }, [fetchProfile, username, me]);
+
+    useEffect(() => {
+        fetchViews(username);
+    }, [username]);
+
+    useEffect(() => {
+        fetchComments(username);
+    }, [username]);
+
+    console.log(props.profile.views);
+    console.log(props.profile.comments);
 
     const [activeTab, setActiveTab] = useState('1');
     const toggle = tab => {
