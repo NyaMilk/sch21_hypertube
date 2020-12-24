@@ -269,7 +269,7 @@ function AsideButton(props) {
                 you: props.name,
                 status: e.target.value
             }
-            
+            console.log('as',data);
             request('/api/users/profile/friends', data, 'POST')
                 .then(response => response.json())
                 .then(result => {
