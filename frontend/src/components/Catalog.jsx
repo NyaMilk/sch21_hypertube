@@ -9,7 +9,7 @@ import {
 } from 'reactstrap';
 import { setUser } from '../redux/login/ActionCreators';
 import {
-    fetchAllCatalog, fetchCatalogCard, fetchRuAllGenres, fetchEnAllGenres,
+    fetchAllCatalog, fetchCatalogCard,
     initCatalog, setCatalogSort, setYearFrom, setYearTo,
     setRateFrom, setRateTo, setGenres, setSearch
 } from '../redux/catalog/ActionCreators';
@@ -27,8 +27,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
     setUser: (username) => dispatch(setUser(username)),
-    fetchEnAllGenres: () => dispatch(fetchEnAllGenres()),
-    fetchRuAllGenres: () => dispatch(fetchRuAllGenres()),
     fetchAllCatalog: (sort) => dispatch(fetchAllCatalog(sort)),
     fetchCatalogCard: (sort, lang) => dispatch(fetchCatalogCard(sort, lang)),
     initCatalog: () => dispatch(initCatalog()),
@@ -89,24 +87,7 @@ function InputForm(props) {
     )
 }
 
-function GenresList(props) {
-    let listItems;
-    if (props.genresLang) {
-        listItems = props.genresLang.map((genre, item) =>
-            <option value={genre} key={item}>{genre}</option>
-        );
-    }
-    return (
-        <Input type='select' multiple className="text-capitalize" defaultValue={props.genres} onChange={e => props.tagsHandle(e)}>
-            {listItems}
-        </Input>
-    );
-}
-
 function Filter(props) {
-    console.log("2", props);
-    const genresLang = (props.lang === 'en') ? props.filter.catalog.enAllGenres : props.filter.catalog.ruAllGenres;
-
     const [show, setModal] = useState(false);
     const toggleModal = () => setModal(!show);
 
@@ -115,7 +96,11 @@ function Filter(props) {
     const tagsHandle = (e) => {
         let value = [];
 
-        if (e.target.value) {
+        if (e.target.value === "action" || e.target.value === "adventure" || e.target.value === "animation" || e.target.value === "comedy" ||
+            e.target.value === "crime" || e.target.value === "documentary" || e.target.value === "drama" || e.target.value === "family" ||
+            e.target.value === "fantasy" || e.target.value === "history" || e.target.value === "horror" || e.target.value === "music" ||
+            e.target.value === "mystery" || e.target.value === "romance" || e.target.value === "thriller" || e.target.value === "war" ||
+            e.target.value === "western" || e.target.value === "tv movie" || e.target.value === "science fiction") {
             value = Array.from(e.target.selectedOptions, option => option.value);
         }
 
@@ -220,10 +205,27 @@ function Filter(props) {
                         <Row className="mt-2">
                             <Col xs={12} className="mb-1">
                                 <p className="font-profile-head">{props.t("catalogPage.genre")}</p>
-                                <GenresList
-                                    genres={props.filter.catalog.genres}
-                                    genresLang={genresLang}
-                                    tagsHandle={tagsHandle} />
+                                <Input type='select' multiple className="text-capitalize" defaultValue={props.filter.catalog.genres} onChange={e => tagsHandle(e)}>
+                                    <option value="action">{props.t("catalogPage.action")}</option>
+                                    <option value="adventure">{props.t("catalogPage.adventure")}</option>
+                                    <option value="animation">{props.t("catalogPage.animation")}</option>
+                                    <option value="comedy">{props.t("catalogPage.comedy")}</option>
+                                    <option value="crime">{props.t("catalogPage.crime")}</option>
+                                    <option value="documentary">{props.t("catalogPage.documentary")}</option>
+                                    <option value="drama">{props.t("catalogPage.drama")}</option>
+                                    <option value="family">{props.t("catalogPage.family")}</option>
+                                    <option value="fantasy">{props.t("catalogPage.fantasy")}</option>
+                                    <option value="history">{props.t("catalogPage.history")}</option>
+                                    <option value="horror">{props.t("catalogPage.horror")}</option>
+                                    <option value="music">{props.t("catalogPage.music")}</option>
+                                    <option value="mystery">{props.t("catalogPage.mystery")}</option>
+                                    <option value="romance">{props.t("catalogPage.romance")}</option>
+                                    <option value="thriller">{props.t("catalogPage.thriller")}</option>
+                                    <option value="war">{props.t("catalogPage.war")}</option>
+                                    <option value="western">{props.t("catalogPage.western")}</option>
+                                    <option value="tv movie">{props.t("catalogPage.tv")}</option>
+                                    <option value="science fiction">{props.t("catalogPage.science")}</option>
+                                </Input>
                             </Col>
                         </Row>
 
@@ -380,13 +382,6 @@ const Catalog = (props) => {
             fetchCatalogCard(data, lang);
         }
     }, [fetchAllCatalog, fetchCatalogCard, page, sort, filterStatus, rateFrom, rateTo, yearFrom, yearTo, genres, search, lang]);
-
-    useEffect(async () => {
-        if (page > 0) {
-            await fetchRuAllGenres();
-            await fetchEnAllGenres();
-        }
-    }, [fetchEnAllGenres, fetchRuAllGenres, page]);
 
     if (props.catalog.isLoading) {
         return (

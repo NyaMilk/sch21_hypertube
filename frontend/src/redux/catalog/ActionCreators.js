@@ -73,20 +73,6 @@ export const setSearch = (search) => (dispatch) => {
     }));
 };
 
-export const addRuGenres = (genres) => (dispatch) => {
-    dispatch(({
-        type: ActionTypes.CATALOG_RU_ALL_GENRES_ADD,
-        genres: genres
-    }))
-};
-
-export const addEnGenres = (genres) => (dispatch) => {
-    dispatch(({
-        type: ActionTypes.CATALOG_EN_ALL_GENRES_ADD,
-        genres: genres
-    }))
-};
-
 export const catalogCardAdd = (info) => ({
     type: ActionTypes.CATALOG_CARD_ADD,
     payload: info.result
@@ -114,31 +100,4 @@ export const fetchAllCatalog = (data) => (dispatch) => {
         .then(response => response.json())
         .then(result => dispatch(countCardAdd(result)))
         .catch(error => dispatch(catalogFailed(error.message)));
-};
-
-export const fetchEnAllGenres = () => async (dispatch) => {
-
-    return fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${CONFIG.API_TMDB_KEY}&language=en-US`)
-        .then(response => response.json())
-        .then(result => {
-            const formatted = result.genres.map((item) => {
-                return item.name.toLowerCase();
-            })
-            dispatch(addEnGenres(formatted));
-        })
-        .catch(error => dispatch(catalogFailed(error.message)))
-};
-
-export const fetchRuAllGenres = (data) => async (dispatch) => {
-    // dispatch(catalogLoading());
-
-    return fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${CONFIG.API_TMDB_KEY}&language=ru-RU`)
-        .then(response => response.json())
-        .then(result => {
-            const formatted = result.genres.map((item) => {
-                return item.name;
-            })
-            dispatch(addRuGenres(formatted));
-        })
-        .catch(error => dispatch(catalogFailed('geg' + error.message)))
 };

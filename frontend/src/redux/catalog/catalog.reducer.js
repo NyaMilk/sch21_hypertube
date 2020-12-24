@@ -10,8 +10,6 @@ const initialState = {
     yearFrom: 1900,
     yearTo: 2020,
     genres: [],
-    ruAllGenres: [],
-    enAllGenres: [],
     search: "",
     cardCount: null,
     info: {}
