@@ -29,7 +29,7 @@ const mapDispatchToProps = (dispatch) => ({
     setUser: (username) => dispatch(setUser(username)),
     fetchEnAllGenres: () => dispatch(fetchEnAllGenres()),
     fetchRuAllGenres: () => dispatch(fetchRuAllGenres()),
-    fetchAllCatalog: (sort, lang) => dispatch(fetchAllCatalog(sort, lang)),
+    fetchAllCatalog: (sort) => dispatch(fetchAllCatalog(sort)),
     fetchCatalogCard: (sort, lang) => dispatch(fetchCatalogCard(sort, lang)),
     initCatalog: () => dispatch(initCatalog()),
     setCatalogSort: (sort) => dispatch(setCatalogSort(sort)),
@@ -376,7 +376,7 @@ const Catalog = (props) => {
         }
 
         if (page > 0) {
-            fetchAllCatalog(data, lang);
+            fetchAllCatalog(data);
             fetchCatalogCard(data, lang);
         }
     }, [fetchAllCatalog, fetchCatalogCard, page, sort, filterStatus, rateFrom, rateTo, yearFrom, yearTo, genres, search, lang]);
