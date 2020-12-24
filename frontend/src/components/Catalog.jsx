@@ -29,7 +29,7 @@ const mapDispatchToProps = (dispatch) => ({
     setUser: (username) => dispatch(setUser(username)),
     fetchEnAllGenres: () => dispatch(fetchEnAllGenres()),
     fetchRuAllGenres: () => dispatch(fetchRuAllGenres()),
-    fetchAllCatalog: (sort) => dispatch(fetchAllCatalog(sort)),
+    fetchAllCatalog: (sort, lang) => dispatch(fetchAllCatalog(sort, lang)),
     fetchCatalogCard: (sort, lang) => dispatch(fetchCatalogCard(sort, lang)),
     initCatalog: () => dispatch(initCatalog()),
     setCatalogSort: (sort) => dispatch(setCatalogSort(sort)),
@@ -97,7 +97,7 @@ function GenresList(props) {
         );
     }
     return (
-        <Input type='select' multiple defaultValue={props.genres} onChange={e => props.tagsHandle(e)}>
+        <Input type='select' multiple className="text-capitalize" defaultValue={props.genres} onChange={e => props.tagsHandle(e)}>
             {listItems}
         </Input>
     );
@@ -105,6 +105,8 @@ function GenresList(props) {
 
 function Filter(props) {
     console.log("2", props);
+    const genresLang = (props.lang === 'en') ? props.filter.catalog.enAllGenres : props.filter.catalog.ruAllGenres;
+
     const [show, setModal] = useState(false);
     const toggleModal = () => setModal(!show);
 
@@ -220,7 +222,7 @@ function Filter(props) {
                                 <p className="font-profile-head">{props.t("catalogPage.genre")}</p>
                                 <GenresList
                                     genres={props.filter.catalog.genres}
-                                    // genresLang={genresLang}
+                                    genresLang={genresLang}
                                     tagsHandle={tagsHandle} />
                             </Col>
                         </Row>
@@ -374,12 +376,12 @@ const Catalog = (props) => {
         }
 
         if (page > 0) {
-            fetchAllCatalog(data);
+            fetchAllCatalog(data, lang);
             fetchCatalogCard(data, lang);
         }
     }, [fetchAllCatalog, fetchCatalogCard, page, sort, filterStatus, rateFrom, rateTo, yearFrom, yearTo, genres, search, lang]);
 
-    useEffect( async () => {
+    useEffect(async () => {
         if (page > 0) {
             await fetchRuAllGenres();
             await fetchEnAllGenres();
@@ -400,7 +402,7 @@ const Catalog = (props) => {
         return (
             <section className="catalog">
                 <Container>
-                    <Filter filter={props} t={t} />
+                    <Filter filter={props} lang={i18n.language} t={t} />
                     <FilmCards
                         cards={props.catalog.info}
                         lang={i18n.language}
@@ -414,7 +416,7 @@ const Catalog = (props) => {
         return (
             <section className="catalog">
                 <Container>
-                    <Filter filter={props} t={t} />
+                    <Filter filter={props} lang={i18n.language} t={t} />
                     <span className="font-profile-head font-message">{t("catalogPage.not")}</span>
                 </Container>
             </section>
