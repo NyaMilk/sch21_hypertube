@@ -107,13 +107,13 @@ export const countCardAdd = (count) => ({
     payload: count.result
 });
 
-export const fetchAllCatalog = (data) => (dispatch) => {
+export const fetchAllCatalog = (data, lang) => (dispatch) => {
     // dispatch(catalogLoading());
 
-    return request('/api/movies/catalog/count', data, 'POST')
+    return request(`/api/movies/catalog/count/${lang}`, data, 'POST')
         .then(response => response.json())
         .then(result => dispatch(countCardAdd(result)))
-        .catch(error => dispatch(catalogFailed('geg1' + error.message)));
+        .catch(error => dispatch(catalogFailed(error.message)));
 };
 
 export const fetchEnAllGenres = () => async (dispatch) => {
@@ -122,7 +122,7 @@ export const fetchEnAllGenres = () => async (dispatch) => {
         .then(response => response.json())
         .then(result => {
             const formatted = result.genres.map((item) => {
-                return item.name;
+                return item.name.toLowerCase();
             })
             dispatch(addEnGenres(formatted));
         })

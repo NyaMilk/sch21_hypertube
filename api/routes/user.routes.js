@@ -3,11 +3,11 @@ const { getProfile, editProfile, insertFriend, deleteFriend } = require("../mode
 const bcrypt = require('bcrypt');
 const { getFavoriteMovies, getProfileComments } = require('../models/movies');
 
-router.get('/profile/:username', async (req, res) => {
+router.get('/profile/:you/:me', async (req, res) => {
     try {
-        const { username } = req.params;
+        const { you, me } = req.params;
 
-        getProfile(username)
+        getProfile(you, me)
             .then(data => {
                 if (data.length > 0) {
                     res.status(200).json({
@@ -112,8 +112,34 @@ router.get('/profile/favorites/movies/:me', function (req, res) {
     }
 });
 
-router.post('/whoami', async (req, res) => {
+router.get('/profile/get_comments/comments/:me', function (req, res) {
     try {
+        const { me } = req.params;
+
+        getProfileComments(me)
+            .then(data => {
+                res.status(200).json({
+                    success: true,
+                    result: data
+                });
+            })
+            .catch(() => {
+                res.status(200).json({
+                    success: false,
+                    message: "Ooops! Not found favorite films"
+                })
+            })
+    } catch (e) {
+        res.status(200).json({
+            success: false,
+            message: "Ooops! Not found favorite films"
+        })
+    }
+});
+
+router.post('/profile/friends', async (req, res) => {
+    try {
+
         const { me, you, status } = req.body;
         const promise = (status === 'add') ? insertFriend(me, you) : deleteFriend(me, you);
 

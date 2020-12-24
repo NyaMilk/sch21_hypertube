@@ -185,7 +185,7 @@ function Comments(props) {
             .catch(error => setMsg(error.message));
     }
 
-    if (props.comments.length > 0) {
+    if (props.comments && props.comments.length > 0) {
         const listItems = props.comments.map((comment, item) =>
             <Media className="mt-2" key={item}>
                 <Media left middle>

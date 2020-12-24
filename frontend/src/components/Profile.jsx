@@ -7,7 +7,7 @@ import {
     FormFeedback
 } from 'reactstrap';
 import classnames from 'classnames';
-import { fetchProfile } from '../redux/profile/ActionCreators';
+import { fetchProfile, fetchViews, fetchComments } from '../redux/profile/ActionCreators';
 import {
     setLogin, setFirstName, setLastName, setEmail,
     setAbout, setNewPassword, fetchEditProfile
@@ -31,7 +31,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
     fetchUpdateLogin: (username) => dispatch(fetchUpdateLogin(username)),
-    fetchProfile: (username) => dispatch(fetchProfile(username)),
+    fetchProfile: (you, me) => dispatch(fetchProfile(you, me)),
+    fetchComments: (username) => dispatch(fetchComments(username)),
+    fetchViews: (you, me) => dispatch(fetchViews(you, me)),
     setLogin: (login) => dispatch(setLogin(login)),
     setFirstName: (firstName) => dispatch(setFirstName(firstName)),
     setLastName: (lastName) => dispatch(setLastName(lastName)),
@@ -160,7 +162,6 @@ function EditProfile(props) {
     const [isActiveBtn, toggleBtn] = useState(true);
 
     const checkBtn = () => {
-        console.log(props);
         const countInvalidInputs = document.querySelectorAll(".is-invalid").length;
         countInvalidInputs === 0 ? toggleBtn(true) : toggleBtn(false);
     }
@@ -269,18 +270,17 @@ function AsideButton(props) {
                 you: props.name,
                 status: e.target.value
             }
-            console.log('as',data);
-            request('/api/users/profile/friends', data, 'POST')
+
+            request('/api/user/profile/friends', data, 'POST')
                 .then(response => response.json())
                 .then(result => {
                     if (result.success) {
-                        props.fetchProfile(props.name);
+                        props.fetchProfile(props.name, props.me);
                     }
                 })
                 .catch(error => props.setMsg(error.message));
         }
     }
-
     if (props.check) {
         const { setLogin, setFirstName, setLastName, setEmail,
             setAbout, setNewPassword, fetchEditProfile, edit } = props;
@@ -305,9 +305,9 @@ function AsideButton(props) {
         return (
             <Row className="aside-button" >
                 <Button color="info"
-                    value={props.status === 'add' ? 'remove' : 'add'}
+                    value={props.info.case === 1 ? 'remove' : 'add'}
                     onClick={changeStatus}>
-                    {props.status === 'add' ? props.status[1] : props.status[0]}
+                    {props.info.case === 1 ? props.status[1] : props.status[0]}
                 </Button>
             </Row>
         );
@@ -318,12 +318,23 @@ const Profile = (props) => {
     const { t } = useTranslation();
     const { me } = props.login;
     const { username } = props.match.params;
-    const { fetchProfile, setLogin, setFirstName, setLastName,
+    const { fetchProfile, fetchViews, fetchComments, setLogin, setFirstName, setLastName,
         setEmail, setAbout, setNewPassword, fetchEditProfile } = props;
 
     useEffect(() => {
-        fetchProfile(username);
-    }, [fetchProfile, username]);
+        fetchProfile(username, me);
+    }, [fetchProfile, username, me]);
+
+    useEffect(() => {
+        fetchViews(username);
+    }, [username]);
+
+    useEffect(() => {
+        fetchComments(username);
+    }, [username]);
+
+    console.log(props.profile.views);
+    console.log(props.profile.comments);
 
     const [activeTab, setActiveTab] = useState('1');
     const toggle = tab => {
@@ -339,7 +350,7 @@ const Profile = (props) => {
     }
     else if (props.profile.infoMsg) {
         return (
-            <Info message={props.movie.infoMsg} />
+            <Info info="message" message={props.profile.infoMsg} />
         );
     }
     else if (props.profile.info != null) {
