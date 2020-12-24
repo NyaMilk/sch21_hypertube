@@ -21,7 +21,8 @@ export const CatalogReducer = (state = initialState, action) => {
 
     switch (action.type) {
         case ActionTypes.CATALOG_CLEAR:
-            return { ...initialState };
+            const tmp = { ...state };
+            return { ...initialState, ruAllGenres: tmp.ruAllGenres, enAllGenres: tmp.enAllGenres };
 
         case ActionTypes.CATALOG_LOADING:
             return { ...state, isLoading: true, infoMsg: null };
