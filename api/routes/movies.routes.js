@@ -3,16 +3,14 @@ const fs = require('fs');
 const { getCountCards, getCards, getMovie, getFavorite, deleteFavoriteFiml, insertFavoriteFiml, insertComment, getComments,
     checkStatus, updateStatus, insertStatus, deleteStatus } = require('../models/movies');
 
-router.post('/catalog/count/:lang', async (req, res) => {
+router.post('/catalog/count', async (req, res) => {
     try {
-        const { rateFrom, rateTo, yearFrom, yearTo, genres, search } = req.body,
-            { lang } = req.params;
+        const { rateFrom, rateTo, yearFrom, yearTo, genres, search } = req.body;
 
         let sqlFilter = `rate >= ${rateFrom} AND rate <= ${rateTo} AND EXTRACT(YEAR FROM dateRelease) BETWEEN ${yearFrom} AND ${yearTo} `;
-        let genresLang = (lang === 'en') ? 'enGenres' : 'ruGenres';
 
         if (genres.length > 0)
-            sqlFilter += `AND ${genresLang} && $1 `;
+            sqlFilter += `AND enGenres && $1 OR ruGenres && $1 `;
 
         if (search.length > 0)
             sqlFilter += `AND lower(title) like lower('%${search}%')`;
@@ -53,7 +51,6 @@ router.post('/catalog/page/:lang', async (req, res) => {
 
         let sqlSort = '',
             title = (lang === 'en') ? 'enTitle' : 'ruTitle',
-            genresLang = (lang === 'en') ? 'enGenres' : 'ruGenres',
             limit = page * 16;
 
         if (sort === 'yearAsc' || sort === 'yearDesc')
@@ -65,7 +62,7 @@ router.post('/catalog/page/:lang', async (req, res) => {
 
         let sqlFilter = `rate >= ${rateFrom} AND rate <= ${rateTo} AND EXTRACT(YEAR FROM dateRelease) BETWEEN ${yearFrom} AND ${yearTo} `;
         if (genres.length > 0)
-            sqlFilter += `AND ${genresLang} && $1 `;
+            sqlFilter += `AND enGenres && $1 OR ruGenres && $1 `;
 
         if (search.length > 0)
             sqlFilter += `AND lower(enTitle) like lower('%${search}%') OR lower(ruTitle) like lower('%${search}%')`;
