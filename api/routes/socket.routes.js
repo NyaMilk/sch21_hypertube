@@ -1,6 +1,6 @@
 module.exports = function (io) {
     const mySpace = io.of('/socks');
-    let users = new Object();
+    let movies = new Object();
 
     function getKeyByValue(object, value) {
         return Object.keys(object).find(key => object[key] === value);
@@ -15,17 +15,15 @@ module.exports = function (io) {
                 .catch();
         });
 
-        socket.on('send_message', (data) => {
-            mySpace.emit(`new_message`, data);
-        });
+        socket.on('notification', ([imdb, username]) => {
+            // (!movies[imdb]) ? movies[imdb] = [] : movies[imdb].push(username);
 
-        socket.on('notification', (data) => {
-            if (data.newStatus === 'connect') {
-                let tmp = data;
-                [tmp.me, tmp.you] = [tmp.you, tmp.me];
-                mySpace.emit('new_notification', tmp);
+            if (movies[imdb])
+                movies[imdb].push(username);
+            else {
+                download();
+                mySpace.emit('new_notification', movies[imdb]);
             }
-            mySpace.emit('new_notification', data);
         })
 
         socket.on('disconnect', () => {
