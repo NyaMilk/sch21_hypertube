@@ -9,7 +9,7 @@ import {
 } from 'reactstrap';
 import { setUser } from '../redux/login/ActionCreators';
 import {
-    fetchAllCatalog, fetchCatalogCard, fetchRuAllGenres, fetchEnAllGenres,
+    fetchAllCatalog, fetchCatalogCard,
     initCatalog, setCatalogSort, setYearFrom, setYearTo,
     setRateFrom, setRateTo, setGenres, setSearch
 } from '../redux/catalog/ActionCreators';
@@ -27,8 +27,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
     setUser: (username) => dispatch(setUser(username)),
-    fetchEnAllGenres: () => dispatch(fetchEnAllGenres()),
-    fetchRuAllGenres: () => dispatch(fetchRuAllGenres()),
     fetchAllCatalog: (sort) => dispatch(fetchAllCatalog(sort)),
     fetchCatalogCard: (sort, lang) => dispatch(fetchCatalogCard(sort, lang)),
     initCatalog: () => dispatch(initCatalog()),
@@ -89,24 +87,7 @@ function InputForm(props) {
     )
 }
 
-function GenresList(props) {
-    let listItems;
-    if (props.genresLang) {
-        listItems = props.genresLang.map((genre, item) =>
-            <option value={genre} key={item}>{genre}</option>
-        );
-    }
-    return (
-        <Input type='select' multiple className="text-capitalize" defaultValue={props.genres} onChange={e => props.tagsHandle(e)}>
-            {listItems}
-        </Input>
-    );
-}
-
 function Filter(props) {
-    console.log("2", props);
-    const genresLang = (props.lang === 'en') ? props.filter.catalog.enAllGenres : props.filter.catalog.ruAllGenres;
-
     const [show, setModal] = useState(false);
     const toggleModal = () => setModal(!show);
 
@@ -115,7 +96,11 @@ function Filter(props) {
     const tagsHandle = (e) => {
         let value = [];
 
-        if (e.target.value) {
+        if (e.target.value === "action" || e.target.value === "adventure" || e.target.value === "animation" || e.target.value === "comedy" ||
+            e.target.value === "crime" || e.target.value === "documentary" || e.target.value === "drama" || e.target.value === "family" ||
+            e.target.value === "fantasy" || e.target.value === "history" || e.target.value === "horror" || e.target.value === "music" ||
+            e.target.value === "mystery" || e.target.value === "romance" || e.target.value === "thriller" || e.target.value === "war" ||
+            e.target.value === "western" || e.target.value === "tv movie" || e.target.value === "science fiction") {
             value = Array.from(e.target.selectedOptions, option => option.value);
         }
 
@@ -135,111 +120,126 @@ function Filter(props) {
     };
 
     return (
-        <Nav expand="lg" color="light">
-            <Row className="catalog-sort-filter">
-                <Col xs='9'>
+        <Row className="catalog-sort-filter">
+            <Col xs='9'>
+                <Input
+                    defaultValue={props.filter.catalog.search}
+                    type="text"
+                    placeholder={props.t("catalogPage.search")}
+                    name="search"
+                    onChange={searchFilm}
+                />
+            </Col>
+
+            <Col xs={2}>
+                <FormGroup>
                     <Input
-                        defaultValue={props.filter.catalog.search}
-                        type="text"
-                        placeholder={props.t("catalogPage.search")}
-                        name="search"
-                        onChange={searchFilm}
-                    />
-                </Col>
+                        type="select"
+                        onChange={e => { props.filter.setCatalogSort(e.target.value) }}
+                        defaultValue={props.filter.catalog.sortType}>
+                        <option value="rateAsc">{props.t("catalogPage.rate")} ↑</option>
+                        <option value="rateDesc">{props.t("catalogPage.rate")} ↓</option>
+                        <option value="yearAsc">{props.t("catalogPage.year")} ↑</option>
+                        <option value="yearDesc">{props.t("catalogPage.year")} ↓</option>
+                        <option value="nameAsc">{props.t("catalogPage.name")} ↑</option>
+                        <option value="nameDesc">{props.t("catalogPage.name")} ↓</option>
+                    </Input>
+                </FormGroup>
+            </Col>
 
-                <Col xs={2}>
-                    <FormGroup>
-                        <Input
-                            type="select"
-                            onChange={e => { props.filter.setCatalogSort(e.target.value) }}
-                            defaultValue={props.filter.catalog.sortType}>
-                            <option value="rateAsc">{props.t("catalogPage.rate")} ↑</option>
-                            <option value="rateDesc">{props.t("catalogPage.rate")} ↓</option>
-                            <option value="yearAsc">{props.t("catalogPage.year")} ↑</option>
-                            <option value="yearDesc">{props.t("catalogPage.year")} ↓</option>
-                            <option value="nameAsc">{props.t("catalogPage.name")} ↑</option>
-                            <option value="nameDesc">{props.t("catalogPage.name")} ↓</option>
-                        </Input>
-                    </FormGroup>
-                </Col>
+            <Col xs={1} className="users-filter">
+                <Button
+                    type="button"
+                    onClick={toggleModal}
+                    color="secondary">
+                    {props.t("catalogPage.filter")}
+                </Button>
+            </Col>
 
-                <Col xs={1} className="users-filter">
-                    <Button
-                        type="button"
-                        onClick={toggleModal}
-                        color="secondary">
-                        {props.t("catalogPage.filter")}
-                    </Button>
-                </Col>
+            <Modal isOpen={show}>
+                <ModalHeader>
+                    <Row>
+                        <Col xs={12}>
+                            <p>{props.t("catalogPage.filter")}</p>
+                        </Col>
+                    </Row>
+                </ModalHeader>
+                <ModalBody className="text-center">
+                    <Row className="mt-2">
+                        <Col xs={12}>
+                            <p className="font-profile-head">{props.t("catalogPage.rate")}</p>
+                        </Col>
+                        <InputForm
+                            name='ratefrom'
+                            defaultValue={props.filter.catalog.rateFrom}
+                            set={props.filter.setRateFrom}
+                            setStatusButton={setStatusButton}
+                            feedback={props.t("inputMsg.rateRange")} />
+                        <InputForm
+                            name='rateto'
+                            defaultValue={props.filter.catalog.rateTo}
+                            set={props.filter.setRateTo}
+                            setStatusButton={setStatusButton}
+                            feedback={props.t("inputMsg.rateRange")} />
+                    </Row>
 
-                <Modal isOpen={show}>
-                    <ModalHeader>
-                        <Row>
-                            <Col xs={12}>
-                                <p>{props.t("catalogPage.filter")}</p>
-                            </Col>
-                        </Row>
-                    </ModalHeader>
-                    <ModalBody className="text-center">
-                        <Row className="mt-2">
-                            <Col xs={12}>
-                                <p className="font-profile-head">{props.t("catalogPage.rate")}</p>
-                            </Col>
-                            <InputForm
-                                name='ratefrom'
-                                defaultValue={props.filter.catalog.rateFrom}
-                                set={props.filter.setRateFrom}
-                                setStatusButton={setStatusButton}
-                                feedback={props.t("inputMsg.rateRange")} />
-                            <InputForm
-                                name='rateto'
-                                defaultValue={props.filter.catalog.rateTo}
-                                set={props.filter.setRateTo}
-                                setStatusButton={setStatusButton}
-                                feedback={props.t("inputMsg.rateRange")} />
-                        </Row>
+                    <Row>
+                        <Col xs={12}>
+                            <p className="font-profile-head">{props.t("catalogPage.year")}</p>
+                        </Col>
+                        <InputForm
+                            name='yearfrom'
+                            defaultValue={props.filter.catalog.yearFrom}
+                            set={props.filter.setYearFrom}
+                            setStatusButton={setStatusButton}
+                            feedback={props.t("inputMsg.yearRange")} />
+                        <InputForm
+                            name='yearto'
+                            defaultValue={props.filter.catalog.yearTo}
+                            set={props.filter.setYearTo}
+                            setStatusButton={setStatusButton}
+                            feedback={props.t("inputMsg.yearRange")} />
+                    </Row>
 
-                        <Row>
-                            <Col xs={12}>
-                                <p className="font-profile-head">{props.t("catalogPage.year")}</p>
-                            </Col>
-                            <InputForm
-                                name='yearfrom'
-                                defaultValue={props.filter.catalog.yearFrom}
-                                set={props.filter.setYearFrom}
-                                setStatusButton={setStatusButton}
-                                feedback={props.t("inputMsg.yearRange")} />
-                            <InputForm
-                                name='yearto'
-                                defaultValue={props.filter.catalog.yearTo}
-                                set={props.filter.setYearTo}
-                                setStatusButton={setStatusButton}
-                                feedback={props.t("inputMsg.yearRange")} />
-                        </Row>
+                    <Row className="mt-2">
+                        <Col xs={12} className="mb-1">
+                            <p className="font-profile-head">{props.t("catalogPage.genre")}</p>
+                            <Input type='select' multiple className="text-capitalize" defaultValue={props.filter.catalog.genres} onChange={e => tagsHandle(e)}>
+                                <option value="action">{props.t("catalogPage.action")}</option>
+                                <option value="adventure">{props.t("catalogPage.adventure")}</option>
+                                <option value="animation">{props.t("catalogPage.animation")}</option>
+                                <option value="comedy">{props.t("catalogPage.comedy")}</option>
+                                <option value="crime">{props.t("catalogPage.crime")}</option>
+                                <option value="documentary">{props.t("catalogPage.documentary")}</option>
+                                <option value="drama">{props.t("catalogPage.drama")}</option>
+                                <option value="family">{props.t("catalogPage.family")}</option>
+                                <option value="fantasy">{props.t("catalogPage.fantasy")}</option>
+                                <option value="history">{props.t("catalogPage.history")}</option>
+                                <option value="horror">{props.t("catalogPage.horror")}</option>
+                                <option value="music">{props.t("catalogPage.music")}</option>
+                                <option value="mystery">{props.t("catalogPage.mystery")}</option>
+                                <option value="romance">{props.t("catalogPage.romance")}</option>
+                                <option value="thriller">{props.t("catalogPage.thriller")}</option>
+                                <option value="war">{props.t("catalogPage.war")}</option>
+                                <option value="western">{props.t("catalogPage.western")}</option>
+                                <option value="tv movie">{props.t("catalogPage.tv")}</option>
+                                <option value="science fiction">{props.t("catalogPage.science")}</option>
+                            </Input>
+                        </Col>
+                    </Row>
 
-                        <Row className="mt-2">
-                            <Col xs={12} className="mb-1">
-                                <p className="font-profile-head">{props.t("catalogPage.genre")}</p>
-                                <GenresList
-                                    genres={props.filter.catalog.genres}
-                                    genresLang={genresLang}
-                                    tagsHandle={tagsHandle} />
-                            </Col>
-                        </Row>
-
-                        <ModalFooter className="justify-content-between">
-                            <Button
-                                color="success"
-                                // className={isValidInput ? '' : 'disabled-button'}
-                                onClick={() => { toggleModal(); props.filter.initCatalog(); }}>
-                                {props.t("catalogPage.clear")}
-                            </Button>
-                            <Button color="secondary" onClick={toggleModal}>{props.t("catalogPage.cancel")}</Button>
-                        </ModalFooter>
-                    </ModalBody>
-                </Modal>
-            </Row>
-        </Nav>
+                    <ModalFooter className="justify-content-between">
+                        <Button
+                            color="success"
+                            // className={isValidInput ? '' : 'disabled-button'}
+                            onClick={() => { toggleModal(); props.filter.initCatalog(); }}>
+                            {props.t("catalogPage.clear")}
+                        </Button>
+                        <Button color="secondary" onClick={toggleModal}>{props.t("catalogPage.cancel")}</Button>
+                    </ModalFooter>
+                </ModalBody>
+            </Modal>
+        </Row>
     );
 }
 
@@ -380,13 +380,6 @@ const Catalog = (props) => {
             fetchCatalogCard(data, lang);
         }
     }, [fetchAllCatalog, fetchCatalogCard, page, sort, filterStatus, rateFrom, rateTo, yearFrom, yearTo, genres, search, lang]);
-
-    useEffect(async () => {
-        if (page > 0) {
-            await fetchRuAllGenres();
-            await fetchEnAllGenres();
-        }
-    }, [fetchEnAllGenres, fetchRuAllGenres, page]);
 
     if (props.catalog.isLoading) {
         return (
