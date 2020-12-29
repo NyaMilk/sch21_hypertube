@@ -20,6 +20,7 @@ import { request } from '../util/http';
 import { useTranslation } from "react-i18next";
 import CONFIG from '../util/const';
 import { isValidInput, isValidPassword } from '../util/check';
+import { ViewsList } from './ViewsList';
 
 const mapStateToProps = (state) => {
     return {
@@ -416,10 +417,10 @@ const Profile = (props) => {
                             </Nav>
                             <TabContent activeTab={activeTab}>
                                 <TabPane tabId="1">
-                                    {/* <ViewsList myviews={props.profile.views} /> */}
+                                    <ViewsList myviews={props.profile.views} movies />
                                 </TabPane>
                                 <TabPane tabId="2">
-                                    {/* <LikesList mylikes={props.profile.likes} /> */}
+                                    <ViewsList myviews={props.profile.comments} comments />
                                 </TabPane>
                                 <TabPane tabId="3">
                                     {/* <LikesList mylikes={props.profile.likes} /> */}
