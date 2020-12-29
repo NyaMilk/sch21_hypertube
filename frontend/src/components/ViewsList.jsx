@@ -5,26 +5,28 @@ import 'moment/locale/ru';
 
 function MovieView(props) {
     const { i18n } = useTranslation();
-    const { entitle, rutitle, engenres, rugenres, enposter, ruposter } = props.movie;
+    const { imdb, entitle, rutitle, engenres, rugenres, enposter, ruposter } = props.movie;
 
     const title = (i18n.language === 'en') ? entitle : rutitle;
     const genres = (i18n.language === 'en') ? engenres : rugenres;
     const poster = (i18n.language === 'en') ? enposter : ruposter;
 
     return (
-        <div className="view-list-block">
-            <div className="view-element-poster-wrapper col-md-1">
-                <img src={`https://image.tmdb.org/t/p/original/${poster}`} className="view-element-poster" alt={title}/>
-            </div>
-            <div className="view-element-info">
-                <div className="view-element-title">{title}</div>
-                <div className="view-element-genres-wrapper">
-                    {genres.map(genre =>
-                        <div className="view-element-genre">{genre}</div>
-                    )}
+        <a href={`/movie/${imdb}`}>
+            <div className="view-list-block">
+                <div className="view-element-poster-wrapper col-md-1">
+                    <img src={`https://image.tmdb.org/t/p/original/${poster}`} className="view-element-poster" alt={title}/>
+                </div>
+                <div className="view-element-info">
+                    <div className="view-element-title">{title}</div>
+                    <div className="view-element-genres-wrapper">
+                        {genres.map(genre =>
+                            <div className="view-element-genre">{genre}</div>
+                        )}
+                    </div>
                 </div>
             </div>
-        </div>
+        </a>
     );
 }
 
@@ -49,6 +51,8 @@ function CommentsView(props) {
 
 export const ViewsList = (props) => {
     const {myviews, movies, comments} = props;
+
+    console.log(myviews);
 
     return (
         <div className="view-list-wrapper">

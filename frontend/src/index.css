@@ -561,7 +561,7 @@ header .navbar .navbar-brand {
 
 .view-list-wrapper {
   width: 100%;
-  padding: 10px;
+  padding: 8px;
 }
 
 .view-list-block {
@@ -583,10 +583,6 @@ a:hover {
   text-decoration: none;
 }
 
-.view-list-block:first-child {
-  margin-top: 0;
-}
-
 .view-element-poster {
   width: 100%;
 }
@@ -594,6 +590,7 @@ a:hover {
 .view-element-title {
   font-size: 18px;
   margin-left: 8px;
+  color: #000000;
 }
 
 .view-element-info {
