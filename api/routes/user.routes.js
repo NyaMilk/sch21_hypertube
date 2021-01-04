@@ -112,31 +112,6 @@ router.get('/profile/favorites/movies/:me', function (req, res) {
     }
 });
 
-router.get('/profile/get_comments/comments/:me', function (req, res) {
-    try {
-        const { me } = req.params;
-
-        getProfileComments(me)
-            .then(data => {
-                res.status(200).json({
-                    success: true,
-                    result: data
-                });
-            })
-            .catch(() => {
-                res.status(200).json({
-                    success: false,
-                    message: "Ooops! Not found favorite films"
-                })
-            })
-    } catch (e) {
-        res.status(200).json({
-            success: false,
-            message: "Ooops! Not found favorite films"
-        })
-    }
-});
-
 router.post('/profile/friends', async (req, res) => {
     try {
 
@@ -162,7 +137,6 @@ router.post('/profile/friends', async (req, res) => {
                     success: false
                 })
             })
-
     }
     catch (e) {
         res.status(200).json({
@@ -173,6 +147,31 @@ router.post('/profile/friends', async (req, res) => {
 });
 
 router.get('/profile/comments/:me', function (req, res) {
+    try {
+        const { me } = req.params;
+
+        getProfileComments(me)
+            .then(data => {
+                res.status(200).json({
+                    success: true,
+                    result: data
+                });
+            })
+            .catch(() => {
+                res.status(200).json({
+                    success: false,
+                    message: "Ooops! Not found favorite films"
+                })
+            })
+    } catch (e) {
+        res.status(200).json({
+            success: false,
+            message: "Ooops! Not found favorite films"
+        })
+    }
+});
+
+router.get('/profile/friends/:me', function (req, res) {
     try {
         const { me } = req.params;
 

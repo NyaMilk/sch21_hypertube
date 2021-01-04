@@ -7,7 +7,7 @@ exports.getProfile = (you, me) => {
     (SELECT 1 FROM Friends
     WHERE idFrom = (SELECT id FROM Users WHERE displayName=$2)
     AND idTo = (SELECT id FROM Users WHERE displayName=$1))
-    THEN 1 ELSE 0 END)
+    THEN 1 ELSE 0 END AS hasFriends)
     FROM Users WHERE displayName=$1`;
 
     return db.any(sql, [you, me]);
