@@ -16,7 +16,7 @@ module.exports = function (io) {
         });
 
         socket.on('notification', ([imdb, username]) => {
-            // (!movies[imdb]) ? movies[imdb] = [] : movies[imdb].push(username);
+            (!movies[imdb]) ? movies[imdb] = [] : movies[imdb].push(username);
 
             if (movies[imdb])
                 movies[imdb].push(username);

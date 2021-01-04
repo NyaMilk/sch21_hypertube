@@ -44,7 +44,7 @@ const mapDispatchToProps = (dispatch) => ({
     setQuality: (quality) => dispatch(setQuality(quality))
 });
 
-function QualitiesList(props) {
+const QualitiesList = (props) => {
     let listItems;
     let last = props.qualities[props.qualities.length - 1];
 
@@ -142,7 +142,7 @@ const Options = (props) => {
     );
 }
 
-function Comments(props) {
+const Comments = (props) => {
     const { me, imdb, setMsg, fetchComments } = props;
     const [textComment, setComment] = useState('');
 
@@ -254,7 +254,7 @@ function Comments(props) {
         );
 }
 
-function CountriesList(props) {
+const CountriesList = (props) => {
     let listItems;
 
     if (props.countries) {
@@ -269,7 +269,7 @@ function CountriesList(props) {
     );
 }
 
-function GenreList(props) {
+const GenreList = (props) => {
     let listItems;
 
     if (props.genres) {
@@ -282,6 +282,32 @@ function GenreList(props) {
     return (
         <ListGroup horizontal>{listItems}</ListGroup>
     );
+}
+
+const VideoPlayer = (props) => {
+    const { torrents, quality, url, poster, imdb } = props;
+
+    const torrent = torrents.filter((item) => item === quality);
+
+    switch (torrent[2]) {
+        case 'not downloaded':
+            return
+        case 'downloading':
+            return (
+                <Col>
+                    <p>Movie is downloading on server right now. Try </p>
+                </Col>
+            )
+        default:
+            return (
+                <Col>
+                    <video key={quality} id="videoPlayer" className="embed-responsive"
+                        poster={`https://image.tmdb.org/t/p/original/${poster}`} controls>
+                        <source src={`${url}/api/movies/video/${imdb}/${quality}`} type="video/mp4" />
+                    </video>
+                </Col>
+            )
+    }
 }
 
 const Movie = (props) => {
@@ -346,7 +372,6 @@ const Movie = (props) => {
                         </Col>
                     </Row>
                     <Row>
-                        <Col>
                             <video key={props.movie.quality} id="videoPlayer" className="embed-responsive" poster={`https://image.tmdb.org/t/p/original/${poster}`} controls>
                                 <source src={`${CONFIG.API_URL}/api/movies/video/${imdb}/${props.movie.quality}`} type="video/mp4" />
 
@@ -354,7 +379,13 @@ const Movie = (props) => {
                                 <track label="Deutsch" kind="subtitles" srcLang="de" src="captions/vtt/sintel-de.vtt" />
                                 <track label="Español" kind="subtitles" srcLang="es" src="captions/vtt/sintel-es.vtt" /> */}
                             </video>
-
+                            <VideoPlayer
+                                quality={props.movie.quality}
+                                torrents={torrents}
+                                imdb={imdb}
+                                poster={`https://image.tmdb.org/t/p/original/${poster}`}
+                                url={CONFIG.API_URL}
+                            />
                         </Col>
                     </Row>
                     <Row className="aside-button">
