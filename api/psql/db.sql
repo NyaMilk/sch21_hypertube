@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS FavoriteMovies CASCADE;
 DROP TABLE IF EXISTS Comments CASCADE;
 DROP TABLE IF EXISTS CommentsLike CASCADE;
 DROP TABLE IF EXISTS Friends CASCADE;
+DROP TABLE IF EXISTS MoviesLogs CASCADE;
 DROP TYPE providers CASCADE;
 
 CREATE TYPE providers AS ENUM ('hypert', 'github', 'school42');
@@ -25,13 +26,12 @@ CREATE TABLE Users
     avatar text[2] DEFAULT ARRAY['image/jpg','1.jpg'],
     about text DEFAULT 'About me',
     createdAt timestamp DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id)             
 );
 
 CREATE TABLE Movies
 (
-    id SERIAL,
-    imdb text NOT NULL UNIQUE,
+    imdb text NOT NULL,
     rate numeric NOT NULL,
     enTitle text NOT NULL, 
     ruTitle text NOT NULL,
@@ -49,8 +49,7 @@ CREATE TABLE Movies
     runtime integer,
     subtitles text,
     torrents text[] NOT NULL,
-    downloads text[],
-    path text
+    PRIMARY KEY (imdb)
 );
 
 CREATE TABLE FavoriteMovies (
@@ -87,6 +86,17 @@ CREATE TABLE Friends (
     createdAt timestamp DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (idFrom) REFERENCES Users (id),
     FOREIGN KEY (idTo) REFERENCES Users (id)
+);
+
+CREATE TABLE MoviesLogs
+(
+    idFilm text NOT NULL,
+    quality text NOT NULL,
+    status text,
+    path text,
+    lastChange timestamp DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (idFilm) REFERENCES Movies (imdb),
+    PRIMARY KEY (idFilm, quality)
 );
 
 INSERT INTO Users (displayName, userName, firstName, lastName, email, password, confirm) VALUES

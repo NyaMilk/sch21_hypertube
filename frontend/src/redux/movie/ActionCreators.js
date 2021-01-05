@@ -107,6 +107,6 @@ export const fetchComments = (me, film) => (dispatch) => {
 export const setQuality = (quality) => (dispatch) => {
     dispatch(({
         type: ActionTypes.QUALITY_ADD,
-        payload: quality
+        quality: quality
     }));
 };
