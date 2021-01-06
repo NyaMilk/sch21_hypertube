@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { withRouter, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Container, Navbar, NavbarBrand, Nav, NavItem, NavLink } from 'reactstrap';
+import { Container, Navbar, NavbarBrand, Nav, NavItem, NavLink, UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { logOut, setUser, setUserFailed } from '../redux/login/ActionCreators';
 import { useTranslation } from "react-i18next";
 import { request } from '../util/http';
+import { socket } from '../util/socket';
 import CONFIG from '../util/const';
 
 const video = '/img/head-video.svg';
@@ -23,6 +24,51 @@ const mapDispatchToProps = (dispatch) => ({
     setUserFailed: (msg) => dispatch(setUserFailed(msg))
 });
 
+const Notification = (props) => {
+    const { hasNew } = props;
+
+    const handleClick = () => {
+        // props.updateNotifications(me);
+        props.set(false);
+    }
+
+    return (
+        <UncontrolledButtonDropdown>
+            <DropdownToggle color="none" onClick={handleClick}>
+                {
+                    (hasNew)
+                        ? <span className="notification" />
+                        : ''
+                }
+                <i className="icon fa fa-bell"></i>
+            </DropdownToggle>
+            <DropdownMenu modifiers={{
+                setMaxHeight: {
+                    enabled: true,
+                    order: 890,
+                    fn: (data) => {
+                        return {
+                            ...data,
+                            styles: {
+                                ...data.styles,
+                                overflow: 'auto',
+                                maxHeight: '350px',
+                                maxWidth: '300px',
+                            },
+                        };
+                    },
+                },
+            }}>
+                <DropdownItem>
+                    Nothing
+        </DropdownItem>
+                {/* <NotificationList notifications={notifications} /> */}
+            </DropdownMenu>
+        </UncontrolledButtonDropdown>
+    );
+}
+
+
 const Header = (props) => {
     const { i18n } = useTranslation();
 
@@ -33,19 +79,40 @@ const Header = (props) => {
     const isLogged = props.login.isLogged;
     const path = props.location.pathname;
     const history = useHistory();
-    const { setUser, setUserFailed } = props;
-
-    useEffect(() => {
-        if (!isLogged && !path.includes('/register') && !path.includes('/remind'))
-            history.push('/login');
-    }, [isLogged, history]);
+    const { me } = props.login;
+    // const { setUser, setUserFailed } = props;
+    const [hasNew, setHasNew] = useState(false);
 
     useEffect(() => {
         request(`${CONFIG.API_URL}/api/auth/success`)
             .then(res => res.json())
             .then(data => (data.user) ? setUser(data.user) : setUserFailed(data.message))
             .catch((e) => setUserFailed(e.message))
-    }, [request, setUser, setUserFailed])
+    }, [])
+
+    useEffect(() => {
+        if (isLogged) {
+
+            socket.on('notification', (data) => {
+                console.log('te',data);
+
+                if (!data[1].indexOf(me)) {
+                    alert('Downloaded');
+                    setHasNew(true);
+                    console.log('DOWNLOADED');
+                    console.log('Found it', data[0]);
+                }
+            });
+
+            return () => {
+                socket.off('notification');
+            };
+        }
+
+        if (!isLogged && !path.includes('/register') && !path.includes('/remind'))
+            history.push('/login');
+    }, [isLogged, history, me, path]);
+
 
     return (
         <header className="header">
@@ -78,7 +145,17 @@ const Header = (props) => {
                                     </NavLink>
                                 </NavItem>
                             }
-
+                            {
+                                isLogged &&
+                                <NavItem>
+                                    <Notification
+                                        // me={me}
+                                        // notifications={props.notification.notifications}
+                                        hasNew={hasNew}
+                                        // updateNotifications={props.updateNotifications}
+                                        set={setHasNew} />
+                                </NavItem>
+                            }
                             <NavItem>
                                 <button
                                     onClick={() => changeLanguage("en")}

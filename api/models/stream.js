@@ -1,100 +1,44 @@
 const { db } = require('../config/psql-setup');
 
-exports.addDownload = (quality, path, imdb) => {
+exports.getMagnet = (imdb, index) => {
     const sql =
-        `UPDATE movies
-        SET downloads = downloads || ARRAY[$1]
-        WHERE imdb = $2 returning id`;
-
-    let obj = new Object;
-    obj.quality = quality;
-    obj.path = path;
-    obj.time = new Date;
-
-    return db.any(sql, [JSON.stringify(obj), imdb])
-}
-
-exports.deleteDownload = (imdb, position) => {
-    const sql =
-        `SELECT downloads 
-        FROM movies 
-        WHERE id = 10`;
-
-    return db.any(sql);
-}
-
-const getMagnets = (imdb) => {
-    const sql =
-        `SELECT torrents 
-        FROM movies 
-        WHERE imdb = $1`;
-
-    return db.one(sql, [imdb]);
-}
-
-exports.getMagnet = async (imdb, quality) => {
-    const magnets = await getMagnets(imdb);
-    console.log('magnets', magnets);
-    const magnet = magnets.torrents.filter((item) => {
-        return item[0] === quality
-    })
-    console.log('filtered magnet', magnet);
-    if (magnet.length > 0)
-        return magnet[0][1];
-    return null;
-}
-
-const getDownload = (imdb) => {
-    const sql =
-        `SELECT downloads
+        `SELECT torrents[$2][2] 
     FROM movies 
     WHERE imdb = $1`;
 
-    return db.one(sql, [imdb]);
-};
-
-exports.getPath = async (imdb, quality) => {
-    const data = await getDownload(imdb);
-    console.log(data);
-    if (!data.downloads)
-        return null;
-
-    const movies = data.downloads.map((item) => {
-        return JSON.parse(item)
-    });
-
-    const filtered = movies.filter((item) => {
-        return item.quality == quality
-    })
-
-    if (filtered.length > 0)
-        return filtered[0].path
-
-    return null;
+    return db.one(sql, [imdb, index]);
 }
 
-const updateDownload = (data, imdb) => {
+exports.getMoviePath = (imdb, quality) => {
     const sql =
-        `UPDATE movies
-    SET downloads = $1
-    WHERE imdb = $2
-    RETURNING id`;
+        `SELECT path from moviesLogs
+    WHERE idFilm = $1 and quality = $2`;
 
-    return db.one(sql, [data, imdb]);
+    return db.one(sql, [imdb, quality]);
 }
 
-exports.updateMovie = async (imdb, quality) => {
-    const data = await getDownload(imdb);
-    const movies = data.downloads.map((item) => {
-        const tmp = JSON.parse(item);
-        if (tmp.quality === quality) {
-            tmp.time = new Date;
-        }
+exports.updateMovie = (imdb, quality, time) => {
+    const sql =
+        `UPDATE moviesLogs SET lastChange = $3
+    WHERE idFilm = $1 and quality = $2
+    RETURNING idFilm`;
 
-        return JSON.stringify(tmp);
-    });
+    return db.any(sql, [imdb, quality, time]);
+}
 
-    const res = await updateDownload(movies, imdb);
-    console.log(res);
-    return (res) ? true : false;
+exports.setMoviePath = (imdb, quality, path) => {
+    const sql =
+        `UPDATE moviesLogs SET status = 'downloaded', path = $3  
+    WHERE idFilm = $1 and quality = $2
+    RETURNING idFilm`;
+
+    return db.any(sql, [imdb, quality, path]);
+}
+
+exports.setMovieStatus = (imdb, quality, status) => {
+    const sql =
+        `INSERT INTO moviesLogs (idFilm, quality, status) VALUES ($1, $2, $3)
+    RETURNING idFilm`;
+
+    return db.any(sql, [imdb, quality, status]);
 }

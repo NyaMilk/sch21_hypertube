@@ -12,7 +12,6 @@ const registerRoutes = require('./routes/register.routes');
 const userRoutes = require('./routes/user.routes');
 const moviesRoutes = require('./routes/movies.routes');
 const streamRoutes = require('./routes/stream.routes');
-// const torrentRoutes = require('./routes/torrent.routes');
 
 app.use(
   cookieSession({
@@ -41,7 +40,6 @@ app.use('/api/register', registerRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/movies', moviesRoutes);
 app.use('/api/stream', streamRoutes);
-// app.use('/api/torrent', torrentRoutes);
 
 app.listen(keys.apiPort, () => console.log('App on ' + keys.apiPort));
 

@@ -15,6 +15,7 @@ import moment from 'moment';
 import 'moment/locale/ru';
 import classnames from 'classnames';
 import { request } from '../util/http';
+import { socket } from "../util/socket";
 
 const like = '/img/like.svg';
 const dislike = '/img/dislike.svg';
@@ -44,7 +45,7 @@ const mapDispatchToProps = (dispatch) => ({
     setQuality: (quality) => dispatch(setQuality(quality))
 });
 
-function QualitiesList(props) {
+const QualitiesList = (props) => {
     let listItems;
     let last = props.qualities[props.qualities.length - 1];
 
@@ -142,7 +143,7 @@ const Options = (props) => {
     );
 }
 
-function Comments(props) {
+const Comments = (props) => {
     const { me, imdb, setMsg, fetchComments } = props;
     const [textComment, setComment] = useState('');
 
@@ -254,7 +255,7 @@ function Comments(props) {
         );
 }
 
-function CountriesList(props) {
+const CountriesList = (props) => {
     let listItems;
 
     if (props.countries) {
@@ -269,7 +270,7 @@ function CountriesList(props) {
     );
 }
 
-function GenreList(props) {
+const GenreList = (props) => {
     let listItems;
 
     if (props.genres) {
@@ -284,12 +285,80 @@ function GenreList(props) {
     );
 }
 
+const VideoPlayer = (props) => {
+    const { logs, torrents, quality, url, poster, imdb, me } = props;
+    const [isSub, setSub] = useState(false);
+    let index;
+
+    torrents.find((item, key) => {
+        if (item[0] === quality) {
+            index = key;
+            return item;
+        }
+        return false;
+    });
+
+    const status = logs.find((item) => {
+        return (item.indexOf(quality) > -1) ? item : false;
+    })
+
+    const ws = () => socket.emit('movie', [imdb, quality, index, me]);
+
+    useEffect(() => {
+        socket.emit('waiters', imdb + quality);
+
+        socket.on('wait_list', (data) => {
+            console.log('wt',data, data[1].indexOf(me));
+            (data[0] === imdb + quality && data[1].indexOf(me) !== -1) ? setSub(true) : setSub(false);
+        })
+
+        return () => socket.off('wait_list');
+
+    }, [quality]);
+
+    console.log('st', status);
+    if (!status || status.indexOf(quality) === -1) {
+        return(
+            <Col>
+                <p>Movie is not downloaded on server.</p>
+                {
+                    !isSub &&
+                    <button onClick={ws}>Click start to download. Notify when movie will be downloaded</button>
+                }
+            </Col>
+        )
+    }
+    else if (status.indexOf('downloaded') > 0) {
+        return(
+            <Col>
+                <video key={quality} id="videoPlayer" className="embed-responsive"
+                    poster={poster} controls>
+                    <source src={`${url}/api/stream/movie/${imdb}/${quality}`} type="video/mp4" />
+                </video>
+            </Col>
+        )
+    }
+    else if (status.indexOf('downloading') > 0) {
+        return(
+            <Col>
+                <p>Movie is downloading on server right now.</p>
+                {
+                    !isSub &&
+                    <button onClick={ws}>Notify when movie will be downloaded</button>
+                }
+            </Col>
+        )
+    }
+    
+
+}
+
 const Movie = (props) => {
     const { t, i18n } = useTranslation();
     const { imdb } = useParams();
     const { fetchMovie, fetchFavoriteFilm, fetchComments, setQuality } = props;
     const { entitle, rutitle, endescription, rudescription, torrents, encountries, rucountries,
-        engenres, rugenres, entrailer, rutrailer, rate, daterelease, runtime, enposter, ruposter } = props.movie.info;
+        engenres, rugenres, entrailer, rutrailer, rate, daterelease, runtime, enposter, ruposter, logs } = props.movie.info;
     const me = props.login.me;
 
     const [message, setMsg] = useState();
@@ -346,16 +415,15 @@ const Movie = (props) => {
                         </Col>
                     </Row>
                     <Row>
-                        <Col>
-                            <video key={props.movie.quality} id="videoPlayer" className="embed-responsive" poster={`https://image.tmdb.org/t/p/original/${poster}`} controls>
-                                <source src={`${CONFIG.API_URL}/api/movies/video/${imdb}/${props.movie.quality}`} type="video/mp4" />
-
-                                {/* <track label="English" kind="subtitles" srcLang="en" src="captions/vtt/sintel-en.vtt" default />
-                                <track label="Deutsch" kind="subtitles" srcLang="de" src="captions/vtt/sintel-de.vtt" />
-                                <track label="Español" kind="subtitles" srcLang="es" src="captions/vtt/sintel-es.vtt" /> */}
-                            </video>
-
-                        </Col>
+                        <VideoPlayer
+                            quality={props.movie.quality}
+                            logs={logs}
+                            torrents={torrents}
+                            imdb={imdb}
+                            poster={`https://image.tmdb.org/t/p/original/${poster}`}
+                            url={CONFIG.API_URL}
+                            me={me}
+                        />
                     </Row>
                     <Row className="aside-button">
                         {/* <Row > */}

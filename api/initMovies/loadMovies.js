@@ -33,7 +33,7 @@ const getPopcornMovies = async () => {
 
         if (torrents && torrents.en) {
             for (key in torrents.en) {
-                const torrent = [key, torrents.en[key].url, "not downloaded"];
+                const torrent = [key, torrents.en[key].url];
                 formatMovie.torrents.push(torrent);
             }
         }
@@ -77,7 +77,7 @@ const getYtsMovies = async () => {
             for (item in torrents) {
                 const { quality, hash } = torrents[item];
                 const url = `magnet:?xt=urn:btih:${hash}`;
-                const torrent = [quality, url, "not downloaded"];
+                const torrent = [quality, url];
                 formatMovie.torrents.push(torrent);
             }
         }
