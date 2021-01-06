@@ -12,6 +12,10 @@ const registerRoutes = require('./routes/register.routes');
 const userRoutes = require('./routes/user.routes');
 const moviesRoutes = require('./routes/movies.routes');
 const streamRoutes = require('./routes/stream.routes');
+// const torrentRoutes = require('./routes/torrent.routes');
+const cron = require('./cron/cron');
+
+cron.job.start();
 
 app.use(
   cookieSession({

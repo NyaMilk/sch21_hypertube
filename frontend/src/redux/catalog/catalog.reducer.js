@@ -29,34 +29,28 @@ export const CatalogReducer = (state = initialState, action) => {
             return { ...state, isLoading: false, infoMsg: action.payload };
 
         case ActionTypes.CATALOG_SORT_ADD:
-            return { ...state, isLoading: false, infoMsg: null, sort: action.sort };
+            return { ...state, isLoading: false, sort: action.sort };
 
         case ActionTypes.CATALOG_FILTER_ADD:
-            return { ...state, isLoading: false, infoMsg: null, filterStatus: action.status };
+            return { ...state, isLoading: false, filterStatus: action.status };
 
         case ActionTypes.CATALOG_RATE_FROM_ADD:
-            return { ...state, isLoading: false, infoMsg: null, rateFrom: action.rateFrom };
+            return { ...state, isLoading: false, rateFrom: action.rateFrom };
 
         case ActionTypes.CATALOG_RATE_TO_ADD:
-            return { ...state, isLoading: false, infoMsg: null, rateTo: action.rateTo };
+            return { ...state, isLoading: false, rateTo: action.rateTo };
 
         case ActionTypes.CATALOG_YEAR_FROM_ADD:
-            return { ...state, isLoading: false, infoMsg: null, yearFrom: action.yearFrom };
+            return { ...state, isLoading: false, yearFrom: action.yearFrom };
 
         case ActionTypes.CATALOG_YEAR_TO_ADD:
-            return { ...state, isLoading: false, infoMsg: null, yearTo: action.yearTo };
+            return { ...state, isLoading: false, yearTo: action.yearTo };
 
         case ActionTypes.CATALOG_GENRES_ADD:
-            return { ...state, isLoading: false, infoMsg: null, genres: action.genres };
-
-        case ActionTypes.CATALOG_RU_ALL_GENRES_ADD:
-            return { ...state, isLoading: false, infoMsg: null, ruAllGenres: action.genres };
-
-        case ActionTypes.CATALOG_EN_ALL_GENRES_ADD:
-            return { ...state, isLoading: false, infoMsg: null, enAllGenres: action.genres };
+            return { ...state, isLoading: false, genres: action.genres };
 
         case ActionTypes.CATALOG_SEARCH_ADD:
-            return { ...state, isLoading: false, infoMsg: null, search: action.search };
+            return { ...state, isLoading: false, search: action.search };
 
         case ActionTypes.CATALOG_CARD_ADD:
             return { ...state, isLoading: false, infoMsg: null, info: action.payload };

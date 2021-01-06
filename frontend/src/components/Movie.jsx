@@ -46,14 +46,16 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const QualitiesList = (props) => {
-    let listItems;
-    let last = props.qualities[props.qualities.length - 1];
+    let listItems, last;
 
     useEffect(() => {
-        props.setQuality(last[0]);
+        if (last)
+            props.setQuality(last[0]);
     }, []);
 
     if (props.qualities) {
+        last = props.qualities[props.qualities.length - 1];
+
         listItems = props.qualities.map((quality, item) =>
             <DropdownItem key={item} onClick={() => props.setQuality(quality[0])}>
                 {quality[0]}
@@ -357,8 +359,6 @@ const Movie = (props) => {
     const { t, i18n } = useTranslation();
     const { imdb } = useParams();
     const { fetchMovie, fetchFavoriteFilm, fetchComments, setQuality } = props;
-    const { entitle, rutitle, endescription, rudescription, torrents, encountries, rucountries,
-        engenres, rugenres, entrailer, rutrailer, rate, daterelease, runtime, enposter, ruposter, logs } = props.movie.info;
     const me = props.login.me;
 
     const [message, setMsg] = useState();
@@ -374,32 +374,30 @@ const Movie = (props) => {
         if (activeTab !== tab) setActiveTab(tab);
     }
 
-    const title = (i18n.language === 'en') ? entitle : rutitle;
-    const description = (i18n.language === 'en') ? endescription : rudescription;
-    const genres = (i18n.language === 'en') ? engenres : rugenres;
-    const trailer = (i18n.language === 'en') ? entrailer : rutrailer;
-    const countries = (i18n.language === 'en') ? encountries : rucountries;
-    const poster = (i18n.language === 'en') ? enposter : ruposter;
-
-    (i18n.language === 'en') ? moment.locale('en') : moment.locale('ru');
-
     if (props.movie.isLoading) {
         return (
             <Loading />
         );
     }
-    else if (props.movie.infoMsg) {
-        return (
-            <Info info='message' message={props.movie.infoMsg} />
-        );
-    }
     else if (props.movie.info != null) {
+        const { entitle, rutitle, endescription, rudescription, torrents, encountries, rucountries,
+            engenres, rugenres, entrailer, rutrailer, rate, daterelease, runtime, enposter, ruposter } = props.movie.info;
+
+        const title = (i18n.language === 'en') ? entitle : rutitle;
+        const description = (i18n.language === 'en') ? endescription : rudescription;
+        const genres = (i18n.language === 'en') ? engenres : rugenres;
+        const trailer = (i18n.language === 'en') ? entrailer : rutrailer;
+        const countries = (i18n.language === 'en') ? encountries : rucountries;
+        const poster = (i18n.language === 'en') ? enposter : ruposter;
+
+        (i18n.language === 'en') ? moment.locale('en') : moment.locale('ru');
+
         return (
             <section className="movie text-break">
                 <Container>
                     {
-                        message &&
-                        <Info info='alert' message={message} />
+                        (message || props.movie.favoriteMsg) &&
+                        <Info info='alert' message={message || props.movie.favoriteMsg} />
                     }
                     <Row className="movie-header">
                         <Col>

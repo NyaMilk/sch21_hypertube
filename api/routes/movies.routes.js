@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const { log } = require('console');
 const fs = require('fs');
 const { getCountCards, getCards, getMovie, getFavorite, deleteFavoriteFiml, insertFavoriteFiml, insertComment, getComments,
     checkStatus, updateStatus, insertStatus, deleteStatus } = require('../models/movies');

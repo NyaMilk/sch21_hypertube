@@ -27,12 +27,12 @@ CREATE TABLE Users
     avatar text[2] DEFAULT ARRAY['image/jpg','1.jpg'],
     about text DEFAULT 'About me',
     createdAt timestamp DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (id)
+    PRIMARY KEY (id)             
 );
 
 CREATE TABLE Movies
 (
-    imdb text NOT NULL UNIQUE,
+    imdb text NOT NULL,
     rate numeric NOT NULL,
     enTitle text NOT NULL, 
     ruTitle text NOT NULL,
@@ -107,6 +107,17 @@ CREATE TABLE Friends (
     createdAt timestamp DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (idFrom) REFERENCES Users (id),
     FOREIGN KEY (idTo) REFERENCES Users (id)
+);
+
+CREATE TABLE MoviesLogs
+(
+    idFilm text NOT NULL,
+    quality text NOT NULL,
+    status text,
+    path text,
+    lastChange timestamp DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (idFilm) REFERENCES Movies (imdb),
+    PRIMARY KEY (idFilm, quality)
 );
 
 INSERT INTO Users (displayName, userName, firstName, lastName, email, password, confirm) VALUES
