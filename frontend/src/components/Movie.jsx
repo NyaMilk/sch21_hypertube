@@ -381,7 +381,7 @@ const Movie = (props) => {
     }
     else if (props.movie.info != null) {
         const { entitle, rutitle, endescription, rudescription, torrents, encountries, rucountries,
-            engenres, rugenres, entrailer, rutrailer, rate, daterelease, runtime, enposter, ruposter } = props.movie.info;
+            engenres, rugenres, entrailer, rutrailer, rate, daterelease, runtime, enposter, ruposter, logs } = props.movie.info;
 
         const title = (i18n.language === 'en') ? entitle : rutitle;
         const description = (i18n.language === 'en') ? endescription : rudescription;

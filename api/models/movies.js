@@ -153,12 +153,9 @@ exports.getProfileComments = (me) => {
 
     return db.any(sql, [me]);
 }
-<<<<<<< HEAD
-=======
 
 exports.deleteMovies = () => {
     const sql = `DELETE FROM MoviesLogs WHERE lastChange < CURRENT_DATE - 2 RETURNING path`;
 
     return db.any(sql);
 }
->>>>>>> mgrass
