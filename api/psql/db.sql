@@ -50,7 +50,6 @@ CREATE TABLE Movies
     runtime integer,
     subtitles text,
     torrents text[] NOT NULL,
-    path text,
     PRIMARY KEY (imdb)
 );
 

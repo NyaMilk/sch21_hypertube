@@ -32,50 +32,50 @@ module.exports = function (io) {
             if (movies[key].size === 1) {
                 await setMovieStatus(imdb, quality, 'downloading');
 
-                // const magnet = getMagnet(imdb, quality);
-                // console.log('magnet', magnet);
-                // const options = {
-                //     connections: 100,
-                //     uploads: 10,
-                //     path: dirPath,
-                //     verify: true,
-                //     dht: true,
-                //     tracker: true
-                // }
+                const magnet = await getMagnet(imdb, index);
+                const dirPath = `${process.cwd()}/movies/${imdb}_${quality}`;
+                console.log('magnet', magnet);
+                const options = {
+                    connections: 100,
+                    uploads: 10,
+                    path: dirPath,
+                    verify: true,
+                    dht: true,
+                    tracker: true
+                }
 
-                // const engine = torrentStream(magnet, options);
+                const engine = torrentStream(magnet.torrents, options);
 
-                // engine
-                //     .on("ready", () => {
-                //         engine.files.forEach(file => {
-                //             const extensions = ['.mp4', '.mkv', '.avi', '.ogg'];
-                //             const check = (filename, extensions) => {
-                //                 let res = false;
-                //                 extensions.forEach((item) => {
-                //                     res = (filename.includes(item)) ? true : res;
-                //                 })
+                engine
+                    .on("ready", () => {
+                        engine.files.forEach(file => {
+                            const extensions = ['.mp4', '.mkv', '.avi', '.ogg'];
+                            const check = (filename, extensions) => {
+                                let res = false;
+                                extensions.forEach((item) => {
+                                    res = (filename.includes(item)) ? true : res;
+                                })
 
-                //                 return res;
-                //             }
+                                return res;
+                            }
 
-                //             if (check(file.name, extensions)) {
-                //                 file.select();
-                //                 newPath = file.path;
-                //             } else {
-                //                 file.deselect();
-                //             }
-                //         });
-                //     })
-                //     .on('download', (index) => {
-                //         console.log(`Engine downloading chunk: [${index}]`);
-                //         console.log('Engine swarm downloaded : ', engine.swarm.downloaded);
-                //     })
-                //     .on('idle', () => {
+                            if (check(file.name, extensions)) {
+                                file.select();
+                                newPath = file.path;
+                            } else {
+                                file.deselect();
+                            }
+                        });
+                    })
+                    .on('download', (index) => {
+                        console.log(`Engine downloading chunk: [${index}]`);
+                        console.log('Engine swarm downloaded : ', engine.swarm.downloaded);
+                    })
+                    .on('idle', () => {
                         mySpace.emit('notification', [key, Array.from(movies[key])]);
-                //         console.log('movies downloaded. Go stream');
-                //         setMoviePath(imdb, index, newPath);
-                //     })
-                
+                        console.log('movies downloaded. Go stream');
+                        setMoviePath(imdb, quality, newPath);
+                    })
             }
         })
 
