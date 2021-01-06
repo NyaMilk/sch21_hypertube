@@ -333,7 +333,7 @@ const VideoPlayer = (props) => {
             <Col>
                 <video key={quality} id="videoPlayer" className="embed-responsive"
                     poster={poster} controls>
-                    <source src={`${url}/api/movies/video/${imdb}/${quality}`} type="video/mp4" />
+                    <source src={`${url}/api/stream/movie/${imdb}/${quality}`} type="video/mp4" />
                 </video>
             </Col>
         )
