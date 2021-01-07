@@ -46,7 +46,6 @@ router.get('/movie/:imdb/:quality', async (req, res) => {
             fs.createReadStream(path).pipe(res)
         }
     } catch (e) {
-        console.log("Smth wrong with stream");
         res.status(200).json({
             success: false,
             msg: e.message
@@ -57,12 +56,10 @@ router.get('/movie/:imdb/:quality', async (req, res) => {
 router.get('/subtitle/:lang/:imdb', async (req, res) => {
     try {
         const { lang, imdb } = req.params;
-        const path = `${process.cwd()}/movies/subtitles/${imdb}_${lang}.srt`;
-        const subtitle = fs.readFileSync(path, res);
-        // const subtitle = fs.readFileSync(path, 'utf8', res);
+        const subtitle = fs.readFileSync(`${process.cwd()}/movies/subtitles/${imdb}_${lang}.srt`, res);
+        
         res.send(subtitle);
     } catch (e) {
-        console.log("Smth wrong with subtitle");
         res.status(200).json({
             success: false,
             msg: e.message

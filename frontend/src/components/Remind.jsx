@@ -5,7 +5,7 @@ import { Info } from './Info';
 import { request } from '../util/http';
 import { useTranslation } from "react-i18next";
 
-const Remind = () => {
+export const Remind = () => {
     const [email, setEmail] = useState('');
     const [msg, setMsg] = useState(null);
     const [isSuccess, setSuccess] = useState(null);
@@ -60,5 +60,3 @@ const Remind = () => {
         </section >
     );
 }
-
-export default Remind;

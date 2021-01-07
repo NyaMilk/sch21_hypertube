@@ -6,7 +6,7 @@ import { Container, Button, Input, Row, Col, Label, Card, CardBody, FormFeedback
 import { Info } from './Info';
 import { useTranslation } from "react-i18next";
 
-function InputForm(props) {
+const InputForm = (props) => {
     const [isValidPass, toggleValidPass] = useState('');
     const [isValidRepass, toggleValidRepass] = useState('');
 
@@ -64,7 +64,7 @@ function InputForm(props) {
     );
 }
 
-const Restore = () => {
+export const Restore = () => {
     const { email, hash } = useParams();
     const [msg, setMsg] = useState(null);
     const [newPass, setPass] = useState();
@@ -135,5 +135,3 @@ const Restore = () => {
         </section>
     );
 }
-
-export default Restore;

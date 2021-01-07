@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Row } from 'reactstrap';
 
-const NotFound = () => {
+export const NotFound = () => {
     return (
         <section className="page-state">
             <Container>
@@ -12,5 +12,3 @@ const NotFound = () => {
         </section>
     )
 }
-
-export default NotFound;

@@ -288,9 +288,10 @@ const GenreList = (props) => {
 }
 
 const VideoPlayer = (props) => {
-    const { logs, torrents, quality, url, poster, imdb, me } = props;
+    const { logs, torrents, quality, url, poster, imdb, me, ensubtitle, rusubtitle } = props;
     const [isSub, setSub] = useState(false);
     let index;
+    let status;
 
     torrents.find((item, key) => {
         if (item[0] === quality) {
@@ -300,9 +301,9 @@ const VideoPlayer = (props) => {
         return false;
     });
 
-    const status = logs.find((item) => {
-        return (item.indexOf(quality) > -1) ? item : false;
-    })
+    if (logs) {
+        status = logs.find((item) => (item.indexOf(quality) > -1) ? item : false);
+    }
 
     const ws = () => socket.emit('movie', [imdb, quality, index, me]);
 
@@ -310,7 +311,6 @@ const VideoPlayer = (props) => {
         socket.emit('waiters', imdb + quality);
 
         socket.on('wait_list', (data) => {
-            console.log('wt',data, data[1].indexOf(me));
             (data[0] === imdb + quality && data[1].indexOf(me) !== -1) ? setSub(true) : setSub(false);
         })
 
@@ -318,9 +318,8 @@ const VideoPlayer = (props) => {
 
     }, [quality]);
 
-    console.log('st', status);
-    if (!status || status.indexOf(quality) === -1) {
-        return(
+    if (!logs || !status || status.indexOf(quality) === -1) {
+        return (
             <Col>
                 <p>Movie is not downloaded on server.</p>
                 {
@@ -331,17 +330,27 @@ const VideoPlayer = (props) => {
         )
     }
     else if (status.indexOf('downloaded') > 0) {
-        return(
+        return (
             <Col>
-                <video key={quality} id="videoPlayer" className="embed-responsive"
-                    poster={poster} controls>
+                <video key={quality} id="videoPlayer" className="embed-responsive" poster={poster} controls>
                     <source src={`${url}/api/stream/movie/${imdb}/${quality}`} type="video/mp4" />
+
+                    {
+                        ensubtitle &&
+                        <track label="English" kind="subtitles"
+                            srclang="en" src={`${url}/api/stream/subtitle/en/${imdb}`} default />
+                    }
+                    {
+                        rusubtitle &&
+                        <track label="Russian" kind="subtitles"
+                            srclang="ru" src={`${url}/api/stream/subtitle/ru/${imdb}`} />
+                    }
                 </video>
             </Col>
         )
     }
     else if (status.indexOf('downloading') > 0) {
-        return(
+        return (
             <Col>
                 <p>Movie is downloading on server right now.</p>
                 {
@@ -351,7 +360,7 @@ const VideoPlayer = (props) => {
             </Col>
         )
     }
-    
+
 
 }
 
@@ -381,7 +390,8 @@ const Movie = (props) => {
     }
     else if (props.movie.info != null) {
         const { entitle, rutitle, endescription, rudescription, torrents, encountries, rucountries,
-            engenres, rugenres, entrailer, rutrailer, rate, daterelease, runtime, enposter, ruposter, logs } = props.movie.info;
+            engenres, rugenres, entrailer, rutrailer, rate, daterelease, runtime,
+            enposter, ruposter, ensubtitle, rusubtitle, logs } = props.movie.info;
 
         const title = (i18n.language === 'en') ? entitle : rutitle;
         const description = (i18n.language === 'en') ? endescription : rudescription;
@@ -421,6 +431,8 @@ const Movie = (props) => {
                             poster={`https://image.tmdb.org/t/p/original/${poster}`}
                             url={CONFIG.API_URL}
                             me={me}
+                            ensubtitle={ensubtitle}
+                            rusubtitle={ensubtitle}
                         />
                     </Row>
                     <Row className="aside-button">

@@ -80,7 +80,7 @@ function InputForm(props) {
     )
 }
 
-function Password(props) {
+const Password = (props) => {
     const [isValidPass, toggleValidPass] = useState('');
     const [isValidRepass, toggleValidRepass] = useState('');
 
