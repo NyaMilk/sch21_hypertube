@@ -94,6 +94,7 @@
 		"nobody": "Nobody had commented",
 		"statusOne": "Movie is not downloaded on server",
 		"statusTwo": "Movie is downloading on server right now",
-		"statusTree": "Click play and wait notify"
+		"statusTree": "Click play and wait notify",
+		"statusFour": "Wait notify"
 	}
 }

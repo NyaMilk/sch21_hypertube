@@ -324,7 +324,7 @@ const VideoPlayer = (props) => {
         return (
             <Col>
                 <p className="txtPlay">{props.t("moviePage.statusOne")}</p>
-                <p className="txtPlay">{props.t("moviePage.statusTree")}</p>
+                <p className="txtPlay">{!isSub ? props.t("moviePage.statusTree") : props.t("moviePage.statusFour")}</p>
                 {
                     !isSub &&
                     // <button onClick={ws}>Click start to download. Notify when movie will be downloaded</button>
@@ -354,7 +354,7 @@ const VideoPlayer = (props) => {
         return (
             <Col>
                 <p className="txtPlay">{props.t("moviePage.statusTwo")}</p>
-                <p className="txtPlay">{props.t("moviePage.statusTree")}</p>
+                <p className="txtPlay">{!isSub ? props.t("moviePage.statusTree") : props.t("moviePage.statusFour")}</p>
                 {
                     !isSub &&
                     // <button onClick={ws}>Notify when movie will be downloaded</button>
