@@ -539,6 +539,35 @@ header .navbar .navbar-brand {
   background-color: #6c757d;
 }
 
+.btnPlay {
+  z-index: 1;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: none;
+  border: none;
+}
+
+.btnPlay img {
+  width: 13vw;
+}
+
+.txtPlay {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  transform: translate(-50%);
+  color: #fff;
+  padding-top: 5px;
+  width: max-content;
+  font-size: 2vw;
+}
+
+.txtPlay:nth-child(2) {
+  padding-top: 4vw;
+}
+
 /* media */
 @media (min-width: 576px) {
   .modalTrailer {
@@ -557,6 +586,12 @@ header .navbar .navbar-brand {
   .movie .media-left {
     display: none;
   }
+  .txtPlay {
+    font-size: 4vw;
+  }
+  .txtPlay:nth-child(2) {
+    padding-top: 7vw;
+  }
 }
 
 .view-list-wrapper {
@@ -571,7 +606,7 @@ header .navbar .navbar-brand {
   border-radius: 5px;
   padding: 5px 0;
   display: flex;
-  transition: all .3s ease;
+  transition: all 0.3s ease;
 }
 
 .view-list-block:hover {

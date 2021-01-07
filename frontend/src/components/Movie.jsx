@@ -28,6 +28,7 @@ const imdb_logo = '/img/imdbc.png';
 const twitter = '/img/twitter.svg';
 const facebook = '/img/facebook.svg';
 const vk = '/img/vk.svg';
+const play = '/img/play.svg';
 
 const mapStateToProps = (state) => {
     return {
@@ -310,7 +311,7 @@ const VideoPlayer = (props) => {
         socket.emit('waiters', imdb + quality);
 
         socket.on('wait_list', (data) => {
-            console.log('wt',data, data[1].indexOf(me));
+            console.log('wt', data, data[1].indexOf(me));
             (data[0] === imdb + quality && data[1].indexOf(me) !== -1) ? setSub(true) : setSub(false);
         })
 
@@ -320,18 +321,27 @@ const VideoPlayer = (props) => {
 
     console.log('st', status);
     if (!status || status.indexOf(quality) === -1) {
-        return(
+        return (
             <Col>
-                <p>Movie is not downloaded on server.</p>
+                <p className="txtPlay">{props.t("moviePage.statusOne")}</p>
+                <p className="txtPlay">{props.t("moviePage.statusTree")}</p>
                 {
                     !isSub &&
-                    <button onClick={ws}>Click start to download. Notify when movie will be downloaded</button>
+                    // <button onClick={ws}>Click start to download. Notify when movie will be downloaded</button>
+                    <button onClick={ws} className="btnPlay">
+                        <img src={play} alt="play" />
+                    </button>
+
                 }
+                <video key={quality} id="videoPlayer" className="embed-responsive"
+                    controls>
+                </video>
+
             </Col>
         )
     }
     else if (status.indexOf('downloaded') > 0) {
-        return(
+        return (
             <Col>
                 <video key={quality} id="videoPlayer" className="embed-responsive"
                     poster={poster} controls>
@@ -341,18 +351,20 @@ const VideoPlayer = (props) => {
         )
     }
     else if (status.indexOf('downloading') > 0) {
-        return(
+        return (
             <Col>
-                <p>Movie is downloading on server right now.</p>
+                <p className="txtPlay">{props.t("moviePage.statusTwo")}</p>
+                <p className="txtPlay">{props.t("moviePage.statusTree")}</p>
                 {
                     !isSub &&
-                    <button onClick={ws}>Notify when movie will be downloaded</button>
+                    // <button onClick={ws}>Notify when movie will be downloaded</button>
+                    <button onClick={ws} className="btnPlay">
+                        <img src={play} alt="play" />
+                    </button>
                 }
             </Col>
         )
     }
-    
-
 }
 
 const Movie = (props) => {
@@ -421,6 +433,7 @@ const Movie = (props) => {
                             poster={`https://image.tmdb.org/t/p/original/${poster}`}
                             url={CONFIG.API_URL}
                             me={me}
+                            t={t}
                         />
                     </Row>
                     <Row className="aside-button">

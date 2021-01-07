@@ -91,6 +91,9 @@
 		"playTrailer": "Play trailer",
 		"trailer": "Trailer",
 		"share": "Share",
-		"nobody": "Nobody had commented"
+		"nobody": "Nobody had commented",
+		"statusOne": "Movie is not downloaded on server",
+		"statusTwo": "Movie is downloading on server right now",
+		"statusTree": "Click play and wait notify"
 	}
 }
