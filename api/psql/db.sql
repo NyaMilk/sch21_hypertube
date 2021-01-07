@@ -48,7 +48,8 @@ CREATE TABLE Movies
     enGenres text[],
     ruGenres text[],
     runtime integer,
-    subtitles text,
+    enSubtitle boolean ,
+    ruSubtitle boolean,
     torrents text[] NOT NULL,
     PRIMARY KEY (imdb)
 );

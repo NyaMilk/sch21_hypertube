@@ -159,3 +159,9 @@ exports.deleteMovies = () => {
 
     return db.any(sql);
 }
+
+exports.setStatusSubtitle = (imdb, lang) => {
+    const sql = `UPDATE Movies SET ${lang} = true WHERE imdb = $1 RETURNING imdb`;
+
+    return db.any(sql, [imdb]);
+}

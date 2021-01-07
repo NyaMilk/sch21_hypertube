@@ -7,7 +7,7 @@ router.get('/movie/:imdb/:quality', async (req, res) => {
         const { imdb, quality } = req.params;
         const dirPath = `${process.cwd()}/movies/${imdb}_${quality}`;
         const dbRes = await getMoviePath(imdb, quality);
-        
+
         if (!dbRes || !dbRes.path) {
             res.status(200).json({
                 success: false,
@@ -47,6 +47,22 @@ router.get('/movie/:imdb/:quality', async (req, res) => {
         }
     } catch (e) {
         console.log("Smth wrong with stream");
+        res.status(200).json({
+            success: false,
+            msg: e.message
+        })
+    }
+});
+
+router.get('/subtitle/:lang/:imdb', async (req, res) => {
+    try {
+        const { lang, imdb } = req.params;
+        const path = `${process.cwd()}/movies/subtitles/${imdb}_${lang}.srt`;
+        const subtitle = fs.readFileSync(path, res);
+        // const subtitle = fs.readFileSync(path, 'utf8', res);
+        res.send(subtitle);
+    } catch (e) {
+        console.log("Smth wrong with subtitle");
         res.status(200).json({
             success: false,
             msg: e.message
