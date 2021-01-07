@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
-    Nav, Container, Row, Col, FormGroup, Input, Button, Card, CardBody,
+    Container, Row, Col, FormGroup, Input, Button, Card, CardBody,
     CardImg, CardTitle, Badge, ListGroup, ListGroupItem, Pagination, PaginationItem,
     PaginationLink, Modal, ModalHeader, ModalBody, ModalFooter,
     FormFeedback
@@ -14,9 +14,8 @@ import {
     setRateFrom, setRateTo, setGenres, setSearch
 } from '../redux/catalog/ActionCreators';
 import { useTranslation } from "react-i18next";
-import { Loading } from './Loading';
-import { Info } from './Info';
-
+import Loading from './Loading';
+import Info from './Info';
 
 const mapStateToProps = (state) => {
     return {
@@ -39,7 +38,7 @@ const mapDispatchToProps = (dispatch) => ({
     setSearch: (search) => dispatch(setSearch(search))
 });
 
-function InputForm(props) {
+const InputForm = (props) => {
     const [isValid, toggleValid] = useState('');
     const [feedback, setFeedback] = useState('Oopsy!');
 
@@ -87,7 +86,7 @@ function InputForm(props) {
     )
 }
 
-function Filter(props) {
+const Filter = (props) => {
     const [show, setModal] = useState(false);
     const toggleModal = () => setModal(!show);
 
@@ -114,8 +113,6 @@ function Filter(props) {
         //     return film.title.toLowerCase().includes(value);
         // });
         // console.log("filter", filter);
-
-        console.log(value);
         props.filter.setSearch(value);
     };
 
@@ -243,7 +240,7 @@ function Filter(props) {
     );
 }
 
-function GenreList(props) {
+const GenreList = (props) => {
     let listItems;
     if (props.genres) {
         listItems = props.genres.map((genre, item) =>
@@ -255,9 +252,8 @@ function GenreList(props) {
     );
 }
 
-function FilmCards(props) {
+const FilmCards = (props) => {
     let listItems;
-    console.log("props", props);
 
     if (props.cards.length > 0) {
         listItems = props.cards.map((card, item) => {
@@ -288,7 +284,7 @@ function FilmCards(props) {
     );
 }
 
-function CardsPagination(props) {
+const CardsPagination = (props) => {
     const countPages = Math.ceil(props.cardCount / 16);
 
     if (countPages > 1) {

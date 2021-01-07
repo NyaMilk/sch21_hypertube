@@ -8,7 +8,7 @@ import { NavLink, Card, CardBody, Row, Col, FormGroup, Label, Input, FormFeedbac
 import CONFIG from '../util/const';
 import { isValidInput, isValidPassword } from '../util/check';
 import { request } from '../util/http';
-import { Loading } from './Loading';
+import Loading from './Loading';
 
 const mapStateToProps = (state) => {
     return {
@@ -26,7 +26,7 @@ const mapDispatchToProps = (dispatch) => ({
     fetchRegister: (data) => dispatch(fetchRegister(data))
 });
 
-function InputForm(props) {
+const InputForm = (props) => {
     const [isValid, toggleValid] = useState('');
     const [feedback, setFeedback] = useState('Oopsy!');
 
@@ -80,7 +80,7 @@ function InputForm(props) {
     )
 }
 
-function Password(props) {
+const Password = (props) => {
     const [isValidPass, toggleValidPass] = useState('');
     const [isValidRepass, toggleValidRepass] = useState('');
 

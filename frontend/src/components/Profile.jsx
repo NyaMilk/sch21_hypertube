@@ -13,8 +13,8 @@ import {
     setAbout, setNewPassword, fetchEditProfile
 } from '../redux/edit/ActionCreators';
 import { fetchUpdateLogin } from '../redux/login/ActionCreators';
-import { Loading } from './Loading';
-import { Info } from './Info';
+import Loading from './Loading';
+import Info from './Info';
 import NotFound from './NotFound';
 import { request } from '../util/http';
 import { useTranslation } from "react-i18next";
@@ -151,7 +151,7 @@ const InputForm = (props) => {
     )
 }
 
-function EditProfile(props) {
+const EditProfile = (props) => {
     const { t } = useTranslation();
     const [modal, setModal] = useState(false);
     const [message, setMessage] = useState();
@@ -263,7 +263,7 @@ function EditProfile(props) {
     );
 }
 
-function AsideButton(props) {
+const AsideButton = (props) => {
     const changeStatus = (e) => {
         if (e.target.value === 'add' || e.target.value === 'remove') {
             const data = {
@@ -333,9 +333,6 @@ const Profile = (props) => {
     useEffect(() => {
         fetchComments(username);
     }, [username]);
-
-    console.log(props.profile.views);
-    console.log(props.profile.comments);
 
     const [activeTab, setActiveTab] = useState('1');
     const toggle = tab => {

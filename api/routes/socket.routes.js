@@ -1,12 +1,13 @@
 const torrentStream = require('torrent-stream');
 const { getMagnet, setMoviePath, setMovieStatus } = require('../models/stream');
+const { getSubtitles } = require('../initMovies/getSubtitles');
 
-module.exports = function (io) {
+module.exports = (io) => {
 
     const mySpace = io.of('/socks');
     let movies = new Object();
 
-    function getKeyByValue(object, value) {
+    getKeyByValue = (object, value) => {
         return Object.keys(object).find(key => object[key] === value);
     }
 
@@ -22,7 +23,6 @@ module.exports = function (io) {
 
         socket.on('movie', async ([imdb, quality, index, username]) => {
             const key = imdb + quality;
-            console.log('ind', movies);
 
             if (!movies[key])
                 movies[key] = new Set();
@@ -32,9 +32,11 @@ module.exports = function (io) {
             if (movies[key].size === 1) {
                 await setMovieStatus(imdb, quality, 'downloading');
 
+                console.log('index', index);
                 const magnet = await getMagnet(imdb, index);
+                console.log(magnet)          
+                await getSubtitles(imdb);
                 const dirPath = `${process.cwd()}/movies/${imdb}_${quality}`;
-                console.log('magnet', magnet);
                 const options = {
                     connections: 100,
                     uploads: 10,
@@ -69,11 +71,9 @@ module.exports = function (io) {
                     })
                     .on('download', (index) => {
                         console.log(`Engine downloading chunk: [${index}]`);
-                        console.log('Engine swarm downloaded : ', engine.swarm.downloaded);
                     })
                     .on('idle', () => {
                         mySpace.emit('notification', [key, Array.from(movies[key])]);
-                        console.log('movies downloaded. Go stream');
                         setMoviePath(imdb, quality, newPath);
                     })
             }
@@ -95,5 +95,4 @@ module.exports = function (io) {
         //             .catch();
         // })
     })
-
 }

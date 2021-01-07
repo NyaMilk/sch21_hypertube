@@ -10,8 +10,7 @@ import Movie from './Movie';
 import Profile from './Profile';
 import Footer from './Footer';
 
-export function Main() {
-
+export const Main = () => {
     return (
         <div>
             <Router>

@@ -8,8 +8,8 @@ import { connect } from 'react-redux';
 import { fetchMovie, fetchFavoriteFilm, fetchUpdateFavoriteFilm, fetchComments, setQuality } from '../redux/movie/ActionCreators';
 import CONFIG from '../util/const';
 import { useTranslation } from "react-i18next";
-import { Loading } from './Loading';
-import { Info } from './Info';
+import Loading from './Loading';
+import Info from './Info';
 import NotFound from './NotFound';
 import moment from 'moment';
 import 'moment/locale/ru';
@@ -289,9 +289,10 @@ const GenreList = (props) => {
 }
 
 const VideoPlayer = (props) => {
-    const { logs, torrents, quality, url, poster, imdb, me } = props;
+    const { logs, torrents, quality, url, poster, imdb, me, ensubtitle, rusubtitle } = props;
     const [isSub, setSub] = useState(false);
     let index;
+    let status;
 
     torrents.find((item, key) => {
         if (item[0] === quality) {
@@ -301,9 +302,9 @@ const VideoPlayer = (props) => {
         return false;
     });
 
-    const status = logs.find((item) => {
-        return (item.indexOf(quality) > -1) ? item : false;
-    })
+    if (logs) {
+        status = logs.find((item) => (item.indexOf(quality) > -1) ? item : false);
+    }
 
     const ws = () => socket.emit('movie', [imdb, quality, index, me]);
 
@@ -319,8 +320,7 @@ const VideoPlayer = (props) => {
 
     }, [quality]);
 
-    console.log('st', status);
-    if (!status || status.indexOf(quality) === -1) {
+    if (!logs || !status || status.indexOf(quality) === -1) {
         return (
             <Col>
                 <p className="txtPlay">{props.t("moviePage.statusOne")}</p>
@@ -343,9 +343,19 @@ const VideoPlayer = (props) => {
     else if (status.indexOf('downloaded') > 0) {
         return (
             <Col>
-                <video key={quality} id="videoPlayer" className="embed-responsive"
-                    poster={poster} controls>
+                <video key={quality} id="videoPlayer" className="embed-responsive" poster={poster} controls>
                     <source src={`${url}/api/stream/movie/${imdb}/${quality}`} type="video/mp4" />
+
+                    {
+                        ensubtitle &&
+                        <track label="English" kind="subtitles"
+                            srclang="en" src={`${url}/api/stream/subtitle/en/${imdb}`} default />
+                    }
+                    {
+                        rusubtitle &&
+                        <track label="Russian" kind="subtitles"
+                            srclang="ru" src={`${url}/api/stream/subtitle/ru/${imdb}`} />
+                    }
                 </video>
             </Col>
         )
@@ -393,7 +403,8 @@ const Movie = (props) => {
     }
     else if (props.movie.info != null) {
         const { entitle, rutitle, endescription, rudescription, torrents, encountries, rucountries,
-            engenres, rugenres, entrailer, rutrailer, rate, daterelease, runtime, enposter, ruposter, logs } = props.movie.info;
+            engenres, rugenres, entrailer, rutrailer, rate, daterelease, runtime,
+            enposter, ruposter, ensubtitle, rusubtitle, logs } = props.movie.info;
 
         const title = (i18n.language === 'en') ? entitle : rutitle;
         const description = (i18n.language === 'en') ? endescription : rudescription;
@@ -434,6 +445,8 @@ const Movie = (props) => {
                             url={CONFIG.API_URL}
                             me={me}
                             t={t}
+                            ensubtitle={ensubtitle}
+                            rusubtitle={ensubtitle}
                         />
                     </Row>
                     <Row className="aside-button">

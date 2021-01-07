@@ -1,8 +1,7 @@
 import React from "react";
 import { Container, Row, Col } from 'reactstrap';
 
-function Footer() {
-
+const Footer = () => {
     return (
         <div className="footer bg-light text-break">
             <Container>

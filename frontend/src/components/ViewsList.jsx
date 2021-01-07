@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import moment from 'moment';
 import 'moment/locale/ru';
 
-function MovieView(props) {
+const MovieView = (props) => {
     const { i18n } = useTranslation();
     const { imdb, entitle, rutitle, engenres, rugenres, enposter, ruposter } = props.movie;
 
@@ -30,7 +30,7 @@ function MovieView(props) {
     );
 }
 
-function CommentsView(props) {
+const CommentsView = (props) => {
     const {i18n} = useTranslation();
 
     const {createdat, comment, idfilm} = props.comment;
@@ -51,8 +51,6 @@ function CommentsView(props) {
 
 export const ViewsList = (props) => {
     const {myviews, movies, comments} = props;
-
-    console.log(myviews);
 
     return (
         <div className="view-list-wrapper">

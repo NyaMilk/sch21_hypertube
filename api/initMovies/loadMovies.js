@@ -6,12 +6,13 @@ const { insertMovies } = require('../models/movies');
 const getPopcornMovies = async () => {
     let raw = [];
 
-    console.log('*Load popcorn movies*');
+    console.log('*Loading popcorn movies*');
     for (let i = 1; i <= 3; i++) {
         try {
             const res = await axios(`https://cors-anywhere.herokuapp.com/movies-v2.api-fetch.sh/movies/${i}`, { headers: { 'X-Requested-With': true } });
             raw.push(...res.data);
         } catch (e) {
+            console.log(e.message);
             continue
         }
     }
@@ -48,12 +49,13 @@ const getPopcornMovies = async () => {
 const getYtsMovies = async () => {
     let raw = [];
 
-    console.log('*Load YTS movies*');
-    for (let i = 1; i <= 3; i++) {
+    console.log('*Loading YTS movies*');
+    for (let i = 1; i <= 20; i++) {
         try {
             const res = await axios(`https://yts.lt/api/v2/list_movies.json?limit=50&page=${i}`)
             raw.push(...res.data.data.movies);
         } catch (e) {
+            console.log(e.message);
             continue
         }
     }
@@ -179,7 +181,7 @@ const scrap = async () => {
         return el != null;
     });
 
-    console.log('*Film finally scrapped and cleared*');
+    console.log(`*${final.length} films finally scrapped and cleared*`);
     return final;
 }
 

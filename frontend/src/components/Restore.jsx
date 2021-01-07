@@ -3,10 +3,10 @@ import { useParams } from 'react-router-dom';
 import { request } from '../util/http';
 import { isValidPassword } from '../util/check';
 import { Container, Button, Input, Row, Col, Label, Card, CardBody, FormFeedback, FormGroup } from 'reactstrap'
-import { Info } from './Info';
+import Info from './Info';
 import { useTranslation } from "react-i18next";
 
-function InputForm(props) {
+const InputForm = (props) => {
     const [isValidPass, toggleValidPass] = useState('');
     const [isValidRepass, toggleValidRepass] = useState('');
 

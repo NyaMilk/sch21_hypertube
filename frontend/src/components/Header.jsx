@@ -94,13 +94,10 @@ const Header = (props) => {
         if (isLogged) {
 
             socket.on('notification', (data) => {
-                console.log('te',data);
 
                 if (!data[1].indexOf(me)) {
                     alert('Downloaded');
                     setHasNew(true);
-                    console.log('DOWNLOADED');
-                    console.log('Found it', data[0]);
                 }
             });
 
