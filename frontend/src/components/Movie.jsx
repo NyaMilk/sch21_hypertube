@@ -372,6 +372,9 @@ const VideoPlayer = (props) => {
                         <img src={play} alt="play" />
                     </button>
                 }
+                <video key={quality} id="videoPlayer" className="embed-responsive"
+                    controls>
+                </video>
             </Col>
         )
     }

@@ -33,7 +33,7 @@ module.exports = (io) => {
                 await setMovieStatus(imdb, quality, 'downloading');
 
                 console.log('index', index);
-                const magnet = await getMagnet(imdb, index);
+                const magnet = await getMagnet(imdb, index + 1);
                 console.log(magnet)          
                 await getSubtitles(imdb);
                 const dirPath = `${process.cwd()}/movies/${imdb}_${quality}`;

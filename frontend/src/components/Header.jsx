@@ -96,6 +96,7 @@ const Header = (props) => {
             socket.on('notification', (data) => {
 
                 if (!data[1].indexOf(me)) {
+                    // data[0] = 'ttfdsafdsaf';
                     alert('Downloaded');
                     setHasNew(true);
                 }

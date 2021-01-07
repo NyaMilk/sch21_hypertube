@@ -33,9 +33,13 @@ const getPopcornMovies = async () => {
         formatMovie.torrents = [];
 
         if (torrents && torrents.en) {
-            for (key in torrents.en) {
-                const torrent = [key, torrents.en[key].url];
-                formatMovie.torrents.push(torrent);
+            let qualities = new Set();
+            for (quality in torrents.en) {
+                if (!qualities.has(quality)) {
+                    const torrent = [quality, torrents.en[quality].url];
+                    formatMovie.torrents.push(torrent);
+                    qualities.add(quality);
+                }
             }
         }
 
@@ -76,11 +80,15 @@ const getYtsMovies = async () => {
         formatMovie.torrents = [];
 
         if (torrents) {
+            let qualities = new Set();
             for (item in torrents) {
                 const { quality, hash } = torrents[item];
-                const url = `magnet:?xt=urn:btih:${hash}`;
-                const torrent = [quality, url];
-                formatMovie.torrents.push(torrent);
+                if (!qualities.has(quality)) {
+                    const url = `magnet:?xt=urn:btih:${hash}`;
+                    const torrent = [quality, url];
+                    formatMovie.torrents.push(torrent);
+                    qualities.add(quality);
+                }
             }
         }
 
@@ -113,14 +121,14 @@ const filterMovies = async () => {
         try {
             if (!movie.imdb)
                 return null;
-                
+
             const res = await axios(`https://api.themoviedb.org/3/movie/${movie.imdb}?api_key=${API_KEY}&append_to_response=videos&language=ru`);
             const enRes = await axios(`https://api.themoviedb.org/3/movie/${movie.imdb}?api_key=${API_KEY}&append_to_response=videos&language=en`);
             const en_poster_path = enRes.data.poster_path;
             const enVideos = enRes.data.videos.results[0].key;
             const { title, genres, overview, release_date, runtime, poster_path, production_countries, videos } = res.data;
 
-            if (!title || !genres || !overview || !release_date || !runtime || !poster_path 
+            if (!title || !genres || !overview || !release_date || !runtime || !poster_path
                 || !production_countries || !enVideos || !videos.results[0].key || !en_poster_path || !title.match(/[А-я]$/))
                 return null;
 
@@ -142,7 +150,7 @@ const filterMovies = async () => {
             movie.ruPoster = poster_path;
             movie.ruGenres = [];
 
-            if ( !movie.enTrailer || !movie.ruTrailer)
+            if (!movie.enTrailer || !movie.ruTrailer)
                 return null;
 
             if (genres) {

@@ -56,8 +56,8 @@ router.get('/movie/:imdb/:quality', async (req, res) => {
 router.get('/subtitle/:lang/:imdb', async (req, res) => {
     try {
         const { lang, imdb } = req.params;
-        const subtitle = fs.readFileSync(`${process.cwd()}/movies/subtitles/${imdb}_${lang}.srt`, res);
-        
+        const subtitle = fs.readFileSync(`${process.cwd()}/movies/subtitles/${imdb}_${lang}.vtt`, res);
+        res.contentType("text/vtt");
         res.send(subtitle);
     } catch (e) {
         res.status(200).json({
