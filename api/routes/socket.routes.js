@@ -1,6 +1,6 @@
 const torrentStream = require('torrent-stream');
 const { getMagnet, setMoviePath, setMovieStatus } = require('../models/stream');
-const { getSubtitles } = require('../initMovies/');
+const { getSubtitles } = require('../initMovies/getSubtitles');
 
 module.exports = (io) => {
 
@@ -32,7 +32,9 @@ module.exports = (io) => {
             if (movies[key].size === 1) {
                 await setMovieStatus(imdb, quality, 'downloading');
 
+                console.log('index', index);
                 const magnet = await getMagnet(imdb, index);
+                console.log(magnet)          
                 await getSubtitles(imdb);
                 const dirPath = `${process.cwd()}/movies/${imdb}_${quality}`;
                 const options = {

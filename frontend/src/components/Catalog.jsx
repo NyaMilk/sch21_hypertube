@@ -14,8 +14,8 @@ import {
     setRateFrom, setRateTo, setGenres, setSearch
 } from '../redux/catalog/ActionCreators';
 import { useTranslation } from "react-i18next";
-import { Loading } from './Loading';
-import { Info } from './Info';
+import Loading from './Loading';
+import Info from './Info';
 
 const mapStateToProps = (state) => {
     return {

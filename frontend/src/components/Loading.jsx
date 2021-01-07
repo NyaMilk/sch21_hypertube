@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Spinner } from 'reactstrap';
 
-export const Loading = () => {
+const Loading = () => {
     return (
         <section className="page-state">
             <Container>
@@ -10,3 +10,5 @@ export const Loading = () => {
         </section>
     );
 };
+
+export default Loading;

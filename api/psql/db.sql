@@ -1,11 +1,11 @@
 DROP TABLE IF EXISTS Users CASCADE;
 DROP TABLE IF EXISTS Movies CASCADE;
+DROP TABLE IF EXISTS MoviesLogs CASCADE;
 DROP TABLE IF EXISTS FavoriteMovies CASCADE;
 DROP TABLE IF EXISTS Comments CASCADE;
 DROP TABLE IF EXISTS Notifications CASCADE;
 DROP TABLE IF EXISTS CommentsLike CASCADE;
 DROP TABLE IF EXISTS Friends CASCADE;
-DROP TABLE IF EXISTS MoviesLogs CASCADE;
 DROP TYPE providers CASCADE;
 
 CREATE TYPE providers AS ENUM ('hypert', 'github', 'school42');
@@ -48,7 +48,7 @@ CREATE TABLE Movies
     enGenres text[],
     ruGenres text[],
     runtime integer,
-    enSubtitle boolean ,
+    enSubtitle boolean,
     ruSubtitle boolean,
     torrents text[] NOT NULL,
     PRIMARY KEY (imdb)

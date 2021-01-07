@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Alert, Col, Container, Row } from "reactstrap";
 
-export const Info = (props) => {
+const Info = (props) => {
     const [isVisible, setClose] = useState(true);
     const color = props.isSuccess ? 'success' : 'danger';
 
@@ -30,3 +30,5 @@ export const Info = (props) => {
             <Alert isOpen={isVisible} color={color}>{props.message}</Alert>
         );
 }
+
+export default Info;

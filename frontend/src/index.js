@@ -5,7 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import './i18n';
-import { Loading } from './components/Loading';
+import Loading from './components/Loading';
 
 ReactDOM.render(
     <React.Fragment>

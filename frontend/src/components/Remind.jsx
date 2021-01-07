@@ -1,11 +1,11 @@
 import React from 'react';
 import { useState } from 'react';
 import { Button, Col, Container, Input, Row, Card, CardBody, Label, NavLink } from 'reactstrap';
-import { Info } from './Info';
+import Info from './Info';
 import { request } from '../util/http';
 import { useTranslation } from "react-i18next";
 
-export const Remind = () => {
+const Remind = () => {
     const [email, setEmail] = useState('');
     const [msg, setMsg] = useState(null);
     const [isSuccess, setSuccess] = useState(null);
@@ -60,3 +60,5 @@ export const Remind = () => {
         </section >
     );
 }
+
+export default Remind;

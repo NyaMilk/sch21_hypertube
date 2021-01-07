@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { request } from '../util/http';
 import { isValidPassword } from '../util/check';
 import { Container, Button, Input, Row, Col, Label, Card, CardBody, FormFeedback, FormGroup } from 'reactstrap'
-import { Info } from './Info';
+import Info from './Info';
 import { useTranslation } from "react-i18next";
 
 const InputForm = (props) => {
@@ -64,7 +64,7 @@ const InputForm = (props) => {
     );
 }
 
-export const Restore = () => {
+const Restore = () => {
     const { email, hash } = useParams();
     const [msg, setMsg] = useState(null);
     const [newPass, setPass] = useState();
@@ -135,3 +135,5 @@ export const Restore = () => {
         </section>
     );
 }
+
+export default Restore;

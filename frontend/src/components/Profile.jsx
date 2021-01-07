@@ -13,8 +13,8 @@ import {
     setAbout, setNewPassword, fetchEditProfile
 } from '../redux/edit/ActionCreators';
 import { fetchUpdateLogin } from '../redux/login/ActionCreators';
-import { Loading } from './Loading';
-import { Info } from './Info';
+import Loading from './Loading';
+import Info from './Info';
 import NotFound from './NotFound';
 import { request } from '../util/http';
 import { useTranslation } from "react-i18next";
