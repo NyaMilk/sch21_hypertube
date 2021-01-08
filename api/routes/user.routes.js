@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { getProfile, editProfile, insertFriend, deleteFriend, getNotif } = require("../models/user");
+const { getProfile, editProfile, insertFriend, deleteFriend, getNotif, addNotif } = require("../models/user");
 const bcrypt = require('bcrypt');
 const { getFavoriteMovies, getProfileComments } = require('../models/movies');
 
@@ -196,8 +196,8 @@ router.get('/profile/friends/:me', function (req, res) {
     }
 });
 
-router.post('/notifications', async (req, res) => {
-    const { me, lang } = req.body;
+router.get('/notifications/:me/:lang', async (req, res) => {
+    const { me, lang } = req.params;
 
     let title = (lang === 'en') ? 'm.enTitle' : 'm.ruTitle',
         poster = (lang === 'en') ? 'm.enPoster' : 'm.ruPoster';
@@ -209,12 +209,29 @@ router.post('/notifications', async (req, res) => {
                 success: true
             })
         })
-        .catch((e) => {
+        .catch(() => {
             res.status(200).json({
-                message: e.message,
+                message: "Can't find notifications",
                 success: false
             })
         })
-})
+});
+
+router.post('/notification/:me/:imdb/:quality', async (req, res) => {
+    const { me, imdb, quality } = req.params;
+
+    addNotif(me, imdb, quality)
+        .then(() => {
+            res.status(200).json({
+                success: true
+            })
+        })
+        .catch((e) => {
+            res.status(200).json({
+                message: "Can't add notification" + e.message,
+                success: false
+            })
+        })
+});
 
 module.exports = router;

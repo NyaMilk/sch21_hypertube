@@ -47,18 +47,19 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const QualitiesList = (props) => {
+    const { qualities, quality, setQuality } = props;
     let listItems, last;
 
     useEffect(() => {
-        if (last)
-            props.setQuality(last[0]);
+        if (!quality && last)
+            setQuality(last[0]);
     }, []);
 
-    if (props.qualities) {
-        last = props.qualities[props.qualities.length - 1];
+    if (qualities) {
+        last = qualities[qualities.length - 1];
 
-        listItems = props.qualities.map((quality, item) =>
-            <DropdownItem key={item} onClick={() => props.setQuality(quality[0])}>
+        listItems = qualities.map((quality, item) =>
+            <DropdownItem key={item} onClick={() => setQuality(quality[0])}>
                 {quality[0]}
             </DropdownItem>
         )
@@ -71,11 +72,12 @@ const QualitiesList = (props) => {
 }
 
 const Options = (props) => {
+    const {me, film, favorite, fetchUpdateFavoriteFilm, setQuality, qualities, quality, t } = props;
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const changeFilmList = (e) => {
         if (e.target.value === 'add' || e.target.value === 'none') {
-            props.fetchUpdateFavoriteFilm(props.me, props.film, props.favorite, e.target.value);
+            fetchUpdateFavoriteFilm(me, film, favorite, e.target.value);
         }
     }
 
@@ -84,23 +86,24 @@ const Options = (props) => {
     const [modalTrailer, setTrailer] = useState(false);
     const toggleShare = () => setShare(!modalShare);
     const toggleTrailer = () => setTrailer(!modalTrailer);
+
     return (
         <Col className="aside-button">
             <ButtonDropdown isOpen={dropdownOpen} toggle={toggle}>
                 <DropdownToggle id="btn-quality">
                     <img src={gear} width='30' alt="Quality" />
-                    {props.quality}
+                    {quality}
                 </DropdownToggle>
-                <QualitiesList qualities={props.qualities} setQuality={props.setQuality} />
+                <QualitiesList quality={quality} qualities={qualities} setQuality={setQuality} />
             </ButtonDropdown>
 
             <button className="aside-button-trailer" onClick={toggleTrailer}>
                 <img src={movie} width="30" alt="movie" />
-                {props.t("moviePage.playTrailer")}
+                {t("moviePage.playTrailer")}
             </button>
             <Modal className='modalTrailer' isOpen={modalTrailer} toggle={toggleTrailer}>
                 <ModalHeader toggle={toggleTrailer}>
-                    <p>{props.t("moviePage.trailer")}</p>
+                    <p>{t("moviePage.trailer")}</p>
                 </ModalHeader>
                 <ModalBody className="text-center">
                     <iframe id="videoPlayer" className="embed-responsive" height="420" controls
@@ -111,9 +114,9 @@ const Options = (props) => {
 
             <input
                 type="image"
-                value={props.favorite === 'add' ? 'none' : 'add'}
+                value={favorite === 'add' ? 'none' : 'add'}
                 onClick={changeFilmList}
-                src={props.favorite === 'add' ? bookfull : book}
+                src={favorite === 'add' ? bookfull : book}
                 width='30'
                 alt="favorite" />
 
@@ -125,7 +128,7 @@ const Options = (props) => {
                 alt="share" />
             <Modal isOpen={modalShare} toggle={toggleShare} >
                 <ModalHeader toggle={toggleShare}>
-                    <p>{props.t("moviePage.share")}</p>
+                    <p>{t("moviePage.share")}</p>
                 </ModalHeader>
                 <ModalBody className="aside-button-share">
                     <a target="_blank" title="facebook" href={`http://www.facebook.com/sharer.php?u=http://localhost:3000/movie/${props.film}&text=True%20story`}>
@@ -293,6 +296,7 @@ const VideoPlayer = (props) => {
     const [isSub, setSub] = useState(false);
     let index;
     let status;
+    console.log('qualit', quality);
 
     torrents.find((item, key) => {
         if (item[0] === quality) {
@@ -309,11 +313,10 @@ const VideoPlayer = (props) => {
     const ws = () => socket.emit('movie', [imdb, quality, index, me]);
 
     useEffect(() => {
-        socket.emit('waiters', imdb + quality);
+        socket.emit('waiters', `${imdb}_${quality}`);
 
         socket.on('wait_list', (data) => {
-            console.log('wt', data, data[1].indexOf(me));
-            (data[0] === imdb + quality && data[1].indexOf(me) !== -1) ? setSub(true) : setSub(false);
+            (data[0] === `${imdb}_${quality}` && data[1].indexOf(me) !== -1) ? setSub(true) : setSub(false);
         })
 
         return () => socket.off('wait_list');
@@ -383,16 +386,15 @@ const VideoPlayer = (props) => {
 const Movie = (props) => {
     const { t, i18n } = useTranslation();
     const { imdb } = useParams();
-    const { fetchMovie, fetchFavoriteFilm, fetchComments, setQuality } = props;
+    const { fetchMovie, fetchFavoriteFilm, fetchComments, fetchUpdateFavoriteFilm, setQuality } = props;
     const me = props.login.me;
-
     const [message, setMsg] = useState();
 
     useEffect(() => {
         fetchMovie(imdb);
         fetchComments(me, imdb);
         fetchFavoriteFilm(me, imdb);
-    }, [fetchMovie, fetchComments, fetchFavoriteFilm, imdb, me]);
+    }, [fetchMovie, fetchComments, fetchFavoriteFilm, setQuality, imdb, me]);
 
     const [activeTab, setActiveTab] = useState('1');
     const toggle = tab => {
@@ -408,7 +410,7 @@ const Movie = (props) => {
         const { entitle, rutitle, endescription, rudescription, torrents, encountries, rucountries,
             engenres, rugenres, entrailer, rutrailer, rate, daterelease, runtime,
             enposter, ruposter, ensubtitle, rusubtitle, logs } = props.movie.info;
-
+        const { favorite, favoriteMsg, quality } = props.movie;
         const title = (i18n.language === 'en') ? entitle : rutitle;
         const description = (i18n.language === 'en') ? endescription : rudescription;
         const genres = (i18n.language === 'en') ? engenres : rugenres;
@@ -422,8 +424,8 @@ const Movie = (props) => {
             <section className="movie text-break">
                 <Container>
                     {
-                        (message || props.movie.favoriteMsg) &&
-                        <Info info='alert' message={message || props.movie.favoriteMsg} />
+                        (message || favoriteMsg) &&
+                        <Info info='alert' message={message || favoriteMsg} />
                     }
                     <Row className="movie-header">
                         <Col>
@@ -440,7 +442,7 @@ const Movie = (props) => {
                     </Row>
                     <Row>
                         <VideoPlayer
-                            quality={props.movie.quality}
+                            quality={quality}
                             logs={logs}
                             torrents={torrents}
                             imdb={imdb}
@@ -455,14 +457,14 @@ const Movie = (props) => {
                     <Row className="aside-button">
                         {/* <Row > */}
                         <Options
-                            favorite={props.movie.favorite}
+                            favorite={favorite}
                             me={me}
                             film={imdb}
                             trailer={trailer}
-                            quality={props.movie.quality}
+                            quality={quality}
                             qualities={torrents}
                             t={t}
-                            fetchUpdateFavoriteFilm={props.fetchUpdateFavoriteFilm}
+                            fetchUpdateFavoriteFilm={fetchUpdateFavoriteFilm}
                             setQuality={setQuality}
                         />
                     </Row>

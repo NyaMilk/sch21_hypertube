@@ -3,7 +3,8 @@ import { withRouter, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Container, Navbar, NavbarBrand, Nav, NavItem, NavLink, UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { logOut, setUser, setUserFailed } from '../redux/login/ActionCreators';
-import { getNotifications } from '../redux/notification/ActionCreators';
+import { getNotifications, addNotification } from '../redux/notification/ActionCreators';
+import { setQuality } from '../redux/movie/ActionCreators';
 import { useTranslation } from "react-i18next";
 import { request } from '../util/http';
 import { socket } from '../util/socket';
@@ -25,18 +26,23 @@ const mapDispatchToProps = (dispatch) => ({
     logOut: () => dispatch(logOut()),
     setUser: (username) => dispatch(setUser(username)),
     setUserFailed: (msg) => dispatch(setUserFailed(msg)),
-    getNotifications: (me, lang) => dispatch(getNotifications(me, lang))
+    getNotifications: (me, lang) => dispatch(getNotifications(me, lang)),
+    addNotification: (me, imdb, quality) => dispatch(addNotification(me, imdb, quality)),
+    setQuality: (quality) => dispatch(setQuality(quality))
 });
 
-function NotificationList(props) {
+const NotificationList = (props) => {
+    const { notifications, setQuality } = props;
     let listItems;
 
-    if (props.notifications.length > 0) {
-        listItems = props.notifications.map((notificaiton, item) => {
+    if (notifications.length > 0) {
+        listItems = props.notifications.map((notification, item) => {
+            const { imdb, title, quality } = notification;
+
             return (
                 <DropdownItem key={item} className="notification-item">
-                    <a href={`/movie/${notificaiton.imdb}`}>
-                        <span>{notificaiton.title}</span>
+                    <a href={`/movie/${imdb}`} onClick={() => setQuality(quality)}>
+                        <span>{title} ({quality}) has been downloaded</span>
                     </a>
                     {/* <div>{notificaiton.message}</div> */}
                     {/* <div>{moment(notificaiton.time).fromNow()}</div> */}
@@ -56,11 +62,11 @@ function NotificationList(props) {
 }
 
 const Notification = (props) => {
-    const { hasNew } = props;
+    const { hasNew, getNotifications, set, setQuality, notifications, t } = props;
 
     const handleClick = () => {
-        props.getNotifications(props.me, props.lang);
-        props.set(false);
+        getNotifications(props.me, props.lang);
+        set(false);
     }
 
     return (
@@ -94,8 +100,10 @@ const Notification = (props) => {
                     {props.t("inputMsg.nothing")}
                 </DropdownItem> */}
                 <NotificationList
-                    notifications={props.notifications}
-                    t={props.t} />
+                    notifications={notifications}
+                    t={t}
+                    setQuality={setQuality}
+                />
             </DropdownMenu>
         </UncontrolledButtonDropdown>
     );
@@ -113,8 +121,8 @@ const Header = (props) => {
     const path = props.location.pathname;
     const history = useHistory();
     const { me } = props.login;
-    // const { setUser, setUserFailed } = props;
     const [hasNew, setHasNew] = useState(false);
+    const { getNotifications, addNotification, setQuality } = props;
 
     useEffect(() => {
         request(`${CONFIG.API_URL}/api/auth/success`)
@@ -125,12 +133,12 @@ const Header = (props) => {
 
     useEffect(() => {
         if (isLogged) {
-
             socket.on('notification', (data) => {
-
-                if (!data[1].indexOf(me)) {
-                    // data[0] = 'ttfdsafdsaf';
-                    alert('Downloaded');
+                console.log('ws322', data);
+                if (data[1].indexOf(me) > -1) {
+                    const tmp = data[0].split('_');
+                    console.log('fetch', me, tmp[0], tmp[1]);
+                    addNotification(me, tmp[0], tmp[1]);
                     setHasNew(true);
                 }
             });
@@ -176,9 +184,12 @@ const Header = (props) => {
                                         me={me}
                                         notifications={props.notification.notifications}
                                         hasNew={hasNew}
-                                        getNotifications={props.getNotifications}
+                                        getNotifications={getNotifications}
+                                        addNotification={addNotification}
                                         lang={i18n.language}
-                                        set={setHasNew} />
+                                        set={setHasNew}
+                                        setQuality={setQuality}
+                                    />
                                 </NavItem>
                             }
                             {

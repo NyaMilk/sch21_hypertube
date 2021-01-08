@@ -40,10 +40,19 @@ exports.deleteFriend = (me, you) => {
 
 exports.getNotif = (me, title, poster) => {
     const sql =
-        `SELECT m.imdb, ${title} title, ${poster} poster
+        `SELECT m.imdb, n.quality, ${title} title, ${poster} poster
     FROM Movies m, Notifications n
     WHERE m.imdb = n.idFilm AND idUser = (SELECT id FROM Users WHERE displayName=$1)
     ORDER BY n.createdAt DESC`;
 
     return db.any(sql, [me, title, poster])
+}
+
+exports.addNotif = (me, imdb, quality) => {
+    const sql =
+        `INSERT INTO Notifications (idUser, idFilm, quality) 
+    VALUES ((SELECT id FROM Users WHERE displayName = $1), $2, $3) 
+    RETURNING idUser`;
+
+    return db.any(sql, [me, imdb, quality]);
 }
