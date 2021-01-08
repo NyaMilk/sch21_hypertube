@@ -41,7 +41,6 @@ router.post('/profile/edit/:username', async (req, res) => {
     let params = [];
     let i = 1;
 
-    // console.log(username, req.body);
     for (const [key, value] of Object.entries(req.body)) {
         if (value !== null && key !== 'newpass') {
             keys.push(`${key} = $${i++}`);
@@ -70,7 +69,6 @@ router.post('/profile/edit/:username', async (req, res) => {
     params.push(username);
     editProfile(que, params, i)
         .then(data => {
-            console.log(data);
             res.status(200).json({
                 message: "Ok",
                 nickname: data.nickname,
@@ -78,7 +76,6 @@ router.post('/profile/edit/:username', async (req, res) => {
             })
         })
         .catch(e => {
-            console.log(e.message);
             res.status(200).json({
                 message: e.message,
                 success: false
@@ -172,11 +169,9 @@ router.get('/friends/:me', function (req, res) {
 router.get('/comments/:me', function (req, res) {
     try {
         const { me } = req.params;
-        console.log('tut');
 
         getProfileComments(me)
             .then(data => {
-                console.log(data);
                 res.status(200).json({
                     success: true,
                     result: data
@@ -204,7 +199,6 @@ router.get('/notifications/:me/:lang', async (req, res) => {
 
     getNotif(me, title, poster)
         .then(data => {
-            console.log(data);
             res.status(200).json({
                 data: data,
                 success: true

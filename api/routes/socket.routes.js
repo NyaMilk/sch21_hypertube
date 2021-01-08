@@ -83,11 +83,12 @@ module.exports = (io) => {
                         });
                     })
                     .on('download', (index) => {
-                        console.log(`Engine downloading chunk: [${index}]`);
+                        console.log(`Engine downloading chunk (${imdb}_${quality}): [${index}]`);
                     })
                     .on('idle', () => {
                         mySpace.emit('notification', [key, Array.from(movies[key])]);
                         setMoviePath(imdb, quality, newPath);
+                        console.log("Movie downloaded");
                     })
             }
         })
