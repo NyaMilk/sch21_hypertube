@@ -28,10 +28,6 @@ export const fetchProfile = (you, me) => (dispatch) => {
         .catch(error => dispatch(profileFailed(error.message)));
 };
 
-export const viewsLoading = () => ({
-    type: ActionTypes.VIEWS_LOADING
-});
-
 export const viewsAdd = (info) => ({
     type: ActionTypes.VIEWS_ADD,
     payload: info.result
@@ -43,20 +39,14 @@ export const viewsFailed = (msg) => ({
 });
 
 export const fetchViews = (nickname) => (dispatch) => {
-    dispatch(viewsLoading());
-
-    return request(`${CONFIG.API_URL}/api/user/profile/favorites/movies/${nickname}`)
+    return request(`${CONFIG.API_URL}/api/user/movies/${nickname}`)
         .then(response => response.json())
         .then(result => {
             console.log(result);
             dispatch(viewsAdd(result))
         })
         .catch(error => dispatch(viewsFailed(error.message)));
-}
-;
-export const commentsLoading = () => ({
-    type: ActionTypes.COMMENTS_LOADING
-});
+};
 
 export const commentsAdd = (info) => ({
     type: ActionTypes.COMMENTS_ADD,
@@ -68,14 +58,30 @@ export const commentsFailed = (msg) => ({
     payload: msg
 });
 
-export const fetchComments = (nickname) => (dispatch) => {
-    dispatch(commentsLoading());
-
-    return request(`${CONFIG.API_URL}/api/user/profile/get_comments/comments/${nickname}`)
+export const fetchComments = (username) => (dispatch) => {
+    return request(`${CONFIG.API_URL}/api/user/comments/${username}`)
         .then(response => response.json())
         .then(result => {
-            console.log(result);
             dispatch(commentsAdd(result))
         })
         .catch(error => dispatch(commentsFailed(error.message)));
+};
+
+export const friendsAdd = (info) => ({
+    type: ActionTypes.FRIENDS_ADD,
+    payload: info.result
+});
+
+export const friendsFailed = (msg) => ({
+    type: ActionTypes.FRIENDS_FAILED,
+    payload: msg
+});
+
+export const fetchFriends = (username) => (dispatch) => {
+    return request(`${CONFIG.API_URL}/api/user/friends/${username}`)
+        .then(response => response.json())
+        .then(result => {
+            dispatch(friendsAdd(result))
+        })
+        .catch(error => dispatch(friendsFailed(error.message)));
 };

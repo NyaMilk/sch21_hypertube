@@ -7,7 +7,7 @@ exports.getProfile = (you, me) => {
     (SELECT 1 FROM Friends
     WHERE idFrom = (SELECT id FROM Users WHERE displayName=$2)
     AND idTo = (SELECT id FROM Users WHERE displayName=$1))
-    THEN 1 ELSE 0 END AS hasFriends)
+    THEN 1 ELSE 0 END AS isFriend)
     FROM Users WHERE displayName=$1`;
 
     return db.any(sql, [you, me]);
@@ -55,4 +55,32 @@ exports.addNotif = (me, imdb, quality) => {
     RETURNING idUser`;
 
     return db.any(sql, [me, imdb, quality]);
+}
+
+exports.getFavoriteMovies = (me) => {
+    const sql =
+        `SELECT m.imdb, m.enTitle, m.enPoster, m.enGenres, m.enDescription, m.ruTitle, 
+    m.ruPoster, m.ruGenres, m.ruDescription, m.runtime, f.createdAt FROM Movies m, FavoriteMovies f 
+    WHERE m.imdb = f.idfilm AND f.idUser = 
+    (SELECT id FROM Users WHERE displayName=$1)`;
+
+    return db.any(sql, [me]);
+}
+
+exports.getProfileComments = (me) => {
+    const sql =
+        `SELECT idFilm, comment, createdAt 
+    FROM Comments 
+    WHERE idUser = (SELECT id FROM Users WHERE displayName=$1)`
+
+    return db.any(sql, [me]);
+}
+
+exports.getProfileFriends = (me) => {
+    const sql =
+        `SELECT u.displayName, u.avatar, f.createdAt
+    FROM Users u, Friends f
+    WHERE u.id = f.idTo AND idFrom = (SELECT id FROM Users WHERE displayName=$1)`;
+
+    return db.any(sql, [me]);
 }

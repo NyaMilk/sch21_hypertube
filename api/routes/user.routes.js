@@ -1,7 +1,6 @@
 const router = require('express').Router();
-const { getProfile, editProfile, insertFriend, deleteFriend, getNotif, addNotif } = require("../models/user");
+const { getProfile, editProfile, insertFriend, deleteFriend, getNotif, addNotif, getFavoriteMovies, getProfileComments, getProfileFriends } = require("../models/user");
 const bcrypt = require('bcrypt');
-const { getFavoriteMovies, getProfileComments } = require('../models/movies');
 
 router.get('/profile/:you/:me', async (req, res) => {
     try {
@@ -87,7 +86,7 @@ router.post('/profile/edit/:username', async (req, res) => {
         })
 })
 
-router.get('/profile/favorites/movies/:me', function (req, res) {
+router.get('/movies/:me', function (req, res) {
     try {
         const { me } = req.params;
 
@@ -112,7 +111,7 @@ router.get('/profile/favorites/movies/:me', function (req, res) {
     }
 });
 
-router.post('/profile/friends', async (req, res) => {
+router.post('/friends', async (req, res) => {
     try {
 
         const { me, you, status } = req.body;
@@ -146,11 +145,11 @@ router.post('/profile/friends', async (req, res) => {
     }
 });
 
-router.get('/profile/comments/:me', function (req, res) {
+router.get('/friends/:me', function (req, res) {
     try {
         const { me } = req.params;
 
-        getProfileComments(me)
+        getProfileFriends(me)
             .then(data => {
                 res.status(200).json({
                     success: true,
@@ -160,23 +159,25 @@ router.get('/profile/comments/:me', function (req, res) {
             .catch(() => {
                 res.status(200).json({
                     success: false,
-                    message: "Ooops! Not found favorite films"
+                    message: "Ooops! Not found friends films"
                 })
             })
     } catch (e) {
         res.status(200).json({
             success: false,
-            message: "Ooops! Not found favorite films"
+            message: "Ooops! Not found friends films"
         })
     }
 });
 
-router.get('/profile/friends/:me', function (req, res) {
+router.get('/comments/:me', function (req, res) {
     try {
         const { me } = req.params;
+        console.log('tut');
 
         getProfileComments(me)
             .then(data => {
+                console.log(data);
                 res.status(200).json({
                     success: true,
                     result: data
