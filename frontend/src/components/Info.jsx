@@ -19,7 +19,7 @@ const Info = (props) => {
                 <Container>
                     <Row>
                         <Col>
-                            <Alert isOpen={isVisible} color={color}>{props.message}</Alert>
+                            <Alert className="text-center" isOpen={isVisible} color={color}>{props.message}</Alert>
                         </Col>
                     </Row>
                 </Container>
@@ -27,7 +27,7 @@ const Info = (props) => {
         )
     else
         return (
-            <Alert isOpen={isVisible} color={color}>{props.message}</Alert>
+            <Alert className="text-center" isOpen={isVisible} color={color}>{props.message}</Alert>
         );
 }
 

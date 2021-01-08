@@ -7,7 +7,7 @@ import {
     FormFeedback
 } from 'reactstrap';
 import classnames from 'classnames';
-import { fetchProfile, fetchViews, fetchComments } from '../redux/profile/ActionCreators';
+import { fetchProfile, fetchViews, fetchComments, fetchFriends } from '../redux/profile/ActionCreators';
 import {
     setLogin, setFirstName, setLastName, setEmail,
     setAbout, setNewPassword, fetchEditProfile
@@ -34,6 +34,7 @@ const mapDispatchToProps = (dispatch) => ({
     fetchUpdateLogin: (username) => dispatch(fetchUpdateLogin(username)),
     fetchProfile: (you, me) => dispatch(fetchProfile(you, me)),
     fetchComments: (username) => dispatch(fetchComments(username)),
+    fetchFriends: (username) => dispatch(fetchFriends(username)),
     fetchViews: (you, me) => dispatch(fetchViews(you, me)),
     setLogin: (login) => dispatch(setLogin(login)),
     setFirstName: (firstName) => dispatch(setFirstName(firstName)),
@@ -70,10 +71,12 @@ const Avatar = (props) => {
 
     return (
         <Col className="col-lg-3">
-            <img
-                src={`${CONFIG.API_URL}/api/image/${props.username}/${src}`}
-                alt={`Avatar ${props.username}`}
-                className="mx-auto d-block profile-avatar rounded-circle" />
+            {props.username &&
+                <img
+                    src={`${CONFIG.API_URL}/api/image/${props.username}/${src}`}
+                    alt={`Avatar ${props.username}`}
+                    className="mx-auto d-block profile-avatar rounded-circle" />
+            }
             {
                 props.check &&
                 <div className="d-flex justify-content-center">
@@ -272,7 +275,7 @@ const AsideButton = (props) => {
                 status: e.target.value
             }
 
-            request('/api/user/profile/friends', data, 'POST')
+            request('/api/user/friends', data, 'POST')
                 .then(response => response.json())
                 .then(result => {
                     if (result.success) {
@@ -306,9 +309,9 @@ const AsideButton = (props) => {
         return (
             <Row className="aside-button" >
                 <Button color="info"
-                    value={props.info.case === 1 ? 'remove' : 'add'}
+                    value={props.info.isfriend === 1 ? 'remove' : 'add'}
                     onClick={changeStatus}>
-                    {props.info.case === 1 ? props.status[1] : props.status[0]}
+                    {props.info.isfriend === 1 ? props.status[1] : props.status[0]}
                 </Button>
             </Row>
         );
@@ -319,8 +322,10 @@ const Profile = (props) => {
     const { t } = useTranslation();
     const { me } = props.login;
     const { username } = props.match.params;
-    const { fetchProfile, fetchViews, fetchComments, setLogin, setFirstName, setLastName,
+    const { fetchProfile, fetchViews, fetchComments, fetchFriends, setLogin, setFirstName, setLastName,
         setEmail, setAbout, setNewPassword, fetchEditProfile } = props;
+    const { isLoading, infoMsgViews, infoMsgComments, infoMsgFriends } = props.profile;
+
 
     useEffect(() => {
         fetchProfile(username, me);
@@ -328,11 +333,9 @@ const Profile = (props) => {
 
     useEffect(() => {
         fetchViews(username);
-    }, [username]);
-
-    useEffect(() => {
         fetchComments(username);
-    }, [username]);
+        fetchFriends(username);
+    }, [fetchViews, fetchComments, fetchFriends, username]);
 
     const [activeTab, setActiveTab] = useState('1');
     const toggle = tab => {
@@ -341,14 +344,14 @@ const Profile = (props) => {
 
     const [message, setMsg] = useState();
 
-    if (props.profile.isLoading) {
+    if (isLoading) {
         return (
             <Loading />
         );
     }
-    else if (props.profile.infoMsg) {
+    else if (infoMsgViews || infoMsgComments || infoMsgFriends) {
         return (
-            <Info info="message" message={props.profile.infoMsg} />
+            <Info info="alert" message={infoMsgViews || infoMsgComments || infoMsgFriends} />
         );
     }
     else if (props.profile.info != null) {
@@ -420,7 +423,7 @@ const Profile = (props) => {
                                     <ViewsList myviews={props.profile.comments} comments />
                                 </TabPane>
                                 <TabPane tabId="3">
-                                    {/* <LikesList mylikes={props.profile.likes} /> */}
+                                    <ViewsList myviews={props.profile.friends} friends />
                                 </TabPane>
                             </TabContent>
                         </Col>
