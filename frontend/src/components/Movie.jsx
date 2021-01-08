@@ -306,7 +306,10 @@ const VideoPlayer = (props) => {
         status = logs.find((item) => (item.indexOf(quality) > -1) ? item : false);
     }
 
-    const ws = () => socket.emit('movie', [imdb, quality, index, me]);
+    const ws = () => {
+        socket.emit('movie', [imdb, quality, index, me]);
+        props.setMsg(props.t("moviePage.statusFive"));
+    }
 
     useEffect(() => {
         socket.emit('waiters', imdb + quality);
@@ -343,18 +346,18 @@ const VideoPlayer = (props) => {
     else if (status.indexOf('downloaded') > 0) {
         return (
             <Col>
-                <video key={quality} id="videoPlayer" className="embed-responsive" poster={poster} controls>
+                <video crossOrigin="anonymous" key={quality} id="videoPlayer" className="embed-responsive" poster={poster} controls>
                     <source src={`${url}/api/stream/movie/${imdb}/${quality}`} type="video/mp4" />
 
                     {
                         ensubtitle &&
                         <track label="English" kind="subtitles"
-                            srclang="en" src={`${url}/api/stream/subtitle/en/${imdb}`} default />
+                            srcLang="en" src={`${url}/api/stream/subtitle/en/${imdb}`} />
                     }
                     {
                         rusubtitle &&
                         <track label="Russian" kind="subtitles"
-                            srclang="ru" src={`${url}/api/stream/subtitle/ru/${imdb}`} />
+                            srcLang="ru" src={`${url}/api/stream/subtitle/ru/${imdb}`} />
                     }
                 </video>
             </Col>
@@ -450,6 +453,7 @@ const Movie = (props) => {
                             t={t}
                             ensubtitle={ensubtitle}
                             rusubtitle={ensubtitle}
+                            setMsg={setMsg}
                         />
                     </Row>
                     <Row className="aside-button">

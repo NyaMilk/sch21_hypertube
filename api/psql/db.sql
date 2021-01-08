@@ -110,17 +110,6 @@ CREATE TABLE Friends (
     FOREIGN KEY (idTo) REFERENCES Users (id)
 );
 
-CREATE TABLE MoviesLogs
-(
-    idFilm text NOT NULL,
-    quality text NOT NULL,
-    status text,
-    path text,
-    lastChange timestamp DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (idFilm) REFERENCES Movies (imdb),
-    PRIMARY KEY (idFilm, quality)
-);
-
 INSERT INTO Users (displayName, userName, firstName, lastName, email, password, confirm) VALUES
     ('rkina', 'rkina', 'Dima', 'Ng', 'd_ng@mail.ru','$2b$10$8zsNJUoK40BuGO4f2zLcSOtUGlCDahrG55TPAU4onwb9ey4Zd1IZG',  TRUE),
     ('mgrass', 'mgrass', 'nya', 'milk', 'nyamilk@yandex.ru', '$2b$10$8zsNJUoK40BuGO4f2zLcSOtUGlCDahrG55TPAU4onwb9ey4Zd1IZG', TRUE);
