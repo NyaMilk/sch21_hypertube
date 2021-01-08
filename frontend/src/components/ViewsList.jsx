@@ -8,12 +8,13 @@ const MovieView = (props) => {
     const { i18n } = useTranslation();
 
     let listItems = props.movies.map((movie, item) => {
-        const { entitle, rutitle, engenres, rugenres, enposter, ruposter } = movie;
+        const { imdb, entitle, rutitle, engenres, rugenres, enposter, ruposter } = movie;
         const title = (i18n.language === 'en') ? entitle : rutitle;
         const genres = (i18n.language === 'en') ? engenres : rugenres;
         const poster = (i18n.language === 'en') ? enposter : ruposter;
+
         return (
-            <a key={item} href={`/movie/${movie.imdb}`}>
+            <a key={item} href={`/movie/${imdb}`}>
                 <div className="view-list-block">
                     <div className="view-element-poster-wrapper col-md-1">
                         <img src={`https://image.tmdb.org/t/p/original/${poster}`} className="view-element-poster" alt={title} />
@@ -42,16 +43,21 @@ const CommentsView = (props) => {
     const { i18n } = useTranslation();
     (i18n.language === 'en') ? moment.locale('en') : moment.locale('ru');
 
-    let listItems = props.comments.map((comment, item) =>
-        <a key={item} href={`/movie/${comment.idfilm}`}>
-            <div className="view-list-block">
-                <div className="view-comment-wrapper">
-                    <div className="view-element-date">{moment(comment.createdat).fromNow()}</div>
-                    <div className="view-element-text">{comment.comment}</div>
+    const listItems = props.comments.map((element, item) => {
+        const { idfilm, createdat, comment } = element;
+
+        return (
+            <a key={item} href={`/movie/${idfilm}`}>
+                <div className="view-list-block">
+                    <div className="view-comment-wrapper">
+                        <div className="view-element-date">{moment(createdat).fromNow()}</div>
+                        <div className="view-element-text">{comment}</div>
+                    </div>
                 </div>
-            </div>
-        </a>
-    );
+            </a>
+        )
+    });
+
     return (
         <div>{listItems}</div>
     );
@@ -61,19 +67,24 @@ const FriendsView = (props) => {
     const { i18n } = useTranslation();
     (i18n.language === 'en') ? moment.locale('en') : moment.locale('ru');
 
-    let listItems = props.friends.map((friend, item) =>
-        <a key={item} href={`/movie/${friend.displayname}`}>
-            <div className="view-list-block">
-                <div className="view-element-poster-wrapper col-md-1">
-                    <img src={`${CONFIG.API_URL}/api/image/${friend.displayname}/1`} className="view-element-poster" alt={friend.displayname} />
+    const listItems = props.friends.map((friend, item) => {
+        const { displayname, createdat } = friend;
+
+        return (
+            <a key={item} href={`/movie/${displayname}`}>
+                <div className="view-list-block">
+                    <div className="view-element-poster-wrapper col-md-1">
+                        <img src={`${CONFIG.API_URL}/api/image/${displayname}/1`} className="view-element-poster" alt={displayname} />
+                    </div>
+                    <div className="view-comment-wrapper">
+                        <div className="view-element-date">{moment(createdat).fromNow()}</div>
+                        <div className="view-element-text">{displayname}</div>
+                    </div>
                 </div>
-                <div className="view-comment-wrapper">
-                    <div className="view-element-date">{moment(friend.createdat).fromNow()}</div>
-                    <div className="view-element-text">{friend.displayname}</div>
-                </div>
-            </div>
-        </a>
-    );
+            </a>
+        )
+    });
+
     return (
         <div>{listItems}</div>
     );
@@ -102,7 +113,7 @@ export const ViewsList = (props) => {
     }
     else {
         return (
-            <div>tt</div>
+            <div>Has nothing...</div>
         )
     }
 }
