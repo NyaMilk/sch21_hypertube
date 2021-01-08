@@ -26,16 +26,16 @@ exports.findUserInAllProviders = (username) => {
 
 exports.addUser = (username, email, provider) => {
     const sql =
-        `INSERT INTO Users (displayName, userName, email, provider) 
-    VALUES ($1, $1, $2, $3) RETURNING id`;
+        `INSERT INTO Users (displayName, userName, email, provider, confirm) 
+    VALUES ($1, $1, $2, $3, true) RETURNING id`;
 
     return db.one(sql, [username, email, provider]);
 }
 
 exports.addFullUser = (username, email, firstName, lastName, provider) => {
     const sql =
-        `INSERT INTO Users (displayName, userName, email, firstName, lastName provider) 
-    VALUES ($1, $2, $3, $4, $5) RETURNING id`;
+        `INSERT INTO Users (displayName, userName, email, firstName, lastName, provider) 
+    VALUES ($1, $1, $2, $3, $4, $5) RETURNING id`;
 
     return db.one(sql, [username, email, firstName, lastName, provider]);
 }

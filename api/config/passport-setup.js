@@ -28,7 +28,7 @@ passport.use(new GithubStrategy({
 
     findUserOauth(userName, 'github')
       .then(data => {
-        if (data.length > 0)
+        if (data.length > 0) 
           done(null, data[0].displayname);
         else {
           addUser(userName, email, 'github')
@@ -39,7 +39,6 @@ passport.use(new GithubStrategy({
               done(null, 'Ooopsy! Cannot auth. Try again');
             });
         }
-
       })
       .catch(() => {
         done(null, 'Ooopsy! Cannot auth. Try again');

@@ -73,7 +73,7 @@ const QualitiesList = (props) => {
 }
 
 const Options = (props) => {
-    const { me, film, favorite, fetchUpdateFavoriteFilm, setQuality, qualities, quality, t } = props;
+    const { me, film, title, favorite, fetchUpdateFavoriteFilm, setQuality, qualities, quality, t } = props;
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const changeFilmList = (e) => {

@@ -7,9 +7,10 @@ export const loginOut = () => ({
 })
 
 export const logOut = () => (dispatch) => {
+    dispatch(loginOut());
+
     return request(`${CONFIG.API_URL}/api/auth/logout`)
-        .then(res => res.json())
-        .then(() => dispatch(loginOut()))
+        .then(res => res.json());
 }
 
 export const loginLoading = () => ({
@@ -65,7 +66,6 @@ export const fetchUpdateLogin = (username) => (dispatch) => {
         .then(res => res.json())
         .then(result => {
             if (result.success === true) {
-                console.log(result);
                 dispatch(loginDataAdd(result.profile));
             }
             else {
