@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const { log } = require('console');
 const fs = require('fs');
 const { getCountCards, getCards, getMovie, getFavorite, deleteFavoriteFiml, insertFavoriteFiml, insertComment, getComments,
     checkStatus, updateStatus, insertStatus, deleteStatus } = require('../models/movies');
@@ -11,10 +10,11 @@ router.post('/catalog/count', async (req, res) => {
         let sqlFilter = `rate >= ${rateFrom} AND rate <= ${rateTo} AND EXTRACT(YEAR FROM dateRelease) BETWEEN ${yearFrom} AND ${yearTo} `;
 
         if (genres.length > 0)
-            sqlFilter += `AND enGenres && $1 OR ruGenres && $1 `;
+            sqlFilter += `AND enGenres && $1 `;
 
         if (search.length > 0)
             sqlFilter += `AND lower(title) like lower('%${search}%')`;
+
 
         getCountCards(genres, sqlFilter)
             .then(data => {

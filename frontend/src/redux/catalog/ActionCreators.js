@@ -94,10 +94,13 @@ export const countCardAdd = (count) => ({
 });
 
 export const fetchAllCatalog = (data) => (dispatch) => {
-    // dispatch(catalogLoading());
+    console.log('data',data);
 
     return request('/api/movies/catalog/count', data, 'POST')
         .then(response => response.json())
-        .then(result => dispatch(countCardAdd(result)))
+        .then(result => {
+            console.log(result);
+            dispatch(countCardAdd(result))
+        })
         .catch(error => dispatch(catalogFailed(error.message)));
 };

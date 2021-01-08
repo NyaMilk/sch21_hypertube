@@ -14,15 +14,15 @@ router.get("/success", (req, res) => {
       cookies: req.cookies
     });
   }
-  else
+  else {
     res.status(200).json({
       success: false,
       message: "user failed to authenticate.2"
     })
+  }
 });
 
 router.get("/failed", (req, res) => {
-  console.log('here');
   res.status(200).json({
     success: false,
     message: "user failed to authenticate.3"

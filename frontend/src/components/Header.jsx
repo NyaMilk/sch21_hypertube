@@ -119,14 +119,16 @@ const Header = (props) => {
     const { hasNew, notifications } = props.notification;
     const path = props.location.pathname;
     const history = useHistory();
-    const { getNotifications, addNotification, setNew, setQuality, logOut } = props;
+    const { getNotifications, addNotification, setNew, setQuality, logOut, setUser } = props;
 
     useEffect(() => {
         request(`${CONFIG.API_URL}/api/auth/success`)
             .then(res => res.json())
-            .then(data => (data.user) ? setUser(data.user) : setUserFailed(data.message))
+            .then(data => {
+                (data.success) ? (setUser(data.user)) : setUserFailed(data.message);
+            })
             .catch((e) => setUserFailed(e.message))
-    }, [])
+    }, [path])
 
     useEffect(() => {
         if (isLogged) {

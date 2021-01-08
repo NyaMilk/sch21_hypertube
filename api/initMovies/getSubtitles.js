@@ -17,7 +17,7 @@ exports.getSubtitles = (imdb) => {
     }).then(async subs => {
         const path = process.cwd() + '/movies/subtitles/';
 
-        if (subs.en && subs.en.url) {
+        if (subs.en && subs.en.utf8) {
             try {
                 fs.writeFileSync(path + imdb + "_en.srt", await download(subs.en.url));
                 await setStatusSubtitle(imdb, 'enSubtitle');
@@ -26,7 +26,7 @@ exports.getSubtitles = (imdb) => {
                 console.log(e.message);
             }
         }
-        if (subs.ru && subs.ru.url) {
+        if (subs.ru && subs.ru.utf8) {
             try {
                 fs.writeFileSync(path + imdb + "_ru.srt", await download(subs.ru.url));
                 await setStatusSubtitle(imdb, 'ruSubtitle');

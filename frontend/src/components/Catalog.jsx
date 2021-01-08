@@ -46,15 +46,14 @@ const InputForm = (props) => {
         const { name, value } = e.target;
 
         let isYear = (value.match(/^\d{1,4}$/)) ? true : false;
+        let isRate = (parseInt(value) > 0 && parseInt(value) <= 10) ? true : false;
 
-        if (isYear) {
-            if (name === 'yearfrom' || name === 'yearto') {
-                return (value < 1900 || value > 2021)
-                    ? (toggleValid('is-invalid'), setFeedback(props.feedback))
-                    : (toggleValid('is-valid'), props.set(value));
-            }
+        if (isYear && (name === 'yearfrom' || name === 'yearto')) {
+            return (value < 1900 || value > 2021)
+                ? (toggleValid('is-invalid'), setFeedback(props.feedback))
+                : (toggleValid('is-valid'), props.set(value));
         }
-        else if (name === 'ratefrom' || name === 'rateto') {
+        else if (isRate && (name === 'ratefrom' || name === 'rateto')) {
             return (parseInt(value) < 0 || parseInt(value) > 10)
                 ? (toggleValid('is-invalid'), setFeedback(props.feedback))
                 : (toggleValid('is-valid'), props.set(value));
@@ -344,7 +343,7 @@ const Catalog = (props) => {
     const { t, i18n } = useTranslation();
     const { page } = props.match.params;
     const { fetchAllCatalog, fetchCatalogCard } = props;
-    const { sort, filterStatus, rateFrom, rateTo, yearFrom, yearTo, genres, search } = props.catalog;
+    const { sort, filterStatus, rateFrom, rateTo, yearFrom, yearTo, genres, search, isLoading, infoMsg, info, cardCount } = props.catalog;
     const lang = i18n.language;
 
     useEffect(() => {
@@ -365,26 +364,26 @@ const Catalog = (props) => {
         }
     }, [fetchAllCatalog, fetchCatalogCard, page, sort, filterStatus, rateFrom, rateTo, yearFrom, yearTo, genres, search, lang]);
 
-    if (props.catalog.isLoading) {
+    if (isLoading) {
         return (
             <Loading />
         );
     }
-    else if (props.catalog.infoMsg) {
+    else if (infoMsg) {
         return (
-            <Info info='message' message={props.catalog.infoMsg} />
+            <Info info='message' message={infoMsg} />
         );
     }
-    else if (props.catalog.info != null) {
+    else if (info != null) {
         return (
             <section className="catalog">
                 <Container>
                     <Filter filter={props} lang={i18n.language} t={t} />
                     <FilmCards
-                        cards={props.catalog.info}
+                        cards={info}
                         lang={i18n.language}
                         t={t} />
-                    <CardsPagination getPage={page} cardCount={props.catalog.cardCount} />
+                    <CardsPagination getPage={page} cardCount={cardCount} />
                 </Container>
             </section>
         );
