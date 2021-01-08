@@ -15,7 +15,8 @@
 		},
 		"text": "Only symbols are required",
 		"yearRange": "Year range 1900 - 2021 only",
-		"rateRange": "Rate range 0 - 10 only"
+		"rateRange": "Rate range 0 - 10 only",
+		"nothing": "Nothing"
 	},
 	"loginPage": {
 		"login": "Login",

@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { getProfile, editProfile, insertFriend, deleteFriend } = require("../models/user");
+const { getProfile, editProfile, insertFriend, deleteFriend, getNotif } = require("../models/user");
 const bcrypt = require('bcrypt');
 const { getFavoriteMovies, getProfileComments } = require('../models/movies');
 
@@ -195,5 +195,26 @@ router.get('/profile/friends/:me', function (req, res) {
         })
     }
 });
+
+router.post('/notifications', async (req, res) => {
+    const { me, lang } = req.body;
+
+    let title = (lang === 'en') ? 'm.enTitle' : 'm.ruTitle',
+        poster = (lang === 'en') ? 'm.enPoster' : 'm.ruPoster';
+
+    getNotif(me, title, poster)
+        .then(data => {
+            res.status(200).json({
+                data: data,
+                success: true
+            })
+        })
+        .catch((e) => {
+            res.status(200).json({
+                message: e.message,
+                success: false
+            })
+        })
+})
 
 module.exports = router;
