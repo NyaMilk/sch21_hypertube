@@ -69,16 +69,16 @@ exports.getFavoriteMovies = (me) => {
 
 exports.getProfileComments = (me) => {
     const sql =
-        `SELECT idFilm, comment, createdAt 
-    FROM Comments 
-    WHERE idUser = (SELECT id FROM Users WHERE displayName=$1)`
+        `SELECT c.idFilm, c.comment, c.createdAt, m.enTitle, m.ruTitle, m.enPoster, m.ruPoster 
+    FROM Comments c, Movies m 
+    WHERE c.idFilm = m.imdb AND idUser = (SELECT id FROM Users WHERE displayName=$1)`;
 
     return db.any(sql, [me]);
 }
 
 exports.getProfileFriends = (me) => {
     const sql =
-        `SELECT u.displayName, u.avatar, f.createdAt
+        `SELECT u.displayName, f.createdAt
     FROM Users u, Friends f
     WHERE u.id = f.idTo AND idFrom = (SELECT id FROM Users WHERE displayName=$1)`;
 
