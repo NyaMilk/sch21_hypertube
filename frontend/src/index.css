@@ -620,13 +620,13 @@ header .notification-item:active {
 
 .view-list-wrapper {
   width: 100%;
-  padding: 8px;
+  /* padding: 8px; */
 }
 
 .view-list-block {
   width: 100%;
   margin-top: 10px;
-  border: 1px solid #6c757d;
+  border: 1px solid #dee2e6;
   border-radius: 5px;
   padding: 5px 0;
   display: flex;
@@ -644,6 +644,16 @@ a:hover {
 
 .view-element-poster {
   width: 100%;
+}
+
+.view-list-block .col-xs-2 {
+  padding-left: 10px;
+}
+.view-element-avatar {
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
 }
 
 .view-element-title {
@@ -668,6 +678,7 @@ a:hover {
   margin-left: 4px;
   width: fit-content;
   padding: 0 2px;
+  text-transform: capitalize;
 }
 
 .view-element-date {
@@ -680,6 +691,7 @@ a:hover {
   font-size: 18px;
   color: #000000;
   display: block;
+  padding-top: 10px;
 }
 
 .view-comment-wrapper {

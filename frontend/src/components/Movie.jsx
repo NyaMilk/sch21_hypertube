@@ -72,7 +72,7 @@ const QualitiesList = (props) => {
 }
 
 const Options = (props) => {
-    const {me, film, favorite, fetchUpdateFavoriteFilm, setQuality, qualities, quality, t } = props;
+    const { me, film, favorite, fetchUpdateFavoriteFilm, setQuality, qualities, quality, t } = props;
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const changeFilmList = (e) => {
@@ -193,42 +193,45 @@ const Comments = (props) => {
     }
 
     if (comments && comments.length > 0) {
-        const listItems = comments.map((comment, item) => {
-            const { displayname, id, createdat, status, comment, count } = comment;
+        const listItems = comments.map((element, item) => {
+            const { displayname, id, createdat, status, comment, count } = element;
 
-            return(
+            return (
                 <Media className="mt-2" key={item}>
-                <Media left middle>
-                    <Media object src={`${CONFIG.API_URL}/api/image/${displayname}/1`} alt={`Profile photo ${displayname}`} />
-                </Media>
-                <Media body className="ml-4">
-                    <Media heading>
-                        <div className="movie-comment-header">
-                            <Link to={`/profile/${displayname}`}>
-                                {displayname}
-                            </Link>
-                            {' '}
-                            <span className="movie-tabs-item">{moment(createdat).fromNow()}</span>
-                        </div>
-                        <div className="movie-comment-footer">
-                            <input
-                                type="image"
-                                className={status === 'like' ? 'opacity-button' : ''}
-                                name='like'
-                                onClick={e => setLike(e, id)}
-                                src={like} alt="like" />
-                            <span>{count}</span>
-                            <input
-                                type="image"
-                                className={status === 'dislike' ? 'opacity-button' : ''}
-                                name='dislike'
-                                onClick={e => setLike(e, id)}
-                                src={dislike} alt="dislike" />
-                        </div>
+                    <Media left middle>
+                        {
+                            displayname &&
+                            <Media object src={`${CONFIG.API_URL}/api/image/${displayname}/1`} alt={`Profile photo ${displayname}`} />
+                        }
                     </Media>
-                    <p>{comment}</p>
+                    <Media body className="ml-4">
+                        <Media heading>
+                            <div className="movie-comment-header">
+                                <Link to={`/profile/${displayname}`}>
+                                    {displayname}
+                                </Link>
+                                {' '}
+                                <span className="movie-tabs-item">{moment(createdat).fromNow()}</span>
+                            </div>
+                            <div className="movie-comment-footer">
+                                <input
+                                    type="image"
+                                    className={status === 'like' ? 'opacity-button' : ''}
+                                    name='like'
+                                    onClick={e => setLike(e, id)}
+                                    src={like} alt="like" />
+                                <span>{count}</span>
+                                <input
+                                    type="image"
+                                    className={status === 'dislike' ? 'opacity-button' : ''}
+                                    name='dislike'
+                                    onClick={e => setLike(e, id)}
+                                    src={dislike} alt="dislike" />
+                            </div>
+                        </Media>
+                        <p>{comment}</p>
+                    </Media>
                 </Media>
-            </Media>
             )
         });
         return (
