@@ -77,6 +77,7 @@ CREATE TABLE FavoriteMovies
 CREATE TABLE Notifications (
     idUser int,
     idFilm text,
+    quality text,
     createdAt timestamp DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (idUser) REFERENCES Users (id),
     FOREIGN KEY (idFilm) REFERENCES Movies (imdb)

@@ -22,7 +22,7 @@ module.exports = (io) => {
         // });
 
         socket.on('movie', async ([imdb, quality, index, username]) => {
-            const key = imdb + quality;
+            const key = `${imdb}_${quality}`;
 
             if (!movies[key])
                 movies[key] = new Set();
@@ -31,10 +31,7 @@ module.exports = (io) => {
 
             if (movies[key].size === 1) {
                 await setMovieStatus(imdb, quality, 'downloading');
-
-                console.log('index', index);
-                const magnet = await getMagnet(imdb, index);
-                console.log(magnet)          
+                const magnet = await getMagnet(imdb, index + 1);          
                 await getSubtitles(imdb);
                 const dirPath = `${process.cwd()}/movies/${imdb}_${quality}`;
                 const options = {

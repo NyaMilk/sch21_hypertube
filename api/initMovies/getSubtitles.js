@@ -12,14 +12,14 @@ const { setStatusSubtitle } = require('../models/movies');
 exports.getSubtitles = (imdb) => {
     OpenSubtitles.search({
         sublanguageid: ["eng", "rus"].join(),
-        extensions: ['srt'],
+        extensions: ['vtt', 'srt'],
         imdbid: imdb,
     }).then(async subs => {
         const path = process.cwd() + '/movies/subtitles/';
-
+        console.log(subs);
         if (subs.en && subs.en.url) {
             try {
-                fs.writeFileSync(path + imdb + "_en.srt", await download(subs.en.url));
+                fs.writeFileSync(path + imdb + "_en.vtt", await download(subs.en.url));
                 await setStatusSubtitle(imdb, 'enSubtitle');
             }
             catch (e) {
@@ -28,7 +28,7 @@ exports.getSubtitles = (imdb) => {
         }
         if (subs.ru && subs.ru.url) {
             try {
-                fs.writeFileSync(path + imdb + "_ru.srt", await download(subs.ru.url));
+                fs.writeFileSync(path + imdb + "_ru.vtt", await download(subs.ru.url));
                 await setStatusSubtitle(imdb, 'ruSubtitle');
             }
             catch (e) {

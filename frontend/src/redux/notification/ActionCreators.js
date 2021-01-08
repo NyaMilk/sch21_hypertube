@@ -25,18 +25,27 @@ export const setNew = (data) => (dispatch) => {
 export const getNotifications = (me, lang) => (dispatch) => {
     dispatch(notificationsLoading());
 
-    const data = {
-        me: me,
-        lang: lang
-    };
-
-    return request(`/api/user/notifications`, data, 'POST')
+    return request(`/api/user/notifications/${me}/${lang}`)
         .then(res => res.json())
         .then(result => {
-            if (result.success === true) {
+            if (result.success) {
                 dispatch(notificationsAdd(result.data));
             }
             else {
+                dispatch(notificationsFailed(result.message));
+            }
+        })
+        .catch(error => dispatch(notificationsFailed(error.message)));
+}
+
+export const addNotification = (me, imdb, quality) => (dispatch) => {
+    dispatch(notificationsLoading());
+
+    console.log('add',me, imdb, quality );
+    return request(`/api/user/notification/${me}/${imdb}/${quality}`, [], 'POST')
+        .then(res => res.json())
+        .then(result => {
+            if (!result.success) {
                 dispatch(notificationsFailed(result.message));
             }
         })
