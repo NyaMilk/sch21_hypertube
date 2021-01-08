@@ -114,7 +114,6 @@ router.get('/profile/favorites/movies/:me', function (req, res) {
 
 router.post('/profile/friends', async (req, res) => {
     try {
-
         const { me, you, status } = req.body;
         const promise = (status === 'add') ? insertFriend(me, you) : deleteFriend(me, you);
 

@@ -44,15 +44,15 @@ router.get('/:nickname/:time', async (req, res) => {
                 res.contentType(data[0].avatar[0])
                 res.send(finalImg);
             })
-            .catch(e => {
+            .catch(() => {
                 res.status(200).json({
-                    message: "Not found photo",
+                    message: "Photo not found",
                     success: false
                 })
             })
     } catch (e) {
         res.status(200).json({
-            message: "Not found photo",
+            message: "Photo not found",
             success: false
         })
     }

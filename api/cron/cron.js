@@ -7,11 +7,8 @@ exports.job = new CronJob('* * * 30 * *', () => {
         .then(files => {
             files.forEach(file => {
                 let path = file.path.split('/').slice(0, -1).join('/');
-                rimraf(path, function (err) {
-                    // console.log(err);
-                    if (err) throw err;
-                });
+                rimraf(path, (err) => { if (err) console.log("Can't delete") });
             })
         })
-        .catch(e => console.log(e.message))
+        .catch(() => console.log("Can't delete"));
 }, null, true, 'America/Los_Angeles');

@@ -1,3 +1,6 @@
+const fs = require('fs');
+const rimraf = require("rimraf");
+const subsrt = require('subsrt');
 const torrentStream = require('torrent-stream');
 const { getMagnet, setMoviePath, setMovieStatus } = require('../models/stream');
 const { getSubtitles } = require('../initMovies/getSubtitles');
@@ -31,8 +34,22 @@ module.exports = (io) => {
 
             if (movies[key].size === 1) {
                 await setMovieStatus(imdb, quality, 'downloading');
-                const magnet = await getMagnet(imdb, index + 1);          
-                await getSubtitles(imdb);
+                const magnet = await getMagnet(imdb, index + 1);
+                getSubtitles(imdb)
+                    .then(() => {
+                        const languages = ['en', 'ru'];
+
+                        languages.map((item) => {
+                            const path = `${process.cwd()}/movies/subtitles/${imdb}_${item}`;
+                            const srt = fs.readFileSync(`${path}.srt`, 'utf8');
+                            if (srt) {
+                                const vtt = subsrt.convert(srt, { format: 'vtt' });
+                                fs.writeFileSync(`${path}.vtt`, vtt);
+                                rimraf(`${path}.srt`, (err) => { if (err) console.log("Can't delete") });
+                            }
+                        });
+                    })
+                    .catch(() => console.log("Can't convert subtitles"));
                 const dirPath = `${process.cwd()}/movies/${imdb}_${quality}`;
                 const options = {
                     connections: 100,

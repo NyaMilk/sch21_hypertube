@@ -150,7 +150,7 @@ const Options = (props) => {
 }
 
 const Comments = (props) => {
-    const { me, imdb, setMsg, fetchComments } = props;
+    const { me, imdb, setMsg, fetchComments, comments } = props;
     const [textComment, setComment] = useState('');
 
     const addComments = () => {
@@ -192,41 +192,45 @@ const Comments = (props) => {
             .catch(error => setMsg(error.message));
     }
 
-    if (props.comments && props.comments.length > 0) {
-        const listItems = props.comments.map((comment, item) =>
-            <Media className="mt-2" key={item}>
+    if (comments && comments.length > 0) {
+        const listItems = comments.map((comment, item) => {
+            const { displayname, id, createdat, status, comment, count } = comment;
+
+            return(
+                <Media className="mt-2" key={item}>
                 <Media left middle>
-                    <Media object src={`${CONFIG.API_URL}/api/image/${comment.displayname}/1`} alt={`Profile photo ${comment.displayname}`} />
+                    <Media object src={`${CONFIG.API_URL}/api/image/${displayname}/1`} alt={`Profile photo ${displayname}`} />
                 </Media>
                 <Media body className="ml-4">
                     <Media heading>
                         <div className="movie-comment-header">
-                            <Link to={`/profile/${comment.displayname}`}>
-                                {comment.displayname}
+                            <Link to={`/profile/${displayname}`}>
+                                {displayname}
                             </Link>
                             {' '}
-                            <span className="movie-tabs-item">{moment(comment.createdat).fromNow()}</span>
+                            <span className="movie-tabs-item">{moment(createdat).fromNow()}</span>
                         </div>
                         <div className="movie-comment-footer">
                             <input
                                 type="image"
-                                className={comment.status === 'like' ? 'opacity-button' : ''}
+                                className={status === 'like' ? 'opacity-button' : ''}
                                 name='like'
-                                onClick={e => setLike(e, comment.id)}
+                                onClick={e => setLike(e, id)}
                                 src={like} alt="like" />
-                            <span>{comment.count}</span>
+                            <span>{count}</span>
                             <input
                                 type="image"
-                                className={comment.status === 'dislike' ? 'opacity-button' : ''}
+                                className={status === 'dislike' ? 'opacity-button' : ''}
                                 name='dislike'
-                                onClick={e => setLike(e, comment.id)}
+                                onClick={e => setLike(e, id)}
                                 src={dislike} alt="dislike" />
                         </div>
                     </Media>
-                    <p>{comment.comment}</p>
+                    <p>{comment}</p>
                 </Media>
             </Media>
-        );
+            )
+        });
         return (
             <div>
                 <Row>

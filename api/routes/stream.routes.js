@@ -35,15 +35,17 @@ router.get('/movie/:imdb/:quality', async (req, res) => {
                 'Content-Length': chunksize,
                 'Content-Type': 'video/mp4',
             }
+
             res.writeHead(206, head);
             file.pipe(res);
         } else {
             const head = {
                 'Content-Length': fileSize,
                 'Content-Type': 'video/mp4',
-            }
-            res.writeHead(200, head)
-            fs.createReadStream(path).pipe(res)
+            };
+
+            res.writeHead(200, head);
+            fs.createReadStream(path).pipe(res);
         }
 
     } catch (e) {
@@ -58,6 +60,7 @@ router.get('/subtitle/:lang/:imdb', async (req, res) => {
     try {
         const { lang, imdb } = req.params;
         const subtitle = fs.readFileSync(`${process.cwd()}/movies/subtitles/${imdb}_${lang}.vtt`, res);
+        
         res.contentType("text/vtt");
         res.send(subtitle);
     } catch (e) {

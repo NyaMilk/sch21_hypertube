@@ -42,6 +42,7 @@
     "pg-promise": "^10.8.0",
     "rimraf": "^3.0.2",
     "socket.io": "^3.0.4",
+    "subsrt": "^1.1.1",
     "torrent-stream": "^1.2.0"
   }
 }
