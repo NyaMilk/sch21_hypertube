@@ -16,7 +16,7 @@
 		"text": "Only symbols are required",
 		"yearRange": "Year range 1900 - 2021 only",
 		"rateRange": "Rate range 0 - 10 only",
-		"nothing": "Nothing"
+		"nothing": "Nothing yet"
 	},
 	"loginPage": {
 		"login": "Login",
@@ -46,7 +46,8 @@
 		"status": {
 			"add": "Add friend!",
 			"remove": "Remove friend"
-		}
+		},
+		"left": "left to "
 	},
 	"catalogPage": {
 		"search": "Search",
