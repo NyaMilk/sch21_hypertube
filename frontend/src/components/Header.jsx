@@ -3,6 +3,7 @@ import { withRouter, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Container, Navbar, NavbarBrand, Nav, NavItem, NavLink, UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { logOut, setUser, setUserFailed } from '../redux/login/ActionCreators';
+import { getNotifications } from '../redux/notification/ActionCreators';
 import { useTranslation } from "react-i18next";
 import { request } from '../util/http';
 import { socket } from '../util/socket';
@@ -11,24 +12,54 @@ import CONFIG from '../util/const';
 const video = '/img/head-video.svg';
 const user = '/img/head-user.svg';
 const logout = '/img/head-logout.svg';
+const bell = '/img/bell.svg';
 
 const mapStateToProps = (state) => {
     return {
-        login: state.login
+        login: state.login,
+        notification: state.notification
     }
 }
 
 const mapDispatchToProps = (dispatch) => ({
     logOut: () => dispatch(logOut()),
     setUser: (username) => dispatch(setUser(username)),
-    setUserFailed: (msg) => dispatch(setUserFailed(msg))
+    setUserFailed: (msg) => dispatch(setUserFailed(msg)),
+    getNotifications: (me, lang) => dispatch(getNotifications(me, lang))
 });
+
+function NotificationList(props) {
+    let listItems;
+
+    if (props.notifications.length > 0) {
+        listItems = props.notifications.map((notificaiton, item) => {
+            return (
+                <DropdownItem key={item} className="notification-item">
+                    <a href={`/movie/${notificaiton.imdb}`}>
+                        <span>{notificaiton.title}</span>
+                    </a>
+                    {/* <div>{notificaiton.message}</div> */}
+                    {/* <div>{moment(notificaiton.time).fromNow()}</div> */}
+                </DropdownItem>
+            );
+        }
+        );
+        return (
+            <label>{listItems}</label>
+        );
+    }
+    return (
+        <DropdownItem>
+            {props.t("inputMsg.nothing")}
+        </DropdownItem>
+    );
+}
 
 const Notification = (props) => {
     const { hasNew } = props;
 
     const handleClick = () => {
-        // props.updateNotifications(me);
+        props.getNotifications(props.me, props.lang);
         props.set(false);
     }
 
@@ -40,7 +71,7 @@ const Notification = (props) => {
                         ? <span className="notification" />
                         : ''
                 }
-                <i className="icon fa fa-bell"></i>
+                <img src={bell} width="23" height="23" alt="bell" />
             </DropdownToggle>
             <DropdownMenu modifiers={{
                 setMaxHeight: {
@@ -59,10 +90,12 @@ const Notification = (props) => {
                     },
                 },
             }}>
-                <DropdownItem>
-                    Nothing
-        </DropdownItem>
-                {/* <NotificationList notifications={notifications} /> */}
+                {/* <DropdownItem>
+                    {props.t("inputMsg.nothing")}
+                </DropdownItem> */}
+                <NotificationList
+                    notifications={props.notifications}
+                    t={props.t} />
             </DropdownMenu>
         </UncontrolledButtonDropdown>
     );
@@ -70,7 +103,7 @@ const Notification = (props) => {
 
 
 const Header = (props) => {
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const changeLanguage = (language) => {
         i18n.changeLanguage(language);
@@ -137,20 +170,22 @@ const Header = (props) => {
                             {
                                 isLogged &&
                                 <NavItem>
-                                    <NavLink href='/login' onClick={() => { props.logOut(); }}>
-                                        <img src={logout} width="25" height="25" alt="Logout" />
-                                    </NavLink>
+                                    <Notification
+                                        t={t}
+                                        me={me}
+                                        notifications={props.notification.notifications}
+                                        hasNew={hasNew}
+                                        getNotifications={props.getNotifications}
+                                        lang={i18n.language}
+                                        set={setHasNew} />
                                 </NavItem>
                             }
                             {
                                 isLogged &&
                                 <NavItem>
-                                    <Notification
-                                        // me={me}
-                                        // notifications={props.notification.notifications}
-                                        hasNew={hasNew}
-                                        // updateNotifications={props.updateNotifications}
-                                        set={setHasNew} />
+                                    <NavLink href='/login' onClick={() => { props.logOut(); }}>
+                                        <img src={logout} width="25" height="25" alt="Logout" />
+                                    </NavLink>
                                 </NavItem>
                             }
                             <NavItem>
