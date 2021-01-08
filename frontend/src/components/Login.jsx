@@ -3,7 +3,6 @@ import { useHistory, useParams, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Card, CardBody, Container, Row, Col, Button, FormGroup, Label, Input, NavLink } from 'reactstrap';
 import { request } from '../util/http';
-import Loading from './Loading';
 import Info from './Info';
 import { localAuth, oAuth } from '../redux/login/ActionCreators';
 import { useTranslation } from "react-i18next";
