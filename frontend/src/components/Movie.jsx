@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams, withRouter } from 'react-router-dom';
 import {
     Container, Row, Col, ListGroup, ListGroupItem, Button,
-    DropdownToggle, DropdownMenu, DropdownItem, ButtonDropdown, Input, Nav, NavItem, NavLink, TabContent, TabPane, InputGroup, Media, Modal, ModalHeader, ModalBody, ModalFooter
+    DropdownToggle, DropdownMenu, DropdownItem, ButtonDropdown, Input, Nav,
+    NavItem, NavLink, TabContent, TabPane, InputGroup, Media, Modal, ModalHeader, ModalBody
 } from 'reactstrap'
 import { connect } from 'react-redux';
 import { fetchMovie, fetchFavoriteFilm, fetchUpdateFavoriteFilm, fetchComments, setQuality } from '../redux/movie/ActionCreators';
@@ -53,7 +54,7 @@ const QualitiesList = (props) => {
     useEffect(() => {
         if (!quality && last)
             setQuality(last[0]);
-    }, []);
+    }, [quality, last, setQuality]);
 
     if (qualities) {
         last = qualities[qualities.length - 1];
@@ -72,7 +73,7 @@ const QualitiesList = (props) => {
 }
 
 const Options = (props) => {
-    const {me, film, favorite, fetchUpdateFavoriteFilm, setQuality, qualities, quality, t } = props;
+    const { me, film, title, favorite, fetchUpdateFavoriteFilm, setQuality, qualities, quality, t } = props;
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const changeFilmList = (e) => {
@@ -106,7 +107,7 @@ const Options = (props) => {
                     <p>{t("moviePage.trailer")}</p>
                 </ModalHeader>
                 <ModalBody className="text-center">
-                    <iframe id="videoPlayer" className="embed-responsive" height="420" controls
+                    <iframe id="videoPlayer" title={title} className="embed-responsive" height="420" controls
                         src={`https://www.youtube.com/embed/${props.trailer}`}>
                     </iframe>
                 </ModalBody>
@@ -131,15 +132,15 @@ const Options = (props) => {
                     <p>{t("moviePage.share")}</p>
                 </ModalHeader>
                 <ModalBody className="aside-button-share">
-                    <a target="_blank" title="facebook" href={`http://www.facebook.com/sharer.php?u=http://localhost:3000/movie/${props.film}&text=True%20story`}>
+                    <a target="_blank" rel="noreferrer" title="facebook" href={`http://www.facebook.com/sharer.php?u=http://localhost:3000/movie/${props.film}&text=True%20story`}>
                         <img src={facebook} alt="fb" />
                         Facebook
                     </a>
-                    <a target="_blank" title="twitter" href={`http://twitter.com/share?url=http://localhost:3000/movie/${props.film}&text=True%20story`}>
+                    <a target="_blank" rel="noreferrer" title="twitter" href={`http://twitter.com/share?url=http://localhost:3000/movie/${props.film}&text=True%20story`}>
                         <img src={twitter} alt="tw" />
                         Twitter
                     </a>
-                    <a target="_blank" title="vk" href={`http://vk.com/share.php?url=http://localhost:3000/movie/${props.film}&text=True%20story`}>
+                    <a target="_blank" rel="noreferrer" title="vk" href={`http://vk.com/share.php?url=http://localhost:3000/movie/${props.film}&text=True%20story`}>
                         <img src={vk} alt="vk" />
                         VKontakte
                     </a>
@@ -193,42 +194,42 @@ const Comments = (props) => {
     }
 
     if (comments && comments.length > 0) {
-        const listItems = comments.map((comment, item) => {
-            const { displayname, id, createdat, status, comment, count } = comment;
+        const listItems = comments.map((element, item) => {
+            const { displayname, id, createdat, status, comment, count } = element;
 
-            return(
+            return (
                 <Media className="mt-2" key={item}>
-                <Media left middle>
-                    <Media object src={`${CONFIG.API_URL}/api/image/${displayname}/1`} alt={`Profile photo ${displayname}`} />
-                </Media>
-                <Media body className="ml-4">
-                    <Media heading>
-                        <div className="movie-comment-header">
-                            <Link to={`/profile/${displayname}`}>
-                                {displayname}
-                            </Link>
-                            {' '}
-                            <span className="movie-tabs-item">{moment(createdat).fromNow()}</span>
-                        </div>
-                        <div className="movie-comment-footer">
-                            <input
-                                type="image"
-                                className={status === 'like' ? 'opacity-button' : ''}
-                                name='like'
-                                onClick={e => setLike(e, id)}
-                                src={like} alt="like" />
-                            <span>{count}</span>
-                            <input
-                                type="image"
-                                className={status === 'dislike' ? 'opacity-button' : ''}
-                                name='dislike'
-                                onClick={e => setLike(e, id)}
-                                src={dislike} alt="dislike" />
-                        </div>
+                    <Media left middle>
+                        <Media object src={`${CONFIG.API_URL}/api/image/${displayname}/1`} alt={`Profile photo ${displayname}`} />
                     </Media>
-                    <p>{comment}</p>
+                    <Media body className="ml-4">
+                        <Media heading>
+                            <div className="movie-comment-header">
+                                <Link to={`/profile/${displayname}`}>
+                                    {displayname}
+                                </Link>
+                                {' '}
+                                <span className="movie-tabs-item">{moment(createdat).fromNow()}</span>
+                            </div>
+                            <div className="movie-comment-footer">
+                                <input
+                                    type="image"
+                                    className={status === 'like' ? 'opacity-button' : ''}
+                                    name='like'
+                                    onClick={e => setLike(e, id)}
+                                    src={like} alt="like" />
+                                <span>{count}</span>
+                                <input
+                                    type="image"
+                                    className={status === 'dislike' ? 'opacity-button' : ''}
+                                    name='dislike'
+                                    onClick={e => setLike(e, id)}
+                                    src={dislike} alt="dislike" />
+                            </div>
+                        </Media>
+                        <p>{comment}</p>
+                    </Media>
                 </Media>
-            </Media>
             )
         });
         return (
@@ -300,7 +301,6 @@ const VideoPlayer = (props) => {
     const [isSub, setSub] = useState(false);
     let index;
     let status;
-    console.log('qualit', quality);
 
     torrents.find((item, key) => {
         if (item[0] === quality) {
@@ -328,7 +328,7 @@ const VideoPlayer = (props) => {
 
         return () => socket.off('wait_list');
 
-    }, [quality]);
+    }, [imdb, me, quality]);
 
     if (!logs || !status || status.indexOf(quality) === -1) {
         return (
@@ -458,7 +458,7 @@ const Movie = (props) => {
                             me={me}
                             t={t}
                             ensubtitle={ensubtitle}
-                            rusubtitle={ensubtitle}
+                            rusubtitle={rusubtitle}
                             setMsg={setMsg}
                         />
                     </Row>
@@ -468,6 +468,7 @@ const Movie = (props) => {
                             favorite={favorite}
                             me={me}
                             film={imdb}
+                            title={title}
                             trailer={trailer}
                             quality={quality}
                             qualities={torrents}

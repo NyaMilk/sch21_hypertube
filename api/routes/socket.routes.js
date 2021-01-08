@@ -15,7 +15,6 @@ module.exports = (io) => {
     }
 
     mySpace.on('connection', (socket) => {
-        console.log('socked', movies);
 
         // socket.on('log_in', (nickname) => {
         //     users[nickname] = socket.id;

@@ -49,6 +49,8 @@ const Login = (props) => {
     const names = ["github", "intra"];
     const [login, setLogin] = useState();
     const [password, setPassword] = useState();
+    const { isLogged } = props.login;
+    const { localAuth } = props;
 
     const handleOauth = (e) => {
         if (names.includes(e.target.name)) {
@@ -56,7 +58,7 @@ const Login = (props) => {
         }
     }
 
-    const submit = () => { props.localAuth(login, password) };
+    const submit = () => { localAuth(login, password) };
 
     if (username && hash) {
         const data = {
@@ -71,10 +73,10 @@ const Login = (props) => {
     }
 
     useEffect(() => {
-        if (props.login.isLogged) {
+        if (isLogged) {
             history.push("/catalog/page/1");
         }
-    }, [props.login.isLogged, history]);
+    }, [isLogged, history]);
 
     return (
         <section className="login">

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { withRouter, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Container, Navbar, NavbarBrand, Nav, NavItem, NavLink, UncontrolledButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { logOut, setUser, setUserFailed } from '../redux/login/ActionCreators';
-import { getNotifications, addNotification } from '../redux/notification/ActionCreators';
+import { getNotifications, addNotification, setNew } from '../redux/notification/ActionCreators';
 import { setQuality } from '../redux/movie/ActionCreators';
 import { useTranslation } from "react-i18next";
 import { request } from '../util/http';
@@ -28,7 +28,8 @@ const mapDispatchToProps = (dispatch) => ({
     setUserFailed: (msg) => dispatch(setUserFailed(msg)),
     getNotifications: (me, lang) => dispatch(getNotifications(me, lang)),
     addNotification: (me, imdb, quality) => dispatch(addNotification(me, imdb, quality)),
-    setQuality: (quality) => dispatch(setQuality(quality))
+    setQuality: (quality) => dispatch(setQuality(quality)),
+    setNew: (status) => dispatch(setNew(status))
 });
 
 const NotificationList = (props) => {
@@ -36,7 +37,7 @@ const NotificationList = (props) => {
     let listItems;
 
     if (notifications.length > 0) {
-        listItems = props.notifications.map((notification, item) => {
+        listItems = notifications.map((notification, item) => {
             const { imdb, title, quality } = notification;
 
             return (
@@ -48,12 +49,13 @@ const NotificationList = (props) => {
                     {/* <div>{moment(notificaiton.time).fromNow()}</div> */}
                 </DropdownItem>
             );
-        }
-        );
+        });
+
         return (
             <label>{listItems}</label>
         );
     }
+
     return (
         <DropdownItem>
             {props.t("inputMsg.nothing")}
@@ -62,11 +64,11 @@ const NotificationList = (props) => {
 }
 
 const Notification = (props) => {
-    const { hasNew, getNotifications, set, setQuality, notifications, t } = props;
+    const { hasNew, getNotifications, setNew, setQuality, notifications, t } = props;
 
     const handleClick = () => {
         getNotifications(props.me, props.lang);
-        set(false);
+        setNew(false);
     }
 
     return (
@@ -117,12 +119,11 @@ const Header = (props) => {
         i18n.changeLanguage(language);
     };
 
-    const isLogged = props.login.isLogged;
+    const { me, isLogged } = props.login;
+    const { hasNew, notifications } = props.notification;
     const path = props.location.pathname;
     const history = useHistory();
-    const { me } = props.login;
-    const [hasNew, setHasNew] = useState(false);
-    const { getNotifications, addNotification, setQuality } = props;
+    const { getNotifications, addNotification, setNew, setQuality, logOut } = props;
 
     useEffect(() => {
         request(`${CONFIG.API_URL}/api/auth/success`)
@@ -134,23 +135,19 @@ const Header = (props) => {
     useEffect(() => {
         if (isLogged) {
             socket.on('notification', (data) => {
-                console.log('ws322', data);
                 if (data[1].indexOf(me) > -1) {
                     const tmp = data[0].split('_');
-                    console.log('fetch', me, tmp[0], tmp[1]);
                     addNotification(me, tmp[0], tmp[1]);
-                    setHasNew(true);
+                    setNew(true);
                 }
             });
 
-            return () => {
-                socket.off('notification');
-            };
+            return () => socket.off('notification');
         }
 
         if (!isLogged && !path.includes('/register') && !path.includes('/remind'))
             history.push('/login');
-    }, [isLogged, history, me, path]);
+    }, [isLogged, history, me, path, setNew, addNotification]);
 
 
     return (
@@ -171,7 +168,7 @@ const Header = (props) => {
                             {
                                 isLogged &&
                                 <NavItem>
-                                    <NavLink href={`/profile/${props.login.me}`}>
+                                    <NavLink href={`/profile/${me}`}>
                                         <img src={user} width="25" height="25" alt="Profile" />
                                     </NavLink>
                                 </NavItem>
@@ -182,12 +179,12 @@ const Header = (props) => {
                                     <Notification
                                         t={t}
                                         me={me}
-                                        notifications={props.notification.notifications}
+                                        notifications={notifications}
                                         hasNew={hasNew}
+                                        setNew={setNew}
                                         getNotifications={getNotifications}
                                         addNotification={addNotification}
                                         lang={i18n.language}
-                                        set={setHasNew}
                                         setQuality={setQuality}
                                     />
                                 </NavItem>
@@ -195,7 +192,7 @@ const Header = (props) => {
                             {
                                 isLogged &&
                                 <NavItem>
-                                    <NavLink href='/login' onClick={() => { props.logOut(); }}>
+                                    <NavLink href='/login' onClick={() => { logOut(); }}>
                                         <img src={logout} width="25" height="25" alt="Logout" />
                                     </NavLink>
                                 </NavItem>

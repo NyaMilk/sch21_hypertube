@@ -41,7 +41,6 @@ export const getNotifications = (me, lang) => (dispatch) => {
 export const addNotification = (me, imdb, quality) => (dispatch) => {
     dispatch(notificationsLoading());
 
-    console.log('add',me, imdb, quality );
     return request(`/api/user/notification/${me}/${imdb}/${quality}`, [], 'POST')
         .then(res => res.json())
         .then(result => {
