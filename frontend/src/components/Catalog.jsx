@@ -85,7 +85,7 @@ const Filter = (props) => {
     const [show, setModal] = useState(false);
     const toggleModal = () => setModal(!show);
 
-    const [isValidInput, setStatusButton] = useState(true);
+    const setStatusButton = useState(true);
 
     const tagsHandle = (e) => {
         let value = [];
