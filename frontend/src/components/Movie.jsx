@@ -73,7 +73,7 @@ const QualitiesList = (props) => {
 }
 
 const Options = (props) => {
-    const { me, film, title, favorite, fetchUpdateFavoriteFilm, setQuality, qualities, quality, t } = props;
+    const { me, film, favorite, fetchUpdateFavoriteFilm, setQuality, qualities, quality, t } = props;
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const changeFilmList = (e) => {
@@ -200,7 +200,10 @@ const Comments = (props) => {
             return (
                 <Media className="mt-2" key={item}>
                     <Media left middle>
-                        <Media object src={`${CONFIG.API_URL}/api/image/${displayname}/1`} alt={`Profile photo ${displayname}`} />
+                        {
+                            displayname &&
+                            <Media object src={`${CONFIG.API_URL}/api/image/${displayname}/1`} alt={`Profile photo ${displayname}`} />
+                        }
                     </Media>
                     <Media body className="ml-4">
                         <Media heading>
