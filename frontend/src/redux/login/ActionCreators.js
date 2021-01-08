@@ -7,9 +7,9 @@ export const loginOut = () => ({
 })
 
 export const logOut = () => (dispatch) => {
+    dispatch(loginOut());
     return request(`${CONFIG.API_URL}/api/auth/logout`)
         .then(res => res.json())
-        .then(() => dispatch(loginOut()))
 }
 
 export const loginLoading = () => ({

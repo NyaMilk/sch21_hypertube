@@ -73,7 +73,7 @@ const QualitiesList = (props) => {
 }
 
 const Options = (props) => {
-    const { me, film, favorite, fetchUpdateFavoriteFilm, setQuality, qualities, quality, t } = props;
+    const { me, film, favorite, fetchUpdateFavoriteFilm, setQuality, qualities, quality, t, title } = props;
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const changeFilmList = (e) => {
@@ -300,7 +300,7 @@ const GenreList = (props) => {
 }
 
 const VideoPlayer = (props) => {
-    const { logs, torrents, quality, url, poster, imdb, me, ensubtitle, rusubtitle } = props;
+    const { logs, torrents, quality, url, imdb, me, ensubtitle, rusubtitle } = props;
     const [isSub, setSub] = useState(false);
     let index;
     let status;
@@ -356,7 +356,7 @@ const VideoPlayer = (props) => {
     else if (status.indexOf('downloaded') > 0) {
         return (
             <Col>
-                <video crossOrigin="anonymous" key={quality} id="videoPlayer" className="embed-responsive" poster={poster} controls>
+                <video crossOrigin="anonymous" key={quality} id="videoPlayer" className="embed-responsive" controls>
                     <source src={`${url}/api/stream/movie/${imdb}/${quality}`} type="video/mp4" />
 
                     {

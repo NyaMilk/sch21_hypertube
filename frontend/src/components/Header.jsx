@@ -43,7 +43,7 @@ const NotificationList = (props) => {
             return (
                 <DropdownItem key={item} className="notification-item">
                     <a href={`/movie/${imdb}`} onClick={() => setQuality(quality)}>
-                        <span>{title} ({quality}) has been downloaded</span>
+                        <span>{title} ({quality}) {props.t("inputMsg.download")}</span>
                     </a>
                     {/* <div>{notificaiton.message}</div> */}
                     {/* <div>{moment(notificaiton.time).fromNow()}</div> */}
@@ -55,7 +55,6 @@ const NotificationList = (props) => {
             <label>{listItems}</label>
         );
     }
-
     return (
         <DropdownItem>
             {props.t("inputMsg.nothing")}
@@ -98,9 +97,6 @@ const Notification = (props) => {
                     },
                 },
             }}>
-                {/* <DropdownItem>
-                    {props.t("inputMsg.nothing")}
-                </DropdownItem> */}
                 <NotificationList
                     notifications={notifications}
                     t={t}

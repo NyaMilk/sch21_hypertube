@@ -4,7 +4,7 @@ const subsrt = require('subsrt');
 const { getSubtitles } = require('./getSubtitles');
 
 const test = () => {
-    const imdb = "tt2948372";
+    const imdb = "tt0080684";
     getSubtitles(imdb)
         .then(() => {
             const languages = ['en', 'ru'];

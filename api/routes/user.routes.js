@@ -204,6 +204,7 @@ router.get('/notifications/:me/:lang', async (req, res) => {
 
     getNotif(me, title, poster)
         .then(data => {
+            console.log(data);
             res.status(200).json({
                 data: data,
                 success: true

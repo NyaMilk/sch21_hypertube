@@ -16,7 +16,8 @@
 		"text": "Only symbols are required",
 		"yearRange": "Year range 1900 - 2021 only",
 		"rateRange": "Rate range 0 - 10 only",
-		"nothing": "Nothing yet"
+		"nothing": "Nothing yet",
+		"download": "ready to watch"
 	},
 	"loginPage": {
 		"login": "Login",
@@ -56,7 +57,7 @@
 		"name": "Name",
 		"filter": "Filter",
 		"genre": "Genres",
-		"clear": "Clean",
+		"clear": "Clear",
 		"cancel": "Cancel",
 		"not": "Not found :C",
 		"action": "action",
