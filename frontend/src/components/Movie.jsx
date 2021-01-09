@@ -7,7 +7,6 @@ import {
 } from 'reactstrap'
 import { connect } from 'react-redux';
 import { fetchMovie, fetchFavoriteFilm, fetchUpdateFavoriteFilm, fetchComments, setQuality } from '../redux/movie/ActionCreators';
-import CONFIG from '../util/const';
 import { useTranslation } from "react-i18next";
 import Loading from './Loading';
 import Info from './Info';
