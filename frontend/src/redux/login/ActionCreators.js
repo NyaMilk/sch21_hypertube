@@ -1,6 +1,5 @@
 import * as ActionTypes from './ActionTypes';
 import { request } from '../../util/http';
-import CONFIG from '../../util/const';
 
 export const loginOut = () => ({
     type: ActionTypes.LOGIN_OUT
@@ -9,7 +8,7 @@ export const loginOut = () => ({
 export const logOut = () => (dispatch) => {
     dispatch(loginOut());
 
-    return request(`${CONFIG.API_URL}/api/auth/logout`)
+    return request(`/api/auth/logout`)
         .then(res => res.json());
 }
 
@@ -46,7 +45,7 @@ export const localAuth = (username, password) => (dispatch) => {
         'password': password
     })
 
-    request(`${CONFIG.API_URL}/api/auth/local`, data, 'POST', 'urlencoded')
+    request(`/api/auth/local`, data, 'POST', 'urlencoded')
         .then(res => res.json())
         .then(result => {
             if (result.success === true) {

@@ -1,6 +1,5 @@
 import * as ActionTypes from './ActionTypes';
 import { request } from '../../util/http';
-import CONFIG from '../../util/const';
 
 export const profileLoading = () => ({
     type: ActionTypes.PROFILE_LOADING
@@ -19,7 +18,7 @@ export const profileFailed = (msg) => ({
 export const fetchProfile = (you, me) => (dispatch) => {
     dispatch(profileLoading());
 
-    return request(`${CONFIG.API_URL}/api/user/profile/${you}/${me}`)
+    return request(`/api/user/profile/${you}/${me}`)
         .then(response => response.json())
         .then(result => {
             console.log(result);
@@ -39,7 +38,7 @@ export const viewsFailed = (msg) => ({
 });
 
 export const fetchViews = (nickname) => (dispatch) => {
-    return request(`${CONFIG.API_URL}/api/user/movies/${nickname}`)
+    return request(`/api/user/movies/${nickname}`)
         .then(response => response.json())
         .then(result => {
             console.log(result);
@@ -59,7 +58,7 @@ export const commentsFailed = (msg) => ({
 });
 
 export const fetchComments = (username) => (dispatch) => {
-    return request(`${CONFIG.API_URL}/api/user/comments/${username}`)
+    return request(`/api/user/comments/${username}`)
         .then(response => response.json())
         .then(result => {
             dispatch(commentsAdd(result))
@@ -78,7 +77,7 @@ export const friendsFailed = (msg) => ({
 });
 
 export const fetchFriends = (username) => (dispatch) => {
-    return request(`${CONFIG.API_URL}/api/user/friends/${username}`)
+    return request(`/api/user/friends/${username}`)
         .then(response => response.json())
         .then(result => {
             dispatch(friendsAdd(result))

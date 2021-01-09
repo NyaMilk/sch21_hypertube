@@ -1,6 +1,5 @@
 import * as ActionTypes from './ActionTypes';
 import { request } from '../../util/http';
-import CONFIG from '../../util/const';
 
 export const initCatalog = () => (dispatch) => {
     dispatch(({

@@ -1,6 +1,5 @@
 import * as ActionTypes from './ActionTypes';
 import { request } from '../../util/http';
-import CONFIG from '../../util/const';
 
 export const formLoading = () => ({
     type: ActionTypes.USER_FORM_LOADING
@@ -61,7 +60,6 @@ export const setRepassword = (pass) => (dispatch) => {
 export const fetchRegister = (data) => (dispatch) => {
     dispatch(formLoading());
 
-    console.log('da', data);
     return request('/api/register', data, 'POST')
         .then(res => res.json())
         .then(result => {

@@ -202,7 +202,7 @@ const Comments = (props) => {
                     <Media left middle>
                         {
                             displayname &&
-                            <Media object src={`${CONFIG.API_URL}/api/image/${displayname}/1`} alt={`Profile photo ${displayname}`} />
+                            <Media object src={`/api/image/${displayname}/1`} alt={`Profile photo ${displayname}`} />
                         }
                     </Media>
                     <Media body className="ml-4">
@@ -300,7 +300,7 @@ const GenreList = (props) => {
 }
 
 const VideoPlayer = (props) => {
-    const { logs, torrents, quality, url, imdb, me, ensubtitle, rusubtitle } = props;
+    const { logs, torrents, quality, imdb, me, ensubtitle, rusubtitle } = props;
     const [isSub, setSub] = useState(false);
     let index;
     let status;
@@ -357,7 +357,7 @@ const VideoPlayer = (props) => {
         return (
             <Col>
                 <video crossOrigin="anonymous" key={quality} id="videoPlayer" className="embed-responsive" controls>
-                    <source src={`${url}/api/stream/movie/${imdb}/${quality}`} type="video/mp4" />
+                    <source src={`/api/stream/movie/${imdb}/${quality}`} type="video/mp4" />
 
                     {
                         ensubtitle &&
@@ -457,7 +457,6 @@ const Movie = (props) => {
                             torrents={torrents}
                             imdb={imdb}
                             poster={`https://image.tmdb.org/t/p/original/${poster}`}
-                            url={CONFIG.API_URL}
                             me={me}
                             t={t}
                             ensubtitle={ensubtitle}

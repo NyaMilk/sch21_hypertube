@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useTranslation } from "react-i18next";
-import CONFIG from '../util/const';
 import moment from 'moment';
 import 'moment/locale/ru';
 
@@ -91,7 +90,7 @@ const FriendsView = (props) => {
                     <div className="view-element-poster-wrapper col-xs-2">
                         {
                             displayname &&
-                            <img src={`${CONFIG.API_URL}/api/image/${displayname}/1`} className="view-element-avatar" alt={displayname} />
+                            <img src={`/api/image/${displayname}/1`} className="view-element-avatar" alt={displayname} />
                         }
                     </div>
                     <div className="view-comment-wrapper">
