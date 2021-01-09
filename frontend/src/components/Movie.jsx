@@ -362,12 +362,12 @@ const VideoPlayer = (props) => {
                     {
                         ensubtitle &&
                         <track label="English" kind="subtitles"
-                            srcLang="en" src={`${url}/api/stream/subtitle/en/${imdb}`} />
+                            srcLang="en" src={`/api/stream/subtitle/en/${imdb}`} />
                     }
                     {
                         rusubtitle &&
                         <track label="Russian" kind="subtitles"
-                            srcLang="ru" src={`${url}/api/stream/subtitle/ru/${imdb}`} />
+                            srcLang="ru" src={`/api/stream/subtitle/ru/${imdb}`} />
                     }
                 </video>
             </Col>
