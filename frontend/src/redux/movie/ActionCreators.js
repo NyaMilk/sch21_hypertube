@@ -86,7 +86,6 @@ export const commentsAdd = (data) => ({
 });
 
 export const fetchComments = (me, film) => (dispatch) => {
-    // dispatch(movieLoading());
 
     const data = {
         me: me,

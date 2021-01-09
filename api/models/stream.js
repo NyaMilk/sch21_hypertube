@@ -28,7 +28,7 @@ exports.updateMovie = (imdb, quality, time) => {
 
 exports.setMoviePath = (imdb, quality, path) => {
     const sql =
-        `UPDATE moviesLogs SET status = 'downloaded', path = $3  
+        `UPDATE moviesLogs SET path = $3  
     WHERE idFilm = $1 and quality = $2
     RETURNING idFilm`;
 
@@ -39,6 +39,15 @@ exports.setMovieStatus = (imdb, quality, status) => {
     const sql =
         `INSERT INTO moviesLogs (idFilm, quality, status) VALUES ($1, $2, $3)
     RETURNING idFilm`;
+
+    return db.any(sql, [imdb, quality, status]);
+}
+
+exports.updateMovieStatus = (imdb, quality, status) => {
+    const sql =
+        `UPDATE moviesLogs SET status = $3
+        WHERE idFilm = $1 and quality = $2
+        RETURNING idFilm`;
 
     return db.any(sql, [imdb, quality, status]);
 }

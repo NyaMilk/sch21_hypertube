@@ -18,8 +18,7 @@ import Info from './Info';
 import NotFound from './NotFound';
 import { request } from '../util/http';
 import { useTranslation } from "react-i18next";
-import CONFIG from '../util/const';
-import { isValidInput, isValidPassword } from '../util/check';
+import { isValidInput } from '../util/check';
 import { ViewsList } from './ViewsList';
 
 const mapStateToProps = (state) => {
@@ -54,12 +53,11 @@ const Avatar = (props) => {
             const file = e.target.files[0];
             const type = e.target.files[0].type;
             if (!type.match("image/png") && !type.match("image/jpeg") && !type.match("image/jpg")) {
-                alert('Wrong format!');
                 return;
             }
             let formData = new FormData();
             formData.append('photo', file);
-            request(`${CONFIG.API_URL}/api/image/${username}`, formData, 'POST', 'image')
+            request(`/api/image/${username}`, formData, 'POST', 'image')
                 .then(data => {
                     if (data) { setSrc(Date.now()) }
                 })
@@ -73,7 +71,7 @@ const Avatar = (props) => {
         <Col className="col-lg-3">
             {props.username &&
                 <img
-                    src={`${CONFIG.API_URL}/api/image/${props.username}/${src}`}
+                    src={`/api/image/${props.username}/${src}`}
                     alt={`Avatar ${props.username}`}
                     className="mx-auto d-block profile-avatar rounded-circle" />
             }
@@ -101,7 +99,7 @@ const InputForm = (props) => {
             if (isValidInput(name, value)) {
                 toggleValid('is-valid');
                 if (name === 'email' || name === 'login') {
-                    request(`${CONFIG.API_URL}/api/register/check/${name}/${value}`)
+                    request(`/api/register/check/${name}/${value}`)
                         .then(res => res.json())
                         .then(result => {
                             if (result.success === true) {

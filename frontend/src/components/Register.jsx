@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { useTranslation } from "react-i18next";
 import { setLogin, setFirstName, setLastName, setEmail, setPassword, setRepassword, fetchRegister } from '../redux/register/ActionCreators';
 import { NavLink, Card, CardBody, Row, Col, FormGroup, Label, Input, FormFeedback, Button, Container, Alert } from 'reactstrap';
-import CONFIG from '../util/const';
 import { isValidInput, isValidPassword } from '../util/check';
 import { request } from '../util/http';
 import Loading from './Loading';
@@ -31,7 +30,7 @@ const InputForm = (props) => {
     const [feedback, setFeedback] = useState('Oopsy!');
 
     const checkExist = (name, value) => {
-        request(`${CONFIG.API_URL}/api/register/check/${name}/${value}`)
+        request(`/api/register/check/${name}/${value}`)
             .then(res => res.json())
             .then(
                 result => {

@@ -45,8 +45,6 @@ exports.getNotif = (me, title, poster) => {
     WHERE m.imdb = n.idFilm AND idUser = (SELECT id FROM Users WHERE displayName=$1)
     ORDER BY n.createdAt DESC`;
 
-    console.log(sql);
-
     return db.any(sql, [me, title, poster])
 }
 

@@ -2,7 +2,7 @@ const fs = require('fs');
 const rimraf = require("rimraf");
 const subsrt = require('subsrt');
 const torrentStream = require('torrent-stream');
-const { getMagnet, setMoviePath, setMovieStatus } = require('../models/stream');
+const { getMagnet, setMoviePath, setMovieStatus, updateMovieStatus } = require('../models/stream');
 const { getSubtitles } = require('../initMovies/getSubtitles');
 
 module.exports = (io) => {
@@ -77,17 +77,19 @@ module.exports = (io) => {
                             if (check(file.name, extensions)) {
                                 file.select();
                                 newPath = file.path;
+                                setMoviePath(imdb, quality, newPath);
                             } else {
                                 file.deselect();
                             }
                         });
                     })
                     .on('download', (index) => {
-                        console.log(`Engine downloading chunk: [${index}]`);
+                        console.log(`Engine downloading chunk (${imdb}_${quality}): [${index}]`);
                     })
-                    .on('idle', () => {
+                    .on('idle', async () => {
+                        await updateMovieStatus(imdb, quality, "downloaded");
                         mySpace.emit('notification', [key, Array.from(movies[key])]);
-                        setMoviePath(imdb, quality, newPath);
+                        console.log("Movie downloaded");
                     })
             }
         })

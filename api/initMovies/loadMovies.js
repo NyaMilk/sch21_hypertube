@@ -2,6 +2,7 @@ const axios = require("axios");
 const API_KEY = 'd022dfadcf20dc66d480566359546d3c';
 const { getRate, getRuIso } = require('./rate');
 const { insertMovies } = require('../models/movies');
+const MAX_PAGES = 20;
 
 const getPopcornMovies = async () => {
     let raw = [];
@@ -11,8 +12,8 @@ const getPopcornMovies = async () => {
         try {
             const res = await axios(`https://cors-anywhere.herokuapp.com/movies-v2.api-fetch.sh/movies/${i}`, { headers: { 'X-Requested-With': true } });
             raw.push(...res.data);
+            console.log(`*Loaded ${(i / MAX_PAGES * 100).toFixed(2)}% of popcorn movies*`);
         } catch (e) {
-            console.log(e.message);
             continue
         }
     }
@@ -58,8 +59,8 @@ const getYtsMovies = async () => {
         try {
             const res = await axios(`https://yts.lt/api/v2/list_movies.json?limit=50&page=${i}`)
             raw.push(...res.data.data.movies);
+            console.log(`*Loaded ${(i / MAX_PAGES * 100).toFixed(2)}% of YTS movies*`);
         } catch (e) {
-            console.log(e.message);
             continue
         }
     }

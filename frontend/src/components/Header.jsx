@@ -8,7 +8,6 @@ import { setQuality } from '../redux/movie/ActionCreators';
 import { useTranslation } from "react-i18next";
 import { request } from '../util/http';
 import { socket } from '../util/socket';
-import CONFIG from '../util/const';
 
 const video = '/img/head-video.svg';
 const user = '/img/head-user.svg';
@@ -122,7 +121,7 @@ const Header = (props) => {
     const { getNotifications, addNotification, setNew, setQuality, logOut, setUser } = props;
 
     useEffect(() => {
-        request(`${CONFIG.API_URL}/api/auth/success`)
+        request(`/api/auth/success`)
             .then(res => res.json())
             .then(data => {
                 (data.success) ? (setUser(data.user)) : setUserFailed(data.message);

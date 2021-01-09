@@ -1,6 +1,6 @@
 const passport = require("passport");
 const keys = require("./keys");
-const { findUserOauth, findUserLocalAuth, addUser, findUserInAllProviders } = require('./../models/auth');
+const { findUserOauth, findUserLocalAuth, addUser, findUserInAllProviders, addFullUser } = require('./../models/auth');
 const GithubStrategy = require('passport-github').Strategy;
 const SchoolStrategy = require('passport-42').Strategy;
 const LocalStrategy = require('passport-local').Strategy;
@@ -55,11 +55,21 @@ passport.use(new SchoolStrategy({
     const userName = profile.username;
     const email = (profile.emails[0].value) ? profile.emails[0].value : '';
     const lastName = profile.name.familyName;
-    const firstName = profile.name.firstName;
+    const firstName = profile.name.givenName;
 
     findUserOauth(userName, 'school42')
       .then(data => {
-        (!data[0]) ? done(null, 'Ooopsy! Cannot auth. Try again') : done(null, data[0].displayname);
+        if (data.length > 0) 
+          done(null, data[0].displayname);
+        else {
+          addFullUser(userName, email, firstName, lastName, "school42")
+          .then(data => {
+            (data) ? done(null, userName) : done(null, 'Ooopsy! Cannot auth. Try again');
+          })
+          .catch(() => {
+            done(null, 'Ooopsy! Cannot auth. Try again');
+          });
+        }
       })
       .catch(() => {
         done(null, 'Ooopsy! Cannot auth. Try again');

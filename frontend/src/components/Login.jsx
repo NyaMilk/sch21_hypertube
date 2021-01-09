@@ -6,7 +6,6 @@ import { request } from '../util/http';
 import Info from './Info';
 import { localAuth } from '../redux/login/ActionCreators';
 import { useTranslation } from "react-i18next";
-import CONFIG from '../util/const';
 
 const logo_42 = '/img/42_logo.svg';
 const logo_git = '/img/git_logo.svg';
@@ -54,7 +53,7 @@ const Login = (props) => {
 
     const handleOauth = (e) => {
         if (names.includes(e.target.name)) {
-            window.open(`${CONFIG.API_URL}/api/auth/${e.target.name}`, "_self");
+            window.open(`http://localhost:5000/api/auth/${e.target.name}`, "_self");
         }
     }
 
