@@ -24,7 +24,7 @@ export const Main = () => {
                     <Route path='/catalog/page/:page' component={Catalog} />
                     <Route exact={true} path='/movie/:imdb' component={Movie} />
                     <Route exact={true} path='/profile/:username' component={Profile} />
-                    <Route component={Login} />
+                    <Route exact path='/' component={Login} />
                 </Switch>
             </Router>
             <Footer />

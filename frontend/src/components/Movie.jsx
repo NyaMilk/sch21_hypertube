@@ -72,7 +72,7 @@ const QualitiesList = (props) => {
 }
 
 const Options = (props) => {
-    const { me, film, title, favorite, fetchUpdateFavoriteFilm, setQuality, qualities, quality, t } = props;
+    const { me, film, title, favorite, fetchUpdateFavoriteFilm, setQuality, qualities, quality, t, trailer } = props;
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const changeFilmList = (e) => {
@@ -107,7 +107,7 @@ const Options = (props) => {
                 </ModalHeader>
                 <ModalBody className="text-center">
                     <iframe id="videoPlayer" title={title} className="embed-responsive" height="420" controls
-                        src={`https://www.youtube.com/embed/${props.trailer}`}>
+                        src={`https://www.youtube.com/embed/${trailer}`}>
                     </iframe>
                 </ModalBody>
             </Modal>
@@ -131,15 +131,15 @@ const Options = (props) => {
                     <p>{t("moviePage.share")}</p>
                 </ModalHeader>
                 <ModalBody className="aside-button-share">
-                    <a target="_blank" rel="noreferrer" title="facebook" href={`http://www.facebook.com/sharer.php?u=http://localhost:3000/movie/${props.film}&text=True%20story`}>
+                    <a target="_blank" rel="noreferrer" title="facebook" href={`http://www.facebook.com/sharer.php?u=http://localhost:3000/movie/${film}&text=True%20story`}>
                         <img src={facebook} alt="fb" />
                         Facebook
                     </a>
-                    <a target="_blank" rel="noreferrer" title="twitter" href={`http://twitter.com/share?url=http://localhost:3000/movie/${props.film}&text=True%20story`}>
+                    <a target="_blank" rel="noreferrer" title="twitter" href={`http://twitter.com/share?url=http://localhost:3000/movie/${film}&text=True%20story`}>
                         <img src={twitter} alt="tw" />
                         Twitter
                     </a>
-                    <a target="_blank" rel="noreferrer" title="vk" href={`http://vk.com/share.php?url=http://localhost:3000/movie/${props.film}&text=True%20story`}>
+                    <a target="_blank" rel="noreferrer" title="vk" href={`http://vk.com/share.php?url=http://localhost:3000/movie/${film}&text=True%20story`}>
                         <img src={vk} alt="vk" />
                         VKontakte
                     </a>
@@ -150,7 +150,7 @@ const Options = (props) => {
 }
 
 const Comments = (props) => {
-    const { me, imdb, setMsg, fetchComments, comments } = props;
+    const { me, imdb, setMsg, fetchComments, comments, t } = props;
     const [textComment, setComment] = useState('');
 
     const addComments = () => {
@@ -238,10 +238,10 @@ const Comments = (props) => {
             <div>
                 <Row>
                     <Col className="movie-comment">
-                        <p className="movie-title">{props.t("moviePage.comment")}</p>
+                        <p className="movie-title">{t("moviePage.comment")}</p>
                         <InputGroup>
                             <Input name='comment' value={textComment} onChange={e => setComment(e.target.value)} />
-                            <Button color='secondary' onClick={addComments}>{props.t("moviePage.send")}</Button>
+                            <Button color='secondary' onClick={addComments}>{t("moviePage.send")}</Button>
                         </InputGroup>
                     </Col>
                 </Row>
@@ -256,14 +256,14 @@ const Comments = (props) => {
             <div>
                 <Row>
                     <Col className="movie-comment">
-                        <p className="movie-title">{props.t("moviePage.comment")}</p>
+                        <p className="movie-title">{t("moviePage.comment")}</p>
                         <InputGroup>
                             <Input name='comment' value={textComment} onChange={e => setComment(e.target.value)} />
-                            <Button color='secondary' onClick={addComments}>{props.t("moviePage.send")}</Button>
+                            <Button color='secondary' onClick={addComments}>{t("moviePage.send")}</Button>
                         </InputGroup>
                     </Col>
                 </Row>
-                <span className="movie-comments-list font-profile-head font-message">{props.t("moviePage.nobody")}</span>
+                <span className="movie-comments-list font-profile-head font-message">{t("moviePage.nobody")}</span>
             </div>
         );
 }
@@ -299,7 +299,7 @@ const GenreList = (props) => {
 }
 
 const VideoPlayer = (props) => {
-    const { logs, torrents, quality, imdb, me, ensubtitle, rusubtitle } = props;
+    const { logs, torrents, quality, imdb, me, ensubtitle, rusubtitle, setMsg, t } = props;
     const [isSub, setSub] = useState(false);
     let index;
     let status;
@@ -318,7 +318,7 @@ const VideoPlayer = (props) => {
 
     const ws = () => {
         socket.emit('movie', [imdb, quality, index, me]);
-        props.setMsg(props.t("moviePage.statusFive"));
+        setMsg(t("moviePage.statusFive"));
     }
 
     useEffect(() => {
@@ -335,11 +335,10 @@ const VideoPlayer = (props) => {
     if (!logs || !status || status.indexOf(quality) === -1) {
         return (
             <Col>
-                <p className="txtPlay">{props.t("moviePage.statusOne")}</p>
-                <p className="txtPlay">{!isSub ? props.t("moviePage.statusTree") : props.t("moviePage.statusFour")}</p>
+                <p className="txtPlay">{t("moviePage.statusOne")}</p>
+                <p className="txtPlay">{!isSub ? t("moviePage.statusTree") : t("moviePage.statusFour")}</p>
                 {
                     !isSub &&
-                    // <button onClick={ws}>Click start to download. Notify when movie will be downloaded</button>
                     <button onClick={ws} className="btnPlay">
                         <img src={play} alt="play" />
                     </button>
@@ -375,8 +374,8 @@ const VideoPlayer = (props) => {
     else if (status.indexOf('downloading') > 0) {
         return (
             <Col>
-                <p className="txtPlay">{props.t("moviePage.statusTwo")}</p>
-                <p className="txtPlay">{!isSub ? props.t("moviePage.statusTree") : props.t("moviePage.statusFour")}</p>
+                <p className="txtPlay">{t("moviePage.statusTwo")}</p>
+                <p className="txtPlay">{!isSub ? t("moviePage.statusTree") : t("moviePage.statusFour")}</p>
                 {
                     !isSub &&
                     // <button onClick={ws}>Notify when movie will be downloaded</button>
@@ -395,7 +394,7 @@ const VideoPlayer = (props) => {
 const Movie = (props) => {
     const { t, i18n } = useTranslation();
     const { imdb } = useParams();
-    const { fetchMovie, fetchFavoriteFilm, fetchComments, fetchUpdateFavoriteFilm, setQuality } = props;
+    const { fetchMovie, fetchFavoriteFilm, fetchComments, fetchUpdateFavoriteFilm, setQuality, movie } = props;
     const me = props.login.me;
     const [message, setMsg] = useState();
 
@@ -410,16 +409,16 @@ const Movie = (props) => {
         if (activeTab !== tab) setActiveTab(tab);
     }
 
-    if (props.movie.isLoading) {
+    if (movie.isLoading) {
         return (
             <Loading />
         );
     }
-    else if (props.movie.info != null) {
+    else if (movie.info != null) {
         const { entitle, rutitle, endescription, rudescription, torrents, encountries, rucountries,
             engenres, rugenres, entrailer, rutrailer, rate, daterelease, runtime,
-            enposter, ruposter, ensubtitle, rusubtitle, logs } = props.movie.info;
-        const { favorite, favoriteMsg, quality } = props.movie;
+            enposter, ruposter, ensubtitle, rusubtitle, logs } = movie.info;
+        const { favorite, favoriteMsg, quality } = movie;
         const title = (i18n.language === 'en') ? entitle : rutitle;
         const description = (i18n.language === 'en') ? endescription : rudescription;
         const genres = (i18n.language === 'en') ? engenres : rugenres;
@@ -528,7 +527,7 @@ const Movie = (props) => {
                                     <Comments
                                         me={me}
                                         imdb={imdb}
-                                        comments={props.movie.comments}
+                                        comments={movie.comments}
                                         t={t}
                                         setMsg={setMsg}
                                         fetchComments={fetchComments} />

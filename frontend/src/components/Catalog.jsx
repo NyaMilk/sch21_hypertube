@@ -41,7 +41,7 @@ const mapDispatchToProps = (dispatch) => ({
 const InputForm = (props) => {
     const { set, name, defaultValue } = props;
     const [isValid, toggleValid] = useState('');
-    const [feedback, setFeedback] = useState('Oopsy!');
+    const [feedback, setFeedback] = useState('Wrong input');
 
     const inputChange = (e) => {
         const { name, value } = e.target;
@@ -219,24 +219,26 @@ const GenreList = (props) => {
 }
 
 const FilmCards = (props) => {
+    const { cards, lang } = props;
     let listItems;
 
-    if (props.cards.length > 0) {
+    if (cards.length > 0) {
         listItems = props.cards.map((card, item) => {
-            const poster = (props.lang === 'en') ? card.enposter : card.ruposter;
-            const title = (props.lang === 'en') ? card.entitle : card.rutitle;
-            const genres = (props.lang === 'en') ? card.engenres : card.rugenres;
+            const { enposter, ruposter, entitle, rutitle, engenres, rugenres, imdb, rate, year } = card;
+            const poster = (lang === 'en') ? enposter : ruposter;
+            const title = (lang === 'en') ? entitle : rutitle;
+            const genres = (lang === 'en') ? engenres : rugenres;
 
             return (<Col md={3} key={item}>
-                <Link to={`/movie/${card.imdb}`}>
+                <Link to={`/movie/${imdb}`}>
                     <Card className="mb-4 text-center">
                         <CardImg top src={`https://image.tmdb.org/t/p/original/${poster}`} alt={title} />
                         <CardBody>
                             <CardTitle>
-                                {title} <Badge color="danger" pill> {card.rate} </Badge>
+                                {title} <Badge color="danger" pill> {rate} </Badge>
                             </CardTitle>
                             <ListGroup flush>
-                                <ListGroupItem>{card.year}</ListGroupItem>
+                                <ListGroupItem>{year}</ListGroupItem>
                                 <GenreList genres={genres} />
                             </ListGroup>
                         </CardBody>
@@ -251,13 +253,14 @@ const FilmCards = (props) => {
 }
 
 const CardsPagination = (props) => {
-    const countPages = Math.ceil(props.cardCount / 16);
+    const { cardCount, getPage } = props;
+    const countPages = Math.ceil(cardCount / 16);
 
     if (countPages > 1) {
         let count,
             index,
             pages = [],
-            currentPage = Number(props.getPage);
+            currentPage = Number(getPage);
 
         if (currentPage === 1 && countPages !== 2) {
             count = currentPage + 2;

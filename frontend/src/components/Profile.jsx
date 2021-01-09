@@ -45,7 +45,7 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 const Avatar = (props) => {
-    const { username } = props;
+    const { username, check, text } = props;
     const [src, setSrc] = useState();
 
     const putPhoto = (e) => {
@@ -62,24 +62,24 @@ const Avatar = (props) => {
                     if (data) { setSrc(Date.now()) }
                 })
                 .catch(e => {
-                    alert(e.message);
+                    console.log(e.message);
                 })
         }
     }
 
     return (
         <Col className="col-lg-3">
-            {props.username &&
+            {username &&
                 <img
-                    src={`/api/image/${props.username}/${src}`}
-                    alt={`Avatar ${props.username}`}
+                    src={`/api/image/${username}/${src}`}
+                    alt={`Avatar ${username}`}
                     className="mx-auto d-block profile-avatar rounded-circle" />
             }
             {
-                props.check &&
+                check &&
                 <div className="d-flex justify-content-center">
                     <Label className="btn btn-sm btn-success">
-                        {props.text}
+                        {text}
                         <Input className="profile-input" type="file" onChange={putPhoto} />
                     </Label>
                 </div>
@@ -90,7 +90,7 @@ const Avatar = (props) => {
 
 const InputForm = (props) => {
     const [isValid, toggleValid] = useState('');
-    const [feedback, setFeedback] = useState('Oopsy!');
+    const [feedback, setFeedback] = useState('Wrong input');
 
     const inputChange = (e) => {
         const { name, value } = e.target;
@@ -264,11 +264,13 @@ const EditProfile = (props) => {
 }
 
 const AsideButton = (props) => {
+    const { me, name, fetchProfile, setMsg, check, info, status } = props;
+
     const changeStatus = (e) => {
         if (e.target.value === 'add' || e.target.value === 'remove') {
             const data = {
-                me: props.me,
-                you: props.name,
+                me: me,
+                you: name,
                 status: e.target.value
             }
 
@@ -276,20 +278,20 @@ const AsideButton = (props) => {
                 .then(response => response.json())
                 .then(result => {
                     if (result.success) {
-                        props.fetchProfile(props.name, props.me);
+                        fetchProfile(name, me);
                     }
                 })
-                .catch(error => props.setMsg(error.message));
+                .catch(error => setMsg(error.message));
         }
     }
-    if (props.check) {
+    if (check) {
         const { setLogin, setFirstName, setLastName, setEmail,
             setAbout, setNewPassword, fetchEditProfile, edit } = props;
 
         return (
             <Row className="aside-button">
                 <EditProfile
-                    info={props.info}
+                    info={info}
                     setLogin={setLogin}
                     setFirstName={setFirstName}
                     setLastName={setLastName}
@@ -306,9 +308,9 @@ const AsideButton = (props) => {
         return (
             <Row className="aside-button" >
                 <Button color="info"
-                    value={props.info.isfriend === 1 ? 'remove' : 'add'}
+                    value={info.isfriend === 1 ? 'remove' : 'add'}
                     onClick={changeStatus}>
-                    {props.info.isfriend === 1 ? props.status[1] : props.status[0]}
+                    {info.isfriend === 1 ? status[1] : status[0]}
                 </Button>
             </Row>
         );
@@ -321,7 +323,7 @@ const Profile = (props) => {
     const { username } = props.match.params;
     const { fetchProfile, fetchViews, fetchComments, fetchFriends, setLogin, setFirstName, setLastName,
         setEmail, setAbout, setNewPassword, fetchEditProfile } = props;
-    const { isLoading, infoMsgViews, infoMsgComments, infoMsgFriends } = props.profile;
+    const { isLoading, infoMsgViews, infoMsgComments, infoMsgFriends, info, views, comments, friends } = props.profile;
 
 
     useEffect(() => {
@@ -351,8 +353,8 @@ const Profile = (props) => {
             <Info info="alert" message={infoMsgViews || infoMsgComments || infoMsgFriends} />
         );
     }
-    else if (props.profile.info != null) {
-        const { displayname, firstname, lastname, about, provider } = props.profile.info;
+    else if (info != null) {
+        const { displayname, firstname, lastname, about, provider } = info;
         const isMe = (me === username);
 
         return (
@@ -364,7 +366,7 @@ const Profile = (props) => {
                     }
                     <AsideButton
                         check={isMe}
-                        info={props.profile.info}
+                        info={info}
                         status={[t("profilePage.status.add"), t("profilePage.status.remove")]}
                         setLogin={setLogin}
                         setFirstName={setFirstName}
@@ -414,13 +416,13 @@ const Profile = (props) => {
                             </Nav>
                             <TabContent activeTab={activeTab}>
                                 <TabPane tabId="1">
-                                    <ViewsList myviews={props.profile.views} movies />
+                                    <ViewsList myviews={views} movies />
                                 </TabPane>
                                 <TabPane tabId="2">
-                                    <ViewsList myviews={props.profile.comments} comments />
+                                    <ViewsList myviews={comments} comments />
                                 </TabPane>
                                 <TabPane tabId="3">
-                                    <ViewsList myviews={props.profile.friends} friends />
+                                    <ViewsList myviews={friends} friends />
                                 </TabPane>
                             </TabContent>
                         </Col>

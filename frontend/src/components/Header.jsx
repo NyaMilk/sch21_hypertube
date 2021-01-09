@@ -44,8 +44,6 @@ const NotificationList = (props) => {
                     <a href={`/movie/${imdb}`} onClick={() => setQuality(quality)}>
                         <span>{title} ({quality}) {props.t("inputMsg.download")}</span>
                     </a>
-                    {/* <div>{notificaiton.message}</div> */}
-                    {/* <div>{moment(notificaiton.time).fromNow()}</div> */}
                 </DropdownItem>
             );
         });
