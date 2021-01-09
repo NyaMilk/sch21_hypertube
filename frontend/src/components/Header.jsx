@@ -127,7 +127,7 @@ const Header = (props) => {
                 (data.success) ? (setUser(data.user)) : setUserFailed(data.message);
             })
             .catch((e) => setUserFailed(e.message))
-    }, [path])
+    }, [path, setUser])
 
     useEffect(() => {
         if (isLogged) {

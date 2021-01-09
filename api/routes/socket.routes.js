@@ -84,12 +84,12 @@ module.exports = (io) => {
                         });
                     })
                     .on('download', (index) => {
-                        console.log(`Engine downloading chunk (${imdb}_${quality}): [${index}]`);
+                        process.stdout.write(`\rEngine downloading chunk (${imdb}_${quality}): [${index}]`);
                     })
                     .on('idle', async () => {
                         await updateMovieStatus(imdb, quality, "downloaded");
                         mySpace.emit('notification', [key, Array.from(movies[key])]);
-                        console.log("Movie downloaded");
+                        console.log(`\nMovie ${imdb} (${quality}) downloaded`);
                     })
             }
         })

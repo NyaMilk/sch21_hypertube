@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { request } from '../util/http';
 import { isValidPassword } from '../util/check';
-import { Container, Button, Input, Row, Col, Label, Card, CardBody, FormFeedback, FormGroup } from 'reactstrap'
+import { Container, Button, Input, Col, Label, Card, CardBody, FormFeedback, FormGroup } from 'reactstrap'
 import Info from './Info';
 import { useTranslation } from "react-i18next";
 
 const InputForm = (props) => {
+    const { labelNamePass, checkBtn, feedback, set, labelNameRePass } = props;
     const [isValidPass, toggleValidPass] = useState('');
     const [isValidRepass, toggleValidRepass] = useState('');
 
@@ -17,7 +18,7 @@ const InputForm = (props) => {
             if (isValidPassword(value) === true) {
                 toggleValidPass('is-valid');
                 if (name === 'password')
-                    props.set(value);
+                    set(value);
             }
             else
                 toggleValidPass('is-invalid');
@@ -32,32 +33,32 @@ const InputForm = (props) => {
         <Col>
             <FormGroup>
                 <Label className="font-profile-head">
-                    {props.labelNamePass}
+                    {labelNamePass}
                     <Input
                         type="password"
-                        name='password'
+                        name="password"
                         onChange={inputChange}
-                        onBlur={props.checkBtn}
+                        onBlur={checkBtn}
                         placeholder="Str0ngPa55%"
                         className={isValidPass}
                         required
                     />
-                    <FormFeedback>{props.feedback[0]}</FormFeedback>
+                    <FormFeedback>{feedback[0]}</FormFeedback>
                 </Label>
             </FormGroup>
             <FormGroup>
                 <Label className="font-profile-head">
-                    {props.labelNameRePass}
+                    {labelNameRePass}
                     <Input
                         type="password"
-                        name='repassword'
+                        name="repassword"
                         onChange={inputChange}
-                        onBlur={props.checkBtn}
+                        onBlur={checkBtn}
                         placeholder="Str0ngPa55%"
                         className={isValidRepass}
                         required
                     />
-                    <FormFeedback>{props.feedback[1]}</FormFeedback>
+                    <FormFeedback>{feedback[1]}</FormFeedback>
                 </Label>
             </FormGroup>
         </Col>

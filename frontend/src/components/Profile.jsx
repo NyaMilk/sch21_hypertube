@@ -155,7 +155,6 @@ const InputForm = (props) => {
 const EditProfile = (props) => {
     const { t } = useTranslation();
     const [modal, setModal] = useState(false);
-    const [message, setMessage] = useState();
     const { displayname, firstname, lastname, about, email, provider } = props.info;
     const { setLogin, setFirstName, setLastName, setEmail, setAbout, setNewPassword, fetchEditProfile } = props;
 
@@ -256,7 +255,7 @@ const EditProfile = (props) => {
                     }
                 </ModalBody>
                 <ModalFooter className="justify-content-between">
-                    <Button color="success" onClick={save} message={message} disabled={!isActiveBtn}>Save</Button>
+                    <Button color="success" onClick={save} disabled={!isActiveBtn}>Save</Button>
                     <Button color="secondary" onClick={toggleModal}>Cancel</Button>
                 </ModalFooter>
             </Modal>
