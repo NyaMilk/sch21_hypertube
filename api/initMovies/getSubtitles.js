@@ -19,7 +19,7 @@ exports.getSubtitles = (imdb) => {
 
         if (subs.en && subs.en.utf8) {
             try {
-                fs.writeFileSync(path + imdb + "_en.srt", await download(subs.en.url));
+                fs.writeFileSync(path + imdb + "_en.srt", await download(subs.en.utf8));
                 await setStatusSubtitle(imdb, 'enSubtitle');
             }
             catch (e) {
@@ -28,7 +28,7 @@ exports.getSubtitles = (imdb) => {
         }
         if (subs.ru && subs.ru.utf8) {
             try {
-                fs.writeFileSync(path + imdb + "_ru.srt", await download(subs.ru.url));
+                fs.writeFileSync(path + imdb + "_ru.srt", await download(subs.ru.utf8));
                 await setStatusSubtitle(imdb, 'ruSubtitle');
             }
             catch (e) {
