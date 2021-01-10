@@ -319,6 +319,7 @@ const VideoPlayer = (props) => {
     const ws = () => {
         socket.emit('movie', [imdb, quality, index, me]);
         setMsg(t("moviePage.statusFive"));
+        document.location.reload();
     }
 
     useEffect(() => {
