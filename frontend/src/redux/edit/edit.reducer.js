@@ -10,19 +10,19 @@ const initialState = {
     about: null,
     newpass: null,
     passwordStatus: false,
-    editProfileStatus: null
+    status: null
 };
 
 export const EditProfileReducer = (state = initialState, action) => {
     switch (action.type) {
         case ActionTypes.EDIT_PROFILE_STATUS_ADD:
-            return { ...state, isLoading: false, errProfile: null, editProfileStatus: action.payload };
+            return { ...state, isLoading: false, errProfile: null, status: action.payload };
 
         case ActionTypes.PROFILE_EDIT_LOADING:
-            return { ...state, isLoading: true, errProfile: null, editProfileStatus: null };
+            return { ...state, isLoading: true, errProfile: null, status: null };
 
         case ActionTypes.PROFILE_EDIT_FAILED:
-            return { ...state, isLoading: false, errProfile: action.payload, editProfileStatus: null };
+            return { ...state, isLoading: false, errProfile: action.payload, status: null };
 
         case ActionTypes.PROFILE_EDIT_CLEAR:
             return { ...initialState };

@@ -7,7 +7,7 @@ const Footer = () => {
             <Container>
                 <Row>
                     <Col>
-                        <span>created by <a href="https://github.com/Dindonpingpong">rkina</a> & <a href="https://github.com/NyaMilk">mgrass</a></span>
+                        <span>created by <a href="https://github.com/Dindonpingpong">rkina</a> & <a href="https://github.com/NyaMilk">mgrass</a> & <a href="https://github.com/cnails">cnails</a></span>
                     </Col>
                 </Row>
             </Container>

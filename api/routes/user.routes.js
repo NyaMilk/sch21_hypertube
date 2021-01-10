@@ -67,11 +67,12 @@ router.post('/profile/edit/:username', async (req, res) => {
 
     const que = keys.join(', ');
     params.push(username);
+
     editProfile(que, params, i)
         .then(data => {
             res.status(200).json({
                 message: "Ok",
-                nickname: data.nickname,
+                username: data[0].displayname,
                 success: true
             })
         })

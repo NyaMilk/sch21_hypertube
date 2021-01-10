@@ -57,19 +57,3 @@ export const localAuth = (username, password) => (dispatch) => {
         })
         .catch(error => dispatch(loginFailed(error.message)));
 }
-
-export const fetchUpdateLogin = (username) => (dispatch) => {
-    dispatch(loginLoading());
-
-    return request(`/api/user/login/${username}`)
-        .then(res => res.json())
-        .then(result => {
-            if (result.success === true) {
-                dispatch(loginDataAdd(result.profile));
-            }
-            else {
-                dispatch(loginFailed(result.message));
-            }
-        })
-        .catch(error => dispatch(loginFailed(error.message)));
-}
