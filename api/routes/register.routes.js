@@ -34,7 +34,7 @@ router.get('/check/email/:email', async (req, res) => {
     }
 })
 
-router.get('/check/login/:login', async (req, res) => {
+router.get('/check/username/:login', async (req, res) => {
     try {
         const login = req.params.login;
         

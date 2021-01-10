@@ -44,16 +44,16 @@ const InputForm = (props) => {
 
     const inputChange = (e) => {
         const { name, value } = e.target;
-        if (name === 'login' || name === 'email' || name === 'lastName' || name === 'firstName') {
+        if (name === 'username' || name === 'email' || name === 'lastName' || name === 'firstName') {
             if (isValidInput(name, value) === true) {
                 toggleValid('is-valid');
-                if (name === 'login' || name === 'email')
+                if (name === 'username' || name === 'email')
                     checkExist(name, value);
                 props.set(value);
             }
             else {
                 toggleValid('is-invalid');
-                (name === 'login' || name === 'email') ? setFeedback(props.feedback[1]) : setFeedback(props.feedback);
+                (name === 'username' || name === 'email') ? setFeedback(props.feedback[1]) : setFeedback(props.feedback);
             }
         }
     };
@@ -194,7 +194,7 @@ const Register = (props) => {
                                             onBlur={checkBtn}
                                             labelName={t("loginPage.login")}
                                             feedback={[t("inputMsg.login.taken"), t("inputMsg.login.invalid")]}
-                                            name='login'
+                                            name='username'
                                             placeholder='rkina7'
                                             type='text' />
                                         <InputForm
