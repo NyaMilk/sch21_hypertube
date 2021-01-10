@@ -373,7 +373,7 @@ const VideoPlayer = (props) => {
     else if (status.indexOf('downloaded') > 0) {
         return (
             <Col>
-                <video crossOrigin="anonymous" key={quality} id="videoPlayer" className="embed-responsive" controls>
+                <video crossOrigin="anonymous" key={quality} id="videoPlayer" controlsList="nodownload" className="embed-responsive" controls>
                     <source src={`/api/stream/movie/${imdb}/${quality}`} type="video/mp4" />
 
                     {
