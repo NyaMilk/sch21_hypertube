@@ -288,7 +288,7 @@ const CountriesList = (props) => {
 const GenreList = (props) => {
     let listItems;
     const [engenres, rugenres, eng] = props.genres;
-    const {setGenres} = props.filter;
+    const { setGenres } = props.filter;
     console.log(props);
 
     const genres = eng ? engenres : rugenres;
@@ -302,13 +302,10 @@ const GenreList = (props) => {
     }
 
     if (genres) {
-        listItems = genres.map((genre, item) => {
-            if (genre !== 'superhero') return (
-                <ListGroupItem className="movie-list" key={item}>
-                    <Link to="/catalog/page/1" onClick={() => {handleGenreClick(item)}}>{genre}</Link>
-                </ListGroupItem>
-            )
-        }
+        listItems = genres.filter((item) => item !== 'superhero').map((genre, item) =>
+            <ListGroupItem className="movie-list" key={item}>
+                <Link to="/catalog/page/1" onClick={() => { handleGenreClick(item) }}>{genre}</Link>
+            </ListGroupItem>
         );
     }
     return (
@@ -440,7 +437,6 @@ const Movie = (props) => {
         const { favorite, favoriteMsg, quality } = movie;
         const title = (i18n.language === 'en') ? entitle : rutitle;
         const description = (i18n.language === 'en') ? endescription : rudescription;
-        const genres = (i18n.language === 'en') ? engenres : rugenres;
         const trailer = (i18n.language === 'en') ? entrailer : rutrailer;
         const countries = (i18n.language === 'en') ? encountries : rucountries;
         const poster = (i18n.language === 'en') ? enposter : ruposter;

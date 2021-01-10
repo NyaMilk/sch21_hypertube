@@ -136,7 +136,7 @@ exports.deleteStatus = (me, idComment) => {
 }
 
 exports.deleteMovies = () => {
-    const sql = `DELETE FROM MoviesLogs WHERE lastChange < CURRENT_DATE - 2 RETURNING path`;
+    const sql = `DELETE FROM MoviesLogs WHERE lastChange < CURRENT_DATE - 30 RETURNING idFilm, quality`;
 
     return db.any(sql);
 }

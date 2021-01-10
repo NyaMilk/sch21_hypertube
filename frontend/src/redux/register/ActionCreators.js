@@ -37,7 +37,7 @@ export const setLastName = (lastName) => (dispatch) => {
 };
 
 export const setEmail = (email) => (dispatch) => {
-    dispatch(() => ({
+    dispatch(({
         type: ActionTypes.USER_FORM_EMAIL_ADD,
         email: email
     }));
