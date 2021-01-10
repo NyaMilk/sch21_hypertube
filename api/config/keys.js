@@ -26,8 +26,8 @@ const SESSION = {
 };
 
 const EMAIL = {
-  EMAIL: "matcha.rm.nd@gmail.com",
-  EMAIL_PASS: "wwqfd123"
+  EMAIL: "nom4dew@gmail.com",
+  EMAIL_PASS: "12072001Aa!@"
 }
 
 const BCRYPT = {

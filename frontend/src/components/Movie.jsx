@@ -275,8 +275,8 @@ const CountriesList = (props) => {
 
     if (props.countries) {
         listItems = props.countries.map((country, item) =>
-            <ListGroupItem className="movie-list" key={item}>
-                <Link to="#">{country}</Link>
+            <ListGroupItem className="country-list" key={item}>
+                <div>{country}</div>
             </ListGroupItem>
         );
     }

@@ -235,7 +235,7 @@ const FilmCards = (props) => {
             const genres = (lang === 'en') ? engenres : rugenres;
 
             return (<Col md={3} key={item}>
-                <Link to={`/ movie / ${imdb} `}>
+                <Link to={`/movie/${imdb}`}>
                     <Card className="mb-4 text-center">
                         <CardImg top src={`https://image.tmdb.org/t/p/original/${poster}`} alt={title} />
                         <CardBody>
