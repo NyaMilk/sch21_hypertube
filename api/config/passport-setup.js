@@ -83,7 +83,7 @@ passport.use(new LocalStrategy(
       .then(data => {
         let check;
 
-        if (data[0]) {
+        if (data[0] && data[0].confirm) {
           check = bcrypt.compareSync(password, data[0].password);
           return (check) ? done(null, displayname) : done(null, 'Ooopsy! Cannot auth. Try again');
         }
