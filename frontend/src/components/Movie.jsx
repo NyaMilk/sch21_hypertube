@@ -7,6 +7,7 @@ import {
 } from 'reactstrap'
 import { connect } from 'react-redux';
 import { fetchMovie, fetchFavoriteFilm, fetchUpdateFavoriteFilm, fetchComments, setQuality } from '../redux/movie/ActionCreators';
+import { setGenres } from '../redux/catalog/ActionCreators';
 import { useTranslation } from "react-i18next";
 import Loading from './Loading';
 import Info from './Info';
@@ -43,6 +44,7 @@ const mapDispatchToProps = (dispatch) => ({
     fetchFavoriteFilm: (user, film) => dispatch(fetchFavoriteFilm(user, film)),
     fetchUpdateFavoriteFilm: (user, film, status, newStatus) => dispatch(fetchUpdateFavoriteFilm(user, film, status, newStatus)),
     fetchComments: (me, film) => dispatch(fetchComments(me, film)),
+    setGenres: (genres) => dispatch(setGenres(genres)),
     setQuality: (quality) => dispatch(setQuality(quality))
 });
 
@@ -285,12 +287,28 @@ const CountriesList = (props) => {
 
 const GenreList = (props) => {
     let listItems;
+    const [engenres, rugenres, eng] = props.genres;
+    const {setGenres} = props.filter;
+    console.log(props);
 
-    if (props.genres) {
-        listItems = props.genres.map((genre, item) =>
-            <ListGroupItem className="movie-list" key={item}>
-                <Link to="#">{genre}</Link>
-            </ListGroupItem>
+    const genres = eng ? engenres : rugenres;
+
+    const handleGenreClick = (index) => {
+        let genre = engenres[index];
+
+        genre = genre === "science-fiction" ? 'science' : genre;
+
+        setGenres([genre]);
+    }
+
+    if (genres) {
+        listItems = genres.map((genre, item) => {
+            if (genre !== 'superhero') return (
+                <ListGroupItem className="movie-list" key={item}>
+                    <Link to="/catalog/page/1" onClick={() => {handleGenreClick(item)}}>{genre}</Link>
+                </ListGroupItem>
+            )
+        }
         );
     }
     return (
@@ -510,7 +528,7 @@ const Movie = (props) => {
                                             <p className="movie-title">
                                                 {t("moviePage.genres")}
                                             </p>
-                                            <GenreList genres={genres} />
+                                            <GenreList filter={props} genres={[engenres, rugenres, i18n.language === 'en']} />
 
                                             <p className="movie-title">
                                                 {t("moviePage.country")}
