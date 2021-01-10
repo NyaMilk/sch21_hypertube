@@ -178,8 +178,7 @@ const EditProfile = (props) => {
             about: about,
             newpass: newpass
         }
-        console.log("DATA2", data);
-
+        
         fetchEditProfile(data, displayname);
         toggleModal();
         history.push(`/profile/${username || displayname}`);

@@ -15,7 +15,6 @@ router.post('/catalog/count', async (req, res) => {
         if (search.length > 0)
             sqlFilter += `AND lower(title) like lower('%${search}%')`;
 
-
         getCountCards(genres, sqlFilter)
             .then(data => {
                 if (data.length > 0) {

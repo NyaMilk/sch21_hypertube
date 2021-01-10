@@ -37,7 +37,6 @@ router.get('/profile/:you/:me', async (req, res) => {
 
 router.post('/profile/edit/:username', async (req, res) => {
     const { username } = req.params;
-    console.log("BODY", req.body);
     let keys = [];
     let params = [];
     let i = 1;
@@ -68,7 +67,7 @@ router.post('/profile/edit/:username', async (req, res) => {
 
     const que = keys.join(', ');
     params.push(username);
-    console.log("QUE", que);
+
     editProfile(que, params, i)
         .then(data => {
             res.status(200).json({
