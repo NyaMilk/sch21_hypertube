@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, useHistory } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {
     Container, Row, Col, Nav, NavItem, NavLink, TabContent, TabPane, Button, Input, Label,
@@ -10,9 +10,8 @@ import classnames from 'classnames';
 import { fetchProfile, fetchViews, fetchComments, fetchFriends } from '../redux/profile/ActionCreators';
 import {
     setLogin, setFirstName, setLastName, setEmail,
-    setAbout, setNewPassword, fetchEditProfile
+    setAbout, setNewPassword, fetchEditProfile, editProfileStatus
 } from '../redux/edit/ActionCreators';
-import { fetchUpdateLogin } from '../redux/login/ActionCreators';
 import Loading from './Loading';
 import Info from './Info';
 import NotFound from './NotFound';
@@ -30,7 +29,6 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    fetchUpdateLogin: (username) => dispatch(fetchUpdateLogin(username)),
     fetchProfile: (you, me) => dispatch(fetchProfile(you, me)),
     fetchComments: (username) => dispatch(fetchComments(username)),
     fetchFriends: (username) => dispatch(fetchFriends(username)),
@@ -41,7 +39,8 @@ const mapDispatchToProps = (dispatch) => ({
     setEmail: (email) => dispatch(setEmail(email)),
     setAbout: (about) => dispatch(setAbout(about)),
     setNewPassword: (newPass) => dispatch(setNewPassword(newPass)),
-    fetchEditProfile: (data, username) => dispatch(fetchEditProfile(data, username))
+    fetchEditProfile: (data, username) => dispatch(fetchEditProfile(data, username)),
+    editProfileStatus: (status) => dispatch(editProfileStatus(status))
 });
 
 const Avatar = (props) => {
@@ -95,7 +94,7 @@ const InputForm = (props) => {
     const inputChange = (e) => {
         const { name, value } = e.target;
         if (name === 'login' || name === 'email' || name === 'lastName' || name === 'firstName'
-            || name === 'currentPass' || name === 'newPass') {
+            || name === 'currentPass' || name === 'newPass' || name === 'about') {
             if (isValidInput(name, value)) {
                 toggleValid('is-valid');
                 if (name === 'email' || name === 'login') {
@@ -156,7 +155,8 @@ const EditProfile = (props) => {
     const { t } = useTranslation();
     const [modal, setModal] = useState(false);
     const { displayname, firstname, lastname, about, email, provider } = props.info;
-    const { setLogin, setFirstName, setLastName, setEmail, setAbout, setNewPassword, fetchEditProfile } = props;
+    const { setLogin, setFirstName, setLastName, setEmail, setAbout, setNewPassword, fetchEditProfile, editProfileStatus } = props;
+    const history = useHistory();
 
     const toggleModal = () => setModal(!modal);
 
@@ -178,9 +178,12 @@ const EditProfile = (props) => {
             about: about,
             newpass: newpass
         }
+        console.log("DATA2", data);
 
         fetchEditProfile(data, displayname);
         toggleModal();
+        history.push(`/profile/${username || displayname}`);
+        editProfileStatus('ok');
     }
 
     return (
@@ -286,7 +289,7 @@ const AsideButton = (props) => {
     }
     if (check) {
         const { setLogin, setFirstName, setLastName, setEmail,
-            setAbout, setNewPassword, fetchEditProfile, edit } = props;
+            setAbout, setNewPassword, fetchEditProfile, editProfileStatus, edit } = props;
 
         return (
             <Row className="aside-button">
@@ -299,6 +302,7 @@ const AsideButton = (props) => {
                     setAbout={setAbout}
                     setNewPassword={setNewPassword}
                     fetchEditProfile={fetchEditProfile}
+                    editProfileStatus={editProfileStatus}
                     edit={edit}
                 />
             </Row>
@@ -322,13 +326,13 @@ const Profile = (props) => {
     const { me } = props.login;
     const { username } = props.match.params;
     const { fetchProfile, fetchViews, fetchComments, fetchFriends, setLogin, setFirstName, setLastName,
-        setEmail, setAbout, setNewPassword, fetchEditProfile } = props;
+        setEmail, setAbout, setNewPassword, fetchEditProfile, editProfileStatus } = props;
     const { isLoading, infoMsgViews, infoMsgComments, infoMsgFriends, info, views, comments, friends } = props.profile;
-
+    const { status } = props.edit;
 
     useEffect(() => {
         fetchProfile(username, me);
-    }, [fetchProfile, username, me]);
+    }, [fetchProfile, username, me, status]);
 
     useEffect(() => {
         fetchViews(username);
@@ -375,6 +379,7 @@ const Profile = (props) => {
                         setAbout={setAbout}
                         setNewPassword={setNewPassword}
                         fetchEditProfile={fetchEditProfile}
+                        editProfileStatus={editProfileStatus}
                         provider={provider}
                         edit={props.edit}
                         setMsg={setMsg}
