@@ -1,4 +1,4 @@
-# sch42_hypertube
+# sch21_hypertube
 ## ER diagram
 ![er-diagram](https://github.com/NyaMilk/sch21_hypertube/blob/master/readme_src/erd.jpg)
 
