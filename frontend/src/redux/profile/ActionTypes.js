@@ -1,0 +1,9 @@
+export const PROFILE_ADD = 'PROFILE_ADD';
+export const PROFILE_LOADING = 'PROFILE_LOADING';
+export const PROFILE_FAILED = 'PROFILE_FAILED';
+export const VIEWS_ADD = 'VIEWS_ADD';
+export const VIEWS_FAILED = 'VIEWS_FAILED';
+export const COMMENTS_ADD = 'COMMENTS_ADD';
+export const COMMENTS_FAILED = 'COMMENTS_FAILED';
+export const FRIENDS_ADD = 'FRIENDS_ADD';
+export const FRIENDS_FAILED = 'FRIENDS_FAILED';

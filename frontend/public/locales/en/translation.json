@@ -1,0 +1,104 @@
+{
+	"inputMsg": {
+		"login": {
+			"taken": "Login is taken",
+			"invalid": "Login is invalid"
+		},
+		"email": {
+			"taken": "Email is taken",
+			"invalid": "Email is invalid"
+		},
+		"password": {
+			"weak": "Too weak password. 8 symbols is required",
+			"match": "Password doesn't match",
+			"wrong": "Wrong password"
+		},
+		"text": "Only symbols are required",
+		"yearRange": "Year range 1900 - 2021 only",
+		"rateRange": "Rate range 0 - 10 only",
+		"nothing": "Nothing yet",
+		"download": "ready to watch"
+	},
+	"loginPage": {
+		"login": "Login",
+		"password": "Password",
+		"repassword": "Re-Password",
+		"email": "Email",
+		"firstName": "First name",
+		"lastName": "Last name",
+		"reset": "Enter your email address and we'll send you a link to reset your password",
+		"signIn": "Sign in",
+		"signUp": "Sign Up",
+		"recovery": "Recovery",
+		"send": "Send",
+		"register": "Newbee?",
+		"remind": "Forgot password?",
+		"back": "Back"
+	},
+	"profilePage": {
+		"tabOne": "Films",
+		"tabTwo": "Comments",
+		"tabTree": "Friends",
+		"editProfile": "Edit profile",
+		"change": "Change",
+		"about": "About",
+		"curpassword": "Current password",
+		"newpassword": "New password",
+		"status": {
+			"add": "Add friend!",
+			"remove": "Remove friend"
+		},
+		"left": "left to "
+	},
+	"catalogPage": {
+		"search": "Search",
+		"rate": "Rate",
+		"year": "Year",
+		"name": "Name",
+		"filter": "Filter",
+		"genre": "Genres",
+		"clear": "Clear",
+		"cancel": "Cancel",
+		"not": "Not found :C",
+		"action": "action",
+		"adventure": "adventure",
+		"animation": "animation",
+		"comedy": "comedy",
+		"crime": "crime",
+		"documentary": "documentary",
+		"drama": "drama",
+		"family": "family",
+		"fantasy": "fantasy",
+		"history": "history",
+		"horror": "horror",
+		"music": "music",
+		"mystery": "mystery",
+		"romance": "romance",
+		"science": "science fiction",
+		"tv": "tv movie",
+		"thriller": "thriller",
+		"war": "war",
+		"western": "western"
+	},
+	"moviePage": {
+		"tabOne": "About",
+		"tabTwo": "Comments",
+		"release": "Release date:",
+		"runtime": "Runtime:",
+		"min": "min",
+		"genres": "Genres:",
+		"country": "Country:",
+		"story": "Storyline:",
+		"comment": "Leave your comment:",
+		"send": "Send",
+		"playTrailer": "Play trailer",
+		"trailer": "Trailer",
+		"share": "Share",
+		"nobody": "Nobody had commented",
+		"statusOne": "Movie is not downloaded on server",
+		"statusTwo": "Movie is downloading on server right now",
+		"statusTree": "Click play and wait notify",
+		"statusFour": "Wait notify",
+		"statusFive": "You subscribed to notify!"
+	}
+}

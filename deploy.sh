@@ -8,7 +8,11 @@ case "$1" in
     npm i
     ;;
     "psql")
-    echo "Ok"
+    psql hypertube < api/psql/db.sql
+    ;;
+    "movies")
+    cd api/initMovies
+    node loadMovies
     ;;
     "run")
     cd api
@@ -26,6 +30,7 @@ case "$1" in
     echo "Usage:"
     echo "sh deploy.sh packages - install npm packages for node js and react"
     echo "sh deploy.sh psql - deploy database"
+    echo "sh deploy.sh movies - load movies"
     echo "sh deploy.sh run - run servers"
     echo "sh deploy.sh api - run api"
     echo "sh deploy.sh front - run front"
