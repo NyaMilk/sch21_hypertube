@@ -140,7 +140,7 @@ const Header = (props) => {
             return () => socket.off('notification');
         }
 
-        if (!isLogged && !path.includes('/register') && !path.includes('/remind'))
+        if ((!isLogged || isLogged === null) && !path.includes('/register') && !path.includes('/remind'))
             history.push('/login');
     }, [isLogged, history, me, path, setNew, addNotification]);
 

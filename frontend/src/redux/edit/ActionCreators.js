@@ -1,10 +1,10 @@
 import * as ActionTypes from './ActionTypes';
 import { request } from '../../util/http';
-import { fetchUpdateLogin } from '../login/ActionCreators';
+import { setUser } from '../login/ActionCreators';
 
 export const editProfileStatus = (status) => ({
     type: ActionTypes.EDIT_PROFILE_STATUS_ADD,
-    payload: status.result
+    payload: status
 });
 
 export const editProfileLoading = () => ({
@@ -49,6 +49,7 @@ export const setEmail = (email) => (dispatch) => {
 };
 
 export const setAbout = (about) => (dispatch) => {
+    console.log("HERE");
     return dispatch(({
         type: ActionTypes.ABOUT_ADD,
         about: about
@@ -78,10 +79,8 @@ export const fetchEditProfile = (data, login) => (dispatch) => {
         .then(response => response.json())
         .then(result => {
             console.log(result);
-            dispatch(fetchUpdateLogin(result.username))
-                .then(() => {
-                    dispatch(editProfileStatus(result));
-                })
+            dispatch(setUser(result.username));
+            dispatch(editProfileStatus(null));
         })
         .catch(error => dispatch(editProfileFailed(error.message)));
 };

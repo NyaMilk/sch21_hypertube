@@ -7,6 +7,7 @@ import {
 } from 'reactstrap'
 import { connect } from 'react-redux';
 import { fetchMovie, fetchFavoriteFilm, fetchUpdateFavoriteFilm, fetchComments, setQuality } from '../redux/movie/ActionCreators';
+import { setGenres } from '../redux/catalog/ActionCreators';
 import { useTranslation } from "react-i18next";
 import Loading from './Loading';
 import Info from './Info';
@@ -43,6 +44,7 @@ const mapDispatchToProps = (dispatch) => ({
     fetchFavoriteFilm: (user, film) => dispatch(fetchFavoriteFilm(user, film)),
     fetchUpdateFavoriteFilm: (user, film, status, newStatus) => dispatch(fetchUpdateFavoriteFilm(user, film, status, newStatus)),
     fetchComments: (me, film) => dispatch(fetchComments(me, film)),
+    setGenres: (genres) => dispatch(setGenres(genres)),
     setQuality: (quality) => dispatch(setQuality(quality))
 });
 
@@ -273,8 +275,8 @@ const CountriesList = (props) => {
 
     if (props.countries) {
         listItems = props.countries.map((country, item) =>
-            <ListGroupItem className="movie-list" key={item}>
-                <Link to="#">{country}</Link>
+            <ListGroupItem className="country-list" key={item}>
+                <div>{country}</div>
             </ListGroupItem>
         );
     }
@@ -285,11 +287,24 @@ const CountriesList = (props) => {
 
 const GenreList = (props) => {
     let listItems;
+    const [engenres, rugenres, eng] = props.genres;
+    const { setGenres } = props.filter;
+    console.log(props);
 
-    if (props.genres) {
-        listItems = props.genres.map((genre, item) =>
+    const genres = eng ? engenres : rugenres;
+
+    const handleGenreClick = (index) => {
+        let genre = engenres[index];
+
+        genre = genre === "science-fiction" ? 'science' : genre;
+
+        setGenres([genre]);
+    }
+
+    if (genres) {
+        listItems = genres.filter((item) => item !== 'superhero').map((genre, item) =>
             <ListGroupItem className="movie-list" key={item}>
-                <Link to="#">{genre}</Link>
+                <Link to="/catalog/page/1" onClick={() => { handleGenreClick(item) }}>{genre}</Link>
             </ListGroupItem>
         );
     }
@@ -319,6 +334,7 @@ const VideoPlayer = (props) => {
     const ws = () => {
         socket.emit('movie', [imdb, quality, index, me]);
         setMsg(t("moviePage.statusFive"));
+        document.location.reload();
     }
 
     useEffect(() => {
@@ -354,7 +370,7 @@ const VideoPlayer = (props) => {
     else if (status.indexOf('downloaded') > 0) {
         return (
             <Col>
-                <video crossOrigin="anonymous" key={quality} id="videoPlayer" className="embed-responsive" controls>
+                <video crossOrigin="anonymous" key={quality} id="videoPlayer" controlsList="nodownload" className="embed-responsive" controls>
                     <source src={`/api/stream/movie/${imdb}/${quality}`} type="video/mp4" />
 
                     {
@@ -421,7 +437,6 @@ const Movie = (props) => {
         const { favorite, favoriteMsg, quality } = movie;
         const title = (i18n.language === 'en') ? entitle : rutitle;
         const description = (i18n.language === 'en') ? endescription : rudescription;
-        const genres = (i18n.language === 'en') ? engenres : rugenres;
         const trailer = (i18n.language === 'en') ? entrailer : rutrailer;
         const countries = (i18n.language === 'en') ? encountries : rucountries;
         const poster = (i18n.language === 'en') ? enposter : ruposter;
@@ -509,7 +524,7 @@ const Movie = (props) => {
                                             <p className="movie-title">
                                                 {t("moviePage.genres")}
                                             </p>
-                                            <GenreList genres={genres} />
+                                            <GenreList filter={props} genres={[engenres, rugenres, i18n.language === 'en']} />
 
                                             <p className="movie-title">
                                                 {t("moviePage.country")}

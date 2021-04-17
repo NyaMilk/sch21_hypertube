@@ -10,19 +10,7 @@ module.exports = (io) => {
     const mySpace = io.of('/socks');
     let movies = new Object();
 
-    getKeyByValue = (object, value) => {
-        return Object.keys(object).find(key => object[key] === value);
-    }
-
     mySpace.on('connection', (socket) => {
-
-        // socket.on('log_in', (nickname) => {
-        //     users[nickname] = socket.id;
-        //     setStatus(["Online", nickname])
-        //         .then()
-        //         .catch();
-        // });
-
         socket.on('movie', async ([imdb, quality, index, username]) => {
             const key = `${imdb}_${quality}`;
 
@@ -100,14 +88,5 @@ module.exports = (io) => {
             else
                 mySpace.emit('wait_list', [imdb, []]);
         })
-
-        // socket.on('disconnect', () => {
-        //     const nickname = getKeyByValue(users, socket.id);
-
-        //     if (users && nickname)
-        //         setStatus(["Offline", nickname])
-        //             .then()
-        //             .catch();
-        // })
     })
 }

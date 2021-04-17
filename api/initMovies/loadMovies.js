@@ -2,7 +2,11 @@ const axios = require("axios");
 const API_KEY = 'd022dfadcf20dc66d480566359546d3c';
 const { getRate, getRuIso } = require('./rate');
 const { insertMovies } = require('../models/movies');
+<<<<<<< HEAD
 const MAX_PAGES = 10;
+=======
+const MAX_PAGES = 1;
+>>>>>>> 7d49b68b7ef72291cef0b81e840a421d6ae44bd4
 
 const getPopcornMovies = async () => {
     let raw = [];

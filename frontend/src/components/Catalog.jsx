@@ -84,7 +84,7 @@ const Filter = (props) => {
     const toggleModal = () => setModal(!show);
     const genres = ["action", "adventure", "animation", "comedy", "crime", "documentary",
         "drama", "family", "fantasy", "history", "horror", "music", "mystery", "romance",
-        "thriller", "war", "western", "tv", "science"];
+        "thriller", "war", "western", "science-fiction"];
 
     const tagsHandle = (e) => {
         let value = [];
@@ -101,8 +101,13 @@ const Filter = (props) => {
         setSearch(value);
     };
 
-    const listGenres = genres.map((key, item) =>
-        <option key={item} value={key}>{t(`catalogPage.${key}`)}</option>
+    const listGenres = genres.map((genre, item) =>
+        < option key={item} value={genre} >
+            {
+                (genre === 'science-fiction') ? t(`catalogPage.science`) :
+                    t(`catalogPage.${genre}`)
+            }
+        </option>
     )
 
     return (
@@ -242,9 +247,9 @@ const FilmCards = (props) => {
                                 <GenreList genres={genres} />
                             </ListGroup>
                         </CardBody>
-                    </Card>
-                </Link>
-            </Col>)
+                    </Card >
+                </Link >
+            </Col >)
         });
     }
     return (

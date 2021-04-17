@@ -409,7 +409,8 @@ header .notification-item:active {
 }
 
 .movie .movie-list,
-.movie .movie-description {
+.movie .movie-description,
+.movie .country-list {
   padding: 0.25rem 0.5rem;
   margin-right: 0.35rem;
   background: #f8f9fa;
