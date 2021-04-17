@@ -8,6 +8,10 @@ const cookieSession = require("cookie-session");
 const cookieParser = require("cookie-parser");
 const imageRoutes = require('./routes/image.routes');
 const authRoutes = require('./routes/oauth.routes');
+<<<<<<< HEAD
+const userRoutes = require('./routes/user');
+const torrentRoutes = require('./routes/torrent.routes');
+=======
 const registerRoutes = require('./routes/register.routes');
 const userRoutes = require('./routes/user.routes');
 const moviesRoutes = require('./routes/movies.routes');
@@ -16,6 +20,7 @@ const streamRoutes = require('./routes/stream.routes');
 const cron = require('./cron/cron');
 
 cron.job.start();
+>>>>>>> rkina
 
 app.use(
   cookieSession({
@@ -38,6 +43,33 @@ app.use(
   })
 );
 
+<<<<<<< HEAD
+app.use('/api/login', authRoutes);
+app.use('/api/test', userRoutes);
+app.use('/api/torrent', torrentRoutes);
+
+const authCheck = (req, res, next) => {
+    if (!req.user) {
+      res.status(401).json({
+        authenticated: false,
+        message: "user has not been authenticated"
+      });
+    } else {
+      next();
+    }
+  };
+  
+  app.get("/", authCheck, (req, res) => {
+    res.status(200).json({
+      authenticated: true,
+      message: "user successfully authenticated",
+      user: req.user,
+      cookies: req.cookies
+    });
+  });
+
+app.listen(keys.apiPort, () => console.log('App on ' + keys.apiPort));
+=======
 app.use('/api/image', imageRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/register', registerRoutes);
@@ -53,3 +85,4 @@ const io = require('socket.io')(httpServer);
 require('./routes/socket.routes')(io);
 
 httpServer.listen(keys.socketPort, () => console.log('Socket on ' + keys.socketPort));
+>>>>>>> rkina

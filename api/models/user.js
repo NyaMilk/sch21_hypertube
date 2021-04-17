@@ -1,3 +1,14 @@
+<<<<<<< HEAD
+const db = require("../config/psql-setup");
+
+const getMe = () => {
+    const sql = `SELECT nickname from Users`;
+
+    return db.any(sql);
+};
+
+exports.getMe = getMe;
+=======
 const { db } = require('../config/psql-setup');
 
 exports.getProfile = (you, me) => {
@@ -84,3 +95,4 @@ exports.getProfileFriends = (me) => {
 
     return db.any(sql, [me]);
 }
+>>>>>>> rkina

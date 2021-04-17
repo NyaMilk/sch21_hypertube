@@ -61,4 +61,30 @@ router.post('/local', urlencodedParser,
   })
 );
 
+<<<<<<< HEAD
+router.get("/github", passport.authenticate("github"), function(req, res){
+  res.redirect(CLIENT_HOME_PAGE_URL);
+});
+
+router.get("/github/redirect",
+  passport.authenticate("github", {
+    successRedirect: CLIENT_HOME_PAGE_URL,
+    failureRedirect: "/auth/login/failed"
+  })
+);
+
+router.get("/intra", passport.authenticate("42"), function(req, res){
+  res.redirect(CLIENT_HOME_PAGE_URL);
+});
+
+router.get("/intra/redirect",
+  passport.authenticate("42", {
+    successRedirect: CLIENT_HOME_PAGE_URL,
+    failureRedirect: "/auth/login/failed"
+  })
+);
+
 module.exports = router;
+=======
+module.exports = router;
+>>>>>>> rkina

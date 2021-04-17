@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+const db = require("../config/psql-setup");
+
+const checkUserName = (username) => {
+    const sql = `SELECT username from Users WHERE username = $1`;
+=======
 const { db } = require('../config/psql-setup');
 
 exports.findUserOauth = (username, provider) => {
@@ -20,10 +26,14 @@ exports.findUserInAllProviders = (username) => {
     const sql =
         `SELECT displayName 
     FROM Users WHERE displayName = $1`;
+>>>>>>> rkina
 
     return db.any(sql, [username]);
 };
 
+<<<<<<< HEAD
+exports.checkUserName = checkUserName;
+=======
 exports.addUser = (username, email, provider) => {
     const sql =
         `INSERT INTO Users (displayName, userName, email, provider, confirm) 
@@ -39,3 +49,4 @@ exports.addFullUser = (username, email, firstName, lastName, provider) => {
 
     return db.one(sql, [username, email, firstName, lastName, provider]);
 }
+>>>>>>> rkina
